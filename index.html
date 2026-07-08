@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🜍 IMAGI-WORLD: Relational Forge 🜍</title>
+<style>
+:root {
+  --gold-grad: linear-gradient(to right, #bf953f 0%, #fcf6ba 20%, #b38728 40%, #fbf5b7 60%, #aa771c 80%, #bf953f 100%);
+  --violet-grad: linear-gradient(to right, #7c5cff 0%, #c9b8ff 20%, #6b4de0 40%, #e2d9ff 60%, #5936c9 80%, #7c5cff 100%);
+  --bg: #010103;
+  --panel: #0a0c10;
+  --ink: #eee;
+  --gold: #ffd700;
+  --gold-dim: #bf953f;
+  --violet: #8b7cf6;
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --pink: #e94560;
+  --cyan: #00d9ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg); color: var(--ink); min-height:100vh;
+  display:flex; flex-direction:column; align-items:center;
+  padding:10px; overflow-x:hidden; touch-action:manipulation;
+}
+.container { max-width:520px; width:100%; position:relative; z-index:1; }
+
+h1 {
+  margin:15px 0 2px; font-size:clamp(1.7rem, 9vw, 3rem); text-align:center;
+  letter-spacing:5px; font-weight:900; background:var(--gold-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 12px rgba(255,215,0,0.85));
+  text-transform:uppercase; animation:shimmer 6s infinite linear; background-size:200% auto;
+}
+@keyframes shimmer { to { background-position:200% center; } }
+.module-badge {
+  margin:0 0 4px; text-align:center;
+  font-size:clamp(0.95rem, 4.4vw, 1.5rem); font-weight:900;
+  letter-spacing:9px; text-transform:uppercase; padding-left:9px;
+  background:var(--violet-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 14px rgba(139,124,246,0.95)) drop-shadow(0 0 26px rgba(89,54,201,0.5));
+  animation:shimmer 6s infinite linear; background-size:200% auto;
+}
+.tagline {
+  text-align:center; font-size:0.62rem; color:#4a4458; letter-spacing:2.5px;
+  text-transform:uppercase; margin-bottom:14px; font-weight:700;
+}
+
+/* ===== Mode tabs ===== */
+.tabs { display:flex; gap:6px; margin-bottom:12px; }
+.tab {
+  flex:1; padding:11px 2px; border-radius:12px; border:1px solid #16141f;
+  background:#07070c; color:#5a5570; font-weight:900; font-size:0.62rem;
+  letter-spacing:1px; text-transform:uppercase; cursor:pointer;
+  transition:0.18s; font-family:inherit; touch-action:manipulation;
+}
+.tab.active {
+  color:#000; background:linear-gradient(135deg, var(--violet), #5936c9);
+  border-color:transparent; box-shadow:0 0 18px rgba(139,124,246,0.45);
+}
+.tab.active.gold-tab {
+  background:linear-gradient(135deg, var(--gold), #b38728);
+  box-shadow:0 0 18px rgba(255,215,0,0.4);
+}
+.tab:focus-visible { outline:2px solid var(--violet); outline-offset:2px; }
+
+/* ===== Arena panel ===== */
+.arena {
+  background:#040406; padding:22px 18px 18px; border-radius:26px;
+  border:1px solid #111; min-height:430px;
+  display:flex; flex-direction:column;
+  box-shadow:inset 0 0 60px rgba(0,0,0,0.9);
+}
+.mode-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.mode-title { font-size:0.72rem; font-weight:900; letter-spacing:2.5px; color:var(--violet); text-transform:uppercase; }
+.mode-title.gold { color:var(--gold-dim); }
+.level-chip {
+  font-size:0.72rem; font-weight:900; color:var(--gold);
+  letter-spacing:1px; text-shadow:0 0 10px rgba(255,215,0,0.5);
+}
+.level-chip .lvl-flash { display:inline-block; }
+@keyframes lvlUp { 0%{transform:scale(1)} 50%{transform:scale(1.55); color:var(--green)} 100%{transform:scale(1)} }
+@keyframes lvlDown { 0%{transform:scale(1)} 50%{transform:scale(0.7); color:var(--pink)} 100%{transform:scale(1)} }
+.lvl-flash.up { animation:lvlUp 0.7s ease-out; }
+.lvl-flash.down { animation:lvlDown 0.7s ease-out; }
+
+.rule-banner {
+  text-align:center; font-size:0.68rem; font-weight:800; letter-spacing:1.4px;
+  color:#8d84b8; text-transform:uppercase; margin-bottom:10px; min-height:16px;
+}
+.rule-banner b { color:var(--violet); }
+
+/* Premises / narrative block */
+.premises {
+  display:flex; flex-direction:column; gap:8px; margin:6px 0 14px;
+}
+.premise-line {
+  background:#08080e; border:1px solid #16141f; border-radius:12px;
+  padding:12px 10px; text-align:center; font-weight:800;
+  font-size:clamp(0.95rem, 4.2vw, 1.2rem); color:#e8e4ff;
+  letter-spacing:0.5px; animation:fadeIn 0.3s ease-out both;
+}
+.premise-line b { color:var(--gold); }
+.premise-line .rel { color:var(--violet); font-weight:900; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+
+.question-box {
+  text-align:center; font-weight:900; margin:2px 0 14px;
+  font-size:clamp(1.15rem, 5.2vw, 1.55rem); color:#fff;
+  text-shadow:0 0 22px rgba(255,255,255,0.14); line-height:1.3; padding:0 4px;
+}
+.question-box .rel { color:var(--violet); }
+.question-box b { color:var(--gold); }
+
+/* Answer buttons */
+.answers { display:flex; gap:10px; width:100%; }
+.answers.vertical { flex-direction:column; }
+.ans-btn {
+  flex:1; padding:20px 8px; font-size:1.05rem; border-radius:16px;
+  border:2px solid #1c1a28; background:#0a0912; color:#cfc9ea;
+  font-weight:900; cursor:pointer; text-transform:uppercase; letter-spacing:1px;
+  transition:0.15s; font-family:inherit; touch-action:manipulation;
+}
+.ans-btn:focus-visible { outline:2px solid var(--violet); outline-offset:2px; }
+.ans-btn.yes { color:var(--green); border-color:rgba(46,204,113,0.25); background:rgba(46,204,113,0.05); }
+.ans-btn.no { color:var(--red); border-color:rgba(231,76,60,0.25); background:rgba(231,76,60,0.05); }
+.ans-btn.unk { color:var(--cyan); border-color:rgba(0,217,255,0.22); background:rgba(0,217,255,0.04); }
+.ans-btn.opt { color:#e8e4ff; border-color:rgba(139,124,246,0.28); background:rgba(139,124,246,0.06); font-size:0.95rem; }
+.ans-btn:active { transform:scale(0.97); }
+.ans-btn.picked-right { background:var(--green) !important; color:#000 !important; border-color:var(--green) !important; }
+.ans-btn.picked-wrong { background:var(--red) !important; color:#fff !important; border-color:var(--red) !important; }
+.ans-btn.reveal-right { border-color:var(--green) !important; color:var(--green) !important; }
+.ans-btn.selected { background:rgba(139,124,246,0.3); border-color:var(--violet); color:#fff; }
+.ans-btn:disabled { opacity:0.35; pointer-events:none; }
+
+/* chips for LENS */
+.chip-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; width:100%; }
+.chip-grid .ans-btn { padding:15px 4px; font-size:0.78rem; letter-spacing:0.6px; }
+
+/* Timer */
+.timer-container { width:100%; height:8px; background:#111; margin-top:14px; border-radius:4px; overflow:hidden; }
+.timer-bar { width:100%; height:100%; background:var(--violet); transition:width 0.1s linear; }
+.timer-bar.hot { background:var(--pink); }
+
+/* Feedback */
+.feedback {
+  min-height:30px; text-align:center; font-weight:900; font-size:1.25rem;
+  margin-top:12px; transition:color 0.15s; letter-spacing:1px;
+}
+.feedback.good { color:var(--green); text-shadow:0 0 16px rgba(46,204,113,0.6); }
+.feedback.bad { color:var(--red); text-shadow:0 0 16px rgba(231,76,60,0.5); }
+.feedback.miss { color:var(--pink); }
+.explain {
+  text-align:center; font-size:0.78rem; color:#9a92c4; line-height:1.5;
+  margin-top:6px; min-height:20px; padding:0 6px;
+}
+.explain b { color:var(--gold); } .explain .rel { color:var(--violet); font-weight:800; }
+
+/* Entailment map (signature element) */
+.entail-map {
+  display:none; margin:10px auto 0; background:#06060b;
+  border:1px solid #16141f; border-radius:16px; width:100%; overflow:hidden;
+}
+.entail-map.show { display:block; animation:fadeIn 0.35s ease-out; }
+.entail-map svg { width:100%; height:auto; display:block; }
+@keyframes drawEdge { from { stroke-dashoffset: 240; } to { stroke-dashoffset: 0; } }
+.derived-edge { stroke-dasharray:7 6; animation:drawEdge 1.1s ease-out both; }
+.map-caption { font-size:0.58rem; color:#4a4458; text-align:center; letter-spacing:1.6px; text-transform:uppercase; padding:5px 0 7px; }
+
+/* Next / start controls */
+.flow-row { display:flex; gap:10px; margin-top:14px; }
+.big-btn {
+  flex:1; padding:16px; border-radius:14px; border:none; font-weight:900;
+  cursor:pointer; text-transform:uppercase; font-family:inherit; font-size:0.95rem;
+  letter-spacing:1.5px; transition:0.2s; touch-action:manipulation;
+}
+.big-btn.primary { background:linear-gradient(135deg, var(--violet), #5936c9); color:#fff; box-shadow:0 0 20px rgba(139,124,246,0.35); }
+.big-btn.gold { background:linear-gradient(135deg, var(--gold), #b38728); color:#000; }
+.big-btn.ghost { background:#0c0b14; color:#8d84b8; border:1px solid #1c1a28; }
+.big-btn:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+.big-btn:disabled { opacity:0.2; pointer-events:none; }
+
+/* STREAM stimulus card */
+.stim-card {
+  margin:8px auto 4px; width:min(240px, 70vw); height:170px;
+  background:#08070f; border:1px solid #1c1a28; border-radius:22px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; box-shadow:inset 0 0 40px rgba(0,0,0,0.8); position:relative;
+  transition:border-color 0.15s, box-shadow 0.15s;
+}
+.stim-card.fb-good { border-color:var(--green); box-shadow:0 0 22px rgba(46,204,113,0.35); }
+.stim-card.fb-bad { border-color:var(--red); box-shadow:0 0 22px rgba(231,76,60,0.35); }
+.stim-arrow { font-size:4.2rem; font-weight:900; line-height:1; filter:drop-shadow(0 0 14px currentColor); }
+.stim-pips { display:flex; gap:7px; }
+.stim-pip { width:13px; height:13px; border-radius:50%; background:currentColor; box-shadow:0 0 8px currentColor; }
+.stim-observe { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem; letter-spacing:3px; color:#4a4458; font-weight:900; }
+
+/* LENS scene */
+.scene-box {
+  margin:6px auto 12px; width:100%; background:#07070d;
+  border:1px solid #16141f; border-radius:18px; overflow:hidden;
+}
+.scene-box svg { width:100%; height:auto; display:block; }
+
+/* Stats */
+.stats { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-top:16px; }
+.stat-box { background:#08080c; padding:11px 4px; border-radius:12px; border:1px solid #111; text-align:center; }
+.stat-label { font-size:0.5rem; color:#444; text-transform:uppercase; font-weight:800; letter-spacing:0.5px; }
+.stat-value { font-size:1rem; font-weight:900; color:var(--gold-dim); }
+
+/* Mastery meter */
+.mastery { margin-top:10px; }
+.mastery-track { display:flex; gap:4px; }
+.mastery-cell { flex:1; height:7px; border-radius:3px; background:#14121c; }
+.mastery-cell.hit { background:var(--green); box-shadow:0 0 6px rgba(46,204,113,0.6); }
+.mastery-cell.err { background:#3a1220; }
+.mastery-note { font-size:0.55rem; color:#4a4458; letter-spacing:1.2px; text-transform:uppercase; margin-top:5px; text-align:center; }
+
+/* CODEX */
+.codex { line-height:1.55; font-size:0.85rem; color:#cfc9ea; }
+.codex h2 {
+  font-size:0.8rem; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold);
+  margin:20px 0 8px; text-shadow:0 0 12px rgba(255,215,0,0.35);
+}
+.codex h2:first-child { margin-top:4px; }
+.codex p { margin-bottom:9px; color:#a79fce; font-size:0.8rem; }
+.codex p b { color:#e8e4ff; }
+.op-table { width:100%; border-collapse:collapse; margin:8px 0 14px; font-size:0.72rem; }
+.op-table th { text-align:left; color:#5a5570; font-size:0.58rem; letter-spacing:1px; text-transform:uppercase; padding:5px 6px; border-bottom:1px solid #1c1a28; }
+.op-table td { padding:7px 6px; border-bottom:1px solid #101018; color:#b8b0dd; vertical-align:top; }
+.op-table td:first-child { color:var(--violet); font-weight:900; font-size:0.95rem; text-align:center; width:34px; }
+.op-table td b { color:#fff; }
+.matrix27 { display:grid; grid-template-columns:auto 1fr 1fr 1fr; gap:4px; margin:8px 0 14px; font-size:0.62rem; }
+.m27-head { color:#5a5570; font-size:0.55rem; letter-spacing:1px; text-transform:uppercase; font-weight:900; padding:5px 3px; text-align:center; }
+.m27-arch { color:var(--gold-dim); font-weight:900; padding:7px 5px 0 0; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.5px; }
+.m27-cell { background:#08080e; border:1px solid #14121c; border-radius:8px; padding:6px 5px; color:#a79fce; line-height:1.35; }
+.m27-cell b { color:#e8e4ff; display:block; font-size:0.64rem; letter-spacing:0.4px; }
+.provenance { font-size:0.68rem; color:#5a5570; border-left:2px solid #1c1a28; padding-left:10px; margin:10px 0; line-height:1.5; }
+
+/* Toast */
+.toast {
+  position:fixed; top:18px; left:50%; transform:translateX(-50%) translateY(-80px);
+  background:linear-gradient(135deg, var(--violet), #5936c9); color:#fff;
+  font-weight:900; letter-spacing:2px; text-transform:uppercase; font-size:0.8rem;
+  padding:14px 26px; border-radius:14px; z-index:300; opacity:0;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.35s;
+  box-shadow:0 10px 40px rgba(89,54,201,0.6); pointer-events:none; text-align:center;
+}
+.toast.gold { background:linear-gradient(135deg, var(--gold), #b38728); color:#000; box-shadow:0 10px 40px rgba(255,215,0,0.4); }
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+/* Progress export modal */
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:200;
+  align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto;
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+.modal.show { display:flex; }
+.modal-inner { background:var(--panel); padding:26px 22px; border-radius:20px; border:1px solid #333;
+  max-width:520px; width:100%; position:relative; box-shadow:0 25px 80px rgba(0,0,0,0.9); }
+.modal-close { position:absolute; top:10px; right:12px; background:none; border:none; color:#666;
+  font-size:1.5rem; cursor:pointer; padding:4px 8px; font-family:inherit; }
+.modal h3 { color:var(--gold); font-size:0.85rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
+.modal textarea { width:100%; min-height:110px; background:#000; color:#8d84b8; border:1px solid #222;
+  border-radius:10px; padding:10px; font-size:0.68rem; font-family:monospace; margin-bottom:10px; }
+.footer-row { display:flex; gap:8px; margin-top:12px; }
+.small-btn { flex:1; padding:11px 6px; border-radius:10px; border:1px solid #1c1a28; background:#0c0b14;
+  color:#8d84b8; font-weight:800; font-size:0.62rem; letter-spacing:1px; text-transform:uppercase;
+  cursor:pointer; font-family:inherit; touch-action:manipulation; }
+.small-btn:focus-visible { outline:2px solid var(--violet); outline-offset:2px; }
+
+.disclaimer { font-size:0.55rem; color:#332f42; text-align:center; letter-spacing:1px; margin:14px 0 30px; line-height:1.6; text-transform:uppercase; }
+
+@media (prefers-reduced-motion: reduce) {
+  h1, .module-badge { animation:none; }
+  .derived-edge { animation:none; stroke-dashoffset:0; }
+  .premise-line { animation:none; }
+}
+</style>
+</head>
+<body>
+<main class="container">
+  <h1>IMAGI-WORLD</h1>
+  <div class="module-badge">Relational Forge</div>
+  <div class="tagline">Derived Relations Engine · Companion Module</div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" id="tab-forge" role="tab" aria-selected="true">Forge</button>
+    <button class="tab" id="tab-mirror" role="tab" aria-selected="false">Mirror</button>
+    <button class="tab" id="tab-stream" role="tab" aria-selected="false">Stream</button>
+    <button class="tab" id="tab-lens" role="tab" aria-selected="false">Lens</button>
+    <button class="tab gold-tab" id="tab-codex" role="tab" aria-selected="false">Codex</button>
+  </div>
+
+  <div class="arena" id="arena">
+    <div class="mode-head">
+      <div class="mode-title" id="mode-title">FORGE · DERIVED RELATIONS</div>
+      <div class="level-chip">LV <span class="lvl-flash" id="level-num">1</span></div>
+    </div>
+    <div class="rule-banner" id="rule-banner"></div>
+    <div id="task-zone" style="flex:1; display:flex; flex-direction:column; justify-content:center;"></div>
+    <div id="answer-zone"></div>
+    <div class="timer-container"><div class="timer-bar" id="timer-bar"></div></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="explain" id="explain"></div>
+    <div class="entail-map" id="entail-map"></div>
+    <div class="flow-row" id="flow-row">
+      <button class="big-btn primary" id="begin-btn">Begin training</button>
+    </div>
+    <div class="mastery" id="mastery">
+      <div class="mastery-track" id="mastery-track"></div>
+      <div class="mastery-note" id="mastery-note">Mastery window · 10 of 12 correct advances the level</div>
+    </div>
+    <div class="stats">
+      <div class="stat-box"><div class="stat-label">Trials</div><div class="stat-value" id="st-trials">0</div></div>
+      <div class="stat-box"><div class="stat-label">Accuracy</div><div class="stat-value" id="st-acc">—</div></div>
+      <div class="stat-box"><div class="stat-label">Streak</div><div class="stat-value" id="st-streak">0</div></div>
+      <div class="stat-box"><div class="stat-label">Peak LV</div><div class="stat-value" id="st-peak">1</div></div>
+    </div>
+  </div>
+
+  <div class="footer-row">
+    <button class="small-btn" id="progress-btn">Save / Load progress</button>
+    <button class="small-btn" id="reset-btn">Reset mode</button>
+  </div>
+
+  <div class="disclaimer">
+    Alpha · Progress lives in this session unless exported · Relational training evidence is promising, far transfer is not guaranteed — treat gains as hypotheses and test them
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="progress-modal" role="dialog" aria-modal="true" aria-label="Save or load progress">
+  <div class="modal-inner">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <h3>Progress code</h3>
+    <p style="font-size:0.68rem; color:#8d84b8; margin-bottom:8px;">Copy this code to save your levels. Paste a saved code and press Load to restore.</p>
+    <textarea id="progress-text" spellcheck="false"></textarea>
+    <div class="footer-row" style="margin-top:0;">
+      <button class="small-btn" id="copy-progress">Copy</button>
+      <button class="small-btn" id="load-progress">Load</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CODEX CONTENT (injected into task zone when tab active) ===================== -->
+<template id="codex-template">
+<div class="codex">
+  <h2>Why this exists</h2>
+  <p>This module rebuilds the Meru-derived "ontological categories" practice into the form the evidence says matters: <b>constrained trials, immediate feedback, adaptive difficulty, and probes of relations you were never shown</b> — the architecture behind relational-frame (SMART-style) training, the strongest published results for reasoning gains. Free-form labeling becomes speeded, scored, derived relational responding.</p>
+
+  <h2>The nine operators — a re-factored basis</h2>
+  <p>The original nine archetypes were poetic but overlapping. This basis is <b>orthogonal and operational</b>: each operator has formal properties that generate testable entailments, which is what the Forge trains.</p>
+  <table class="op-table">
+    <tr><th></th><th>Operator</th><th>Properties · what it entails</th></tr>
+    <tr><td>=</td><td><b>SAME</b> (coordination)</td><td>Symmetric, transitive. A=B, B=C ⊢ A=C.</td></tr>
+    <tr><td>⇄</td><td><b>OPPOSITE</b></td><td>Symmetric. Two opposites cancel: A⇄B, B⇄C ⊢ A=C.</td></tr>
+    <tr><td>≠</td><td><b>DIFFERENT</b> (distinction)</td><td>Symmetric, <b>not</b> transitive. A≠B, B≠C entails nothing about A,C — the classic trap.</td></tr>
+    <tr><td>&gt;</td><td><b>COMPARISON</b> (more/less)</td><td>Asymmetric, transitive. A&gt;B ⊢ B&lt;A; A&gt;B&gt;C ⊢ A&gt;C.</td></tr>
+    <tr><td>⊃</td><td><b>CONTAINMENT</b> (class / enclosure)</td><td>Asymmetric, transitive. Inverse reading: part-of.</td></tr>
+    <tr><td>∈</td><td><b>COMPOSITION</b> (part–whole)</td><td>Asymmetric, transitive mereology. Distinct from class inclusion.</td></tr>
+    <tr><td>→</td><td><b>SEQUENCE</b> (before/after)</td><td>Asymmetric, transitive temporal order.</td></tr>
+    <tr><td>⇒</td><td><b>CAUSATION</b></td><td>Asymmetric; chains compose. Distinct from mere sequence.</td></tr>
+    <tr><td>◉</td><td><b>PERSPECTIVE</b> (deictic)</td><td>I↔YOU, HERE↔THERE, NOW↔THEN frame swaps; two swaps of one axis cancel.</td></tr>
+  </table>
+
+  <h2>The 27-cell matrix, kept — and grounded</h2>
+  <p>Meru's 3×9 arrangement (nine archetypes × Archetypal / Inner / Outer) is retained as a <b>content skeleton</b> — but note its levels coincide with Hebrew gematria's decimal places (units, tens, hundreds), and its real cognitive value is that Inner/Outer/Archetypal is the <b>PERSPECTIVE operator applied to the other eight</b>: the same relation read from inside the system, from outside it, and frame-invariantly. That is a perspective-shifting drill, and perspective (deictic) training is the best-supported piece of the relational literature — the Mirror trains it directly.</p>
+  <div class="matrix27">
+    <div class="m27-head"></div><div class="m27-head">Archetypal</div><div class="m27-head">Inner</div><div class="m27-head">Outer</div>
+    <div class="m27-arch">All</div>
+    <div class="m27-cell"><b>Unity</b>SAME applied reflexively over a whole</div>
+    <div class="m27-cell"><b>Identity felt</b>the whole from within itself</div>
+    <div class="m27-cell"><b>Totality seen</b>the whole as one object among others</div>
+    <div class="m27-arch">Difference</div>
+    <div class="m27-cell"><b>Distinction</b>the ≠ operator itself</div>
+    <div class="m27-cell"><b>Contrast</b>felt non-identity, figure vs ground</div>
+    <div class="m27-cell"><b>Boundary</b>the drawn edge between things</div>
+    <div class="m27-arch">Action</div>
+    <div class="m27-cell"><b>Causation</b>the ⇒ operator itself</div>
+    <div class="m27-cell"><b>Agency</b>being the cause</div>
+    <div class="m27-cell"><b>Effect</b>bearing the cause</div>
+    <div class="m27-arch">Division</div>
+    <div class="m27-cell"><b>Partition</b>inverse composition (whole → parts)</div>
+    <div class="m27-cell"><b>Fragment</b>being a part</div>
+    <div class="m27-cell"><b>Cut</b>the act of separating seen from outside</div>
+    <div class="m27-arch">Connection</div>
+    <div class="m27-cell"><b>Relation</b>any edge between nodes</div>
+    <div class="m27-cell"><b>Bond</b>participating in a relation</div>
+    <div class="m27-cell"><b>Link</b>the relation observed as a thing</div>
+    <div class="m27-arch">Multiplication</div>
+    <div class="m27-cell"><b>Iteration</b>an operator applied to its own output</div>
+    <div class="m27-cell"><b>Growth</b>recursion from inside the process</div>
+    <div class="m27-cell"><b>Array</b>the produced multiplicity</div>
+    <div class="m27-arch">Projection</div>
+    <div class="m27-cell"><b>Perspective</b>the ◉ operator itself</div>
+    <div class="m27-cell"><b>Viewpoint</b>the frame you look from</div>
+    <div class="m27-cell"><b>Image</b>what lands on the far screen</div>
+    <div class="m27-arch">Encompassment</div>
+    <div class="m27-cell"><b>Containment</b>the ⊃ operator itself</div>
+    <div class="m27-cell"><b>Being held</b>membership from within</div>
+    <div class="m27-cell"><b>Enclosing</b>the boundary that holds</div>
+    <div class="m27-arch">Completion</div>
+    <div class="m27-cell"><b>Bounded satisfaction</b>min ≤ x ≤ max — comparison + conjunction, not a new primitive</div>
+    <div class="m27-cell"><b>Enough</b>criterion met from within</div>
+    <div class="m27-cell"><b>Fit</b>criterion verified from outside</div>
+  </div>
+
+  <h2>How the four modes train</h2>
+  <p><b>FORGE</b> — SMART-style derived relations on nonsense tokens: premises state a few relations, the probe asks one you were never told. Yes / No / Cannot-tell. Difficulty scales by premise count (binary → ternary → quaternary relational complexity), frame mixing, distractor premises, and a shrinking clock. The entailment map after each answer shows the derivation path — feedback that teaches the proof, not just the verdict.</p>
+  <p><b>MIRROR</b> — deictic protocol: I↔YOU, HERE↔THERE, NOW↔THEN with single, double, then triple reversals under time pressure.</p>
+  <p><b>STREAM</b> — relational n-back: hold n items while judging whether the current stimulus bears a stated <b>relation</b> (same, opposite, more, conjunction) to the one n back — binding relations inside working memory, with rule-switching at higher levels.</p>
+  <p><b>LENS</b> — the old "ontological streaming," given ground truth: procedurally drawn scenes with a known dominant relation; classify it fast, learn from misses. When two relations apply, pick the more specific (OPPOSITE beats DIFFERENT; COMPARISON beats DIFFERENT).</p>
+
+  <h2>Method &amp; honesty</h2>
+  <p>Advance requires 10 of 12 correct in the rolling window; sustained failure drops you back — training stays at the edge of ability, which is where transfer is even possible. Probes of untrained relations, not memorized pairs, are what distinguished the strong relational-training results.</p>
+  <div class="provenance">Provenance: content skeleton after Stan Tenen / Meru Foundation's Matrix of Meaning; training architecture after Relational Frame Theory and SMART (Cassidy &amp; Roche); complexity scaling after Halford's relational complexity; rule variety informed by the Carpenter–Just–Shell analysis of Raven's matrices. Caveat: far transfer to fluid intelligence remains contested across the whole training literature — measure yourself before and after with an independent test.</div>
+</div>
+</template>
+
+<script>
+/* ============================================================
+   RELATIONAL FORGE — core
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const rnd = n => Math.floor(Math.random() * n);
+const pick = arr => arr[rnd(arr.length)];
+const shuffle = arr => { const a = arr.slice(); for (let i=a.length-1;i>0;i--){ const j=rnd(i+1); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+const MODES = ['forge','mirror','stream','lens'];
+const state = {
+  active: 'forge',
+  running: false,
+  trial: null,          // current trial object
+  phase: 'idle',        // idle | ask | feedback
+  timerId: null,
+  deadlineAt: 0,
+  modes: {}
+};
+MODES.forEach(m => state.modes[m] = { level:1, peak:1, trials:0, correct:0, streak:0, window:[] });
+
+const WINDOW_SIZE = 12, ADVANCE_AT = 10, DROP_AT = 6;
+
+/* ---------- shared UI ---------- */
+function setTitle(txt, gold){ const t=$('mode-title'); t.textContent=txt; t.classList.toggle('gold', !!gold); }
+function toast(msg, gold){
+  const t=$('toast'); t.textContent=msg; t.classList.toggle('gold', !!gold);
+  t.classList.add('show'); clearTimeout(toast._id);
+  toast._id=setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function renderMastery(){
+  const w = state.modes[state.active].window;
+  const track = $('mastery-track'); track.innerHTML='';
+  for (let i=0;i<WINDOW_SIZE;i++){
+    const c=document.createElement('div'); c.className='mastery-cell';
+    if (i < w.length) c.classList.add(w[i] ? 'hit' : 'err');
+    track.appendChild(c);
+  }
+}
+function renderStats(){
+  const m = state.modes[state.active];
+  $('st-trials').textContent = m.trials;
+  $('st-acc').textContent = m.trials ? Math.round(100*m.correct/m.trials)+'%' : '—';
+  $('st-streak').textContent = m.streak;
+  $('st-peak').textContent = m.peak;
+  $('level-num').textContent = m.level;
+}
+function flashLevel(dir){
+  const el=$('level-num'); el.classList.remove('up','down'); void el.offsetWidth;
+  el.classList.add(dir);
+}
+function recordResult(ok){
+  const m = state.modes[state.active];
+  m.trials++; if (ok){ m.correct++; m.streak++; } else m.streak=0;
+  m.window.push(!!ok);
+  if (m.window.length > WINDOW_SIZE) m.window.shift();
+  if (m.window.length === WINDOW_SIZE){
+    const hits = m.window.filter(Boolean).length;
+    if (hits >= ADVANCE_AT){
+      m.level++; m.peak=Math.max(m.peak,m.level); m.window=[];
+      flashLevel('up'); toast('LEVEL UP → LV '+m.level, true);
+    } else if (hits <= DROP_AT && m.level > 1){
+      m.level--; m.window=[];
+      flashLevel('down'); toast('LEVEL DOWN → LV '+m.level);
+    }
+  }
+  renderMastery(); renderStats();
+}
+
+/* ---------- trial timer ---------- */
+function startClock(seconds, onExpire){
+  stopClock();
+  const bar=$('timer-bar'); bar.style.width='100%'; bar.classList.remove('hot');
+  state.deadlineAt = Date.now() + seconds*1000;
+  state.timerId = setInterval(()=>{
+    const left = state.deadlineAt - Date.now();
+    const frac = Math.max(0, left / (seconds*1000));
+    bar.style.width = (frac*100)+'%';
+    if (frac < 0.25) bar.classList.add('hot');
+    if (left <= 0){ stopClock(); onExpire(); }
+  }, 80);
+}
+function stopClock(){ if (state.timerId){ clearInterval(state.timerId); state.timerId=null; } }
+
+function clearTrialUI(){
+  $('task-zone').innerHTML=''; $('answer-zone').innerHTML='';
+  $('feedback').textContent=''; $('feedback').className='feedback';
+  $('explain').innerHTML=''; $('entail-map').className='entail-map'; $('entail-map').innerHTML='';
+  $('timer-bar').style.width='0%';
+}
+
+/* ---------- nonsense tokens ---------- */
+const CONS='BDFGKLMNPRSTVZ', VOWS='AEIOU';
+function makeTokens(n){
+  const used=new Set(), out=[];
+  while (out.length<n){
+    const t = CONS[rnd(CONS.length)]+VOWS[rnd(VOWS.length)]+CONS[rnd(CONS.length)];
+    if (!used.has(t)){ used.add(t); out.push(t); }
+  }
+  return out;
+}
+
+/* ============================================================
+   FORGE — derived relations engine
+   ============================================================ */
+const REL = {
+  SAME:      { glyph:'=',  word:'the SAME as' },
+  OPPOSITE:  { glyph:'⇄',  word:'the OPPOSITE of' },
+  DIFFERENT: { glyph:'≠',  word:'DIFFERENT from' },
+  MORE:      { glyph:'>',  fwd:(a,b)=>[a,' is ',{r:'MORE than'},' ',b], bwd:(a,b)=>[b,' is ',{r:'LESS than'},' ',a], q:(a,b)=>['Is ',a,' ',{r:'MORE than'},' ',b,'?'] },
+  CONTAINS:  { glyph:'⊃',  fwd:(a,b)=>[a,' ',{r:'CONTAINS'},' ',b], bwd:(a,b)=>[b,' is ',{r:'PART OF'},' ',a], q:(a,b)=>['Does ',a,' ',{r:'CONTAIN'},' ',b,'?'] },
+  BEFORE:    { glyph:'→',  fwd:(a,b)=>[a,' comes ',{r:'BEFORE'},' ',b], bwd:(a,b)=>[b,' comes ',{r:'AFTER'},' ',a], q:(a,b)=>['Does ',a,' come ',{r:'BEFORE'},' ',b,'?'] },
+  CAUSES:    { glyph:'⇒',  fwd:(a,b)=>[a,' ',{r:'CAUSES'},' ',b], bwd:(a,b)=>[b,' is ',{r:'CAUSED BY'},' ',a], q:(a,b)=>['Does ',a,' ',{r:'CAUSE'},' ',b,'?'] }
+};
+
+/* Level table: family, chain length (premises ≈ links), unknown probes allowed,
+   distractor premises, seconds. Past the table, difficulty keeps compounding. */
+const FORGE_LEVELS = [
+  null,
+  { fam:'polarity', links:1, opp:false, unk:false, dis:0, t:20 },   // 1  mutual entailment
+  { fam:'polarity', links:2, opp:false, unk:false, dis:0, t:20 },   // 2  same-same transitivity
+  { fam:'polarity', links:2, opp:true,  unk:false, dis:0, t:20 },   // 3  opposite enters
+  { fam:'polarity', links:3, opp:true,  unk:true,  dis:0, t:18 },   // 4  cannot-tell unlocks
+  { fam:'classes',  links:3, opp:true,  unk:true,  dis:0, t:18 },   // 5  different ≠ transitive
+  { fam:'order',    frame:'MORE',     links:2, unk:true, dis:0, t:16 }, // 6
+  { fam:'order',    frame:'MORE',     links:3, unk:true, dis:1, t:15 }, // 7
+  { fam:'order',    frame:'CONTAINS', links:3, unk:true, dis:1, t:15 }, // 8
+  { fam:'order',    frame:'BEFORE',   links:3, unk:true, dis:1, t:14 }, // 9
+  { fam:'order',    frame:'CAUSES',   links:3, unk:true, dis:1, t:13 }, // 10
+  { fam:'mixed',    links:3, unk:true, dis:2, t:13 },               // 11
+  { fam:'mixed',    links:4, unk:true, dis:2, t:12 }                // 12
+];
+function forgeConfig(level){
+  if (level < FORGE_LEVELS.length) return FORGE_LEVELS[level];
+  const extra = level - (FORGE_LEVELS.length - 1);
+  return { fam:'mixed', links: Math.min(5, 4 + Math.floor(extra/2)),
+           unk:true, dis: Math.min(3, 2 + Math.floor(extra/3)),
+           t: Math.max(7, 12 - extra) };
+}
+
+/* Build a chain structure. Returns {tokens, edges:[{a,b,rel,phraseParts}], probe:{a,b,askRel}, answer, path} */
+function genPolarityTrial(cfg){
+  const unknown = cfg.unk && Math.random() < 0.3;
+  const n = cfg.links + 1;
+  const tokens = makeTokens(unknown ? n + 2 : n);
+  const rels = cfg.opp ? ['SAME','OPPOSITE'] : ['SAME'];
+  const edges = [];
+  for (let i=0;i<cfg.links;i++){
+    const r = pick(rels);
+    edges.push({ a:tokens[i], b:tokens[i+1], rel:r });
+  }
+  let probeA = tokens[0], probeB = tokens[cfg.links], path = edges.slice(), answer, truth;
+  if (unknown){
+    // detached duo with its own premise, probe across components
+    edges.push({ a:tokens[n], b:tokens[n+1], rel:pick(rels) });
+    probeB = pick([tokens[n], tokens[n+1]]);
+    path = null; truth = null; answer = 'unknown';
+  } else {
+    let pol = 1;
+    path.forEach(e => { if (e.rel==='OPPOSITE') pol = -pol; });
+    truth = pol === 1 ? 'SAME' : 'OPPOSITE';
+  }
+  const askRel = cfg.opp ? pick(['SAME','OPPOSITE']) : 'SAME';
+  if (answer !== 'unknown') answer = (askRel === truth) ? 'yes' : 'no';
+  return finishSymTrial(tokens, edges, probeA, probeB, askRel, answer, path, truth);
+}
+
+/* classes family: SAME / DIFFERENT chain. 0 diffs on path → same, 1 → different, ≥2 → unknown */
+function genClassesTrial(cfg){
+  const forcedUnknown = cfg.unk && Math.random() < 0.25;
+  const n = cfg.links + 1;
+  const tokens = makeTokens(n);
+  let edges, diffs;
+  do {
+    edges = [];
+    for (let i=0;i<cfg.links;i++) edges.push({ a:tokens[i], b:tokens[i+1], rel: Math.random()<0.45 ? 'DIFFERENT' : 'SAME' });
+    diffs = edges.filter(e=>e.rel==='DIFFERENT').length;
+  } while (forcedUnknown ? diffs < 2 : diffs > 1);
+  const truth = diffs === 0 ? 'SAME' : diffs === 1 ? 'DIFFERENT' : null;
+  const askRel = pick(['SAME','DIFFERENT']);
+  const answer = truth === null ? 'unknown' : (askRel === truth ? 'yes' : 'no');
+  return finishSymTrial(tokens, edges, tokens[0], tokens[cfg.links], askRel, answer, edges, truth);
+}
+
+function finishSymTrial(tokens, edges, pa, pb, askRel, answer, path, truth){
+  const premises = shuffle(edges).map(e => [e.a,' is ',{r:REL[e.rel].word},' ',e.b]);
+  const question = ['Is ',pa,' ',{r:REL[askRel].word},' ',pb,'?'];
+  let explain;
+  if (answer === 'unknown'){
+    explain = ['No premise chain connects ',{b:pa},' to ',{b:pb},' → ',{r:'CANNOT TELL'},'.'];
+  } else if (truth === 'SAME' || truth === 'OPPOSITE'){
+    const opps = path.filter(e=>e.rel==='OPPOSITE').length;
+    explain = ['Path ',{b:pa},' … ',{b:pb},' crosses ',{r:String(opps)+' OPPOSITE'},' link'+(opps===1?'':'s'),
+               ' → net ',{r:truth},'. Asked ',{r:askRel},' → ',{b:answer.toUpperCase()},'.'];
+  } else {
+    const d = path.filter(e=>e.rel==='DIFFERENT').length;
+    explain = ['Path holds ',{r:String(d)+' DIFFERENT'},' link'+(d===1?'':'s'),': one flip is decisive, two say nothing.',
+               ' → ',{r:truth},'. Asked ',{r:askRel},' → ',{b:answer.toUpperCase()},'.'];
+  }
+  return { premises, question, answer, explain,
+           graph:{ tokens, edges, probe:{a:pa,b:pb} }, threeWay:true };
+}
+
+/* order family: hidden ranks along a chain; MORE / CONTAINS / BEFORE / CAUSES */
+function genOrderTrial(cfg, frameName){
+  const F = REL[frameName];
+  const unknown = cfg.unk && Math.random() < 0.3;
+  const n = cfg.links + 1;
+  const tokens = makeTokens(unknown ? n + 2 : n);
+  const chain = tokens.slice(0, n);            // chain[0] highest / first / outermost / root cause
+  const edges = [];
+  for (let i=0;i<n-1;i++) edges.push({ a:chain[i], b:chain[i+1], rel:frameName });
+  let pa, pb, answer, forward=null;
+  if (unknown){
+    edges.push({ a:tokens[n], b:tokens[n+1], rel:frameName });
+    pa = pick(chain); pb = pick([tokens[n], tokens[n+1]]); answer='unknown';
+  } else {
+    let i = rnd(n), j = rnd(n);
+    while (Math.abs(i-j) < (n>2?2:1)) { i = rnd(n); j = rnd(n); }   // prefer non-adjacent
+    pa = chain[Math.min(i,j)]; pb = chain[Math.max(i,j)];
+    forward = Math.random() < 0.5;                                   // ask true direction or reversed
+    if (!forward) [pa,pb] = [pb,pa];
+    answer = forward ? 'yes' : 'no';
+  }
+  const premises = shuffle(edges).map(e => (Math.random()<0.5 ? F.fwd(e.a,e.b) : F.bwd(e.a,e.b)));
+  // distractor premises about unrelated tokens
+  if (cfg.dis){
+    const dTok = makeTokens(cfg.dis+1);
+    for (let i=0;i<cfg.dis;i++){
+      const DF = REL[pick(['MORE','CONTAINS','BEFORE','CAUSES'])];
+      premises.splice(rnd(premises.length+1), 0, (Math.random()<0.5 ? DF.fwd(dTok[i],dTok[i+1]) : DF.bwd(dTok[i],dTok[i+1])));
+    }
+  }
+  const question = F.q(pa,pb);
+  let explain;
+  if (answer==='unknown'){
+    explain = ['The premises never link ',{b:pa},' and ',{b:pb},' into one chain → ',{r:'CANNOT TELL'},'.'];
+  } else {
+    const seq = forward ? chain.slice(chain.indexOf(pa), chain.indexOf(pb)+1)
+                        : chain.slice(chain.indexOf(pb), chain.indexOf(pa)+1);
+    explain = ['Chain by transitivity: ',{b:seq.join(' '+F.glyph+' ')},'. ',
+               forward ? ['So ',{b:pa},' ',{r:F.glyph},' ',{b:pb},' → ',{b:'YES'},'.']
+                       : ['The chain runs the other way (',{b:pb},' ',{r:F.glyph},' ',{b:pa},') → ',{b:'NO'},'.']].flat(2);
+  }
+  return { premises, question, answer, explain,
+           graph:{ tokens: unknown ? tokens : chain, edges, probe:{a:pa,b:pb} }, threeWay:true };
+}
+
+function genForgeTrial(level){
+  const cfg = forgeConfig(level);
+  if (cfg.fam==='polarity') return genPolarityTrial(cfg);
+  if (cfg.fam==='classes')  return genClassesTrial(cfg);
+  if (cfg.fam==='order')    return genOrderTrial(cfg, cfg.frame);
+  // mixed: order backbone + polarity distractor noise
+  const t = genOrderTrial({ ...cfg, dis:0 }, pick(['MORE','CONTAINS','BEFORE','CAUSES']));
+  const noiseTok = makeTokens(3);
+  const noise = [
+    [noiseTok[0],' is ',{r:REL.SAME.word},' ',noiseTok[1]],
+    [noiseTok[1],' is ',{r:REL.OPPOSITE.word},' ',noiseTok[2]]
+  ];
+  for (let i=0;i<Math.min(cfg.dis, noise.length);i++) t.premises.splice(rnd(t.premises.length+1),0,noise[i]);
+  return t;
+}
+
+/* rich-text: array of strings / {r:txt} relation-colored / {b:txt} bold-gold */
+function richHTML(parts){
+  return parts.map(p => typeof p==='string'
+    ? (/^[A-Z]{3}$/.test(p.trim()) ? '<b>'+p+'</b>' : p)
+    : p.r ? '<span class="rel">'+p.r+'</span>' : '<b>'+p.b+'</b>').join('');
+}
+
+/* entailment map (signature): circle layout, premise edges gold, derived probe violet */
+function drawEntailMap(graph, correct){
+  const W=300, H=170, cx=W/2, cy=H/2-6, R=Math.min(58, 66);
+  const nodes = graph.tokens;
+  const pos = {};
+  nodes.forEach((t,i)=>{
+    const a = -Math.PI/2 + i * 2*Math.PI/nodes.length;
+    pos[t] = [cx + R*Math.cos(a), cy + R*Math.sin(a)];
+  });
+  let svg = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Entailment map">';
+  graph.edges.forEach(e=>{
+    const [x1,y1]=pos[e.a], [x2,y2]=pos[e.b];
+    svg += '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#8a6d1f" stroke-width="1.6" opacity="0.85"/>';
+    svg += '<text x="'+((x1+x2)/2)+'" y="'+((y1+y2)/2 - 4)+'" fill="#c9a227" font-size="11" font-weight="900" text-anchor="middle">'+REL[e.rel].glyph+'</text>';
+  });
+  const [px1,py1]=pos[graph.probe.a], [px2,py2]=pos[graph.probe.b];
+  const mx=(px1+px2)/2, my=(py1+py2)/2;
+  const nxv = -(py2-py1), nyv = (px2-px1);
+  const nl = Math.hypot(nxv,nyv)||1;
+  const qx = mx + 26*nxv/nl, qy = my + 26*nyv/nl;
+  svg += '<path class="derived-edge" d="M '+px1+' '+py1+' Q '+qx+' '+qy+' '+px2+' '+py2+'" fill="none" stroke="'+(correct?'#2ecc71':'#8b7cf6')+'" stroke-width="2.4"/>';
+  svg += '<text x="'+qx+'" y="'+(qy+4)+'" fill="'+(correct?'#2ecc71':'#8b7cf6')+'" font-size="10" font-weight="900" text-anchor="middle">?</text>';
+  nodes.forEach(t=>{
+    const [x,y]=pos[t];
+    const hot = t===graph.probe.a || t===graph.probe.b;
+    svg += '<circle cx="'+x+'" cy="'+y+'" r="14.5" fill="#0a0912" stroke="'+(hot?'#8b7cf6':'#2a2438')+'" stroke-width="'+(hot?2:1.2)+'"/>';
+    svg += '<text x="'+x+'" y="'+(y+3.5)+'" fill="'+(hot?'#e8e4ff':'#8d84b8')+'" font-size="9.5" font-weight="900" text-anchor="middle">'+t+'</text>';
+  });
+  svg += '</svg>';
+  const box=$('entail-map');
+  box.innerHTML = svg + '<div class="map-caption">Entailment map · gold = given · dashed = derived</div>';
+  box.classList.add('show');
+}
+
+function runForgeTrial(){
+  clearTrialUI();
+  const m = state.modes.forge;
+  const cfg = forgeConfig(m.level);
+  const trial = state.trial = genForgeTrial(m.level);
+  state.phase='ask';
+  const famName = cfg.fam==='polarity' ? 'SAME / OPPOSITE' : cfg.fam==='classes' ? 'SAME / DIFFERENT'
+                : cfg.fam==='order' ? cfg.frame + ' chains' : 'MIXED FRAMES';
+  $('rule-banner').innerHTML = 'Frame: <b>'+famName+'</b> · derive the unstated relation';
+  const tz=$('task-zone');
+  const pDiv=document.createElement('div'); pDiv.className='premises';
+  trial.premises.forEach((p,i)=>{
+    const line=document.createElement('div'); line.className='premise-line';
+    line.style.animationDelay=(i*0.07)+'s'; line.innerHTML=richHTML(p);
+    pDiv.appendChild(line);
+  });
+  const qDiv=document.createElement('div'); qDiv.className='question-box'; qDiv.innerHTML=richHTML(trial.question);
+  tz.appendChild(pDiv); tz.appendChild(qDiv);
+
+  const az=$('answer-zone');
+  const row=document.createElement('div'); row.className='answers';
+  const showUnk = trial.threeWay && m.level >= 4;
+  [['yes','YES','yes'],['no','NO','no']].concat(showUnk?[['unknown','CANNOT TELL','unk']]:[])
+    .forEach(([val,label,cls])=>{
+      const b=document.createElement('button'); b.className='ans-btn '+cls; b.textContent=label;
+      b.onclick=()=>answerForge(val,b);
+      row.appendChild(b);
+    });
+  az.appendChild(row);
+  startClock(cfg.t, ()=>answerForge(null,null));
+}
+function answerForge(val, btn){
+  if (state.phase!=='ask') return;
+  state.phase='feedback'; stopClock();
+  const trial=state.trial, ok = val===trial.answer;
+  document.querySelectorAll('#answer-zone .ans-btn').forEach(b=>{
+    b.disabled=true;
+    const isRight = b.textContent===({yes:'YES',no:'NO',unknown:'CANNOT TELL'})[trial.answer];
+    if (b===btn) b.classList.add(ok?'picked-right':'picked-wrong');
+    else if (isRight) b.classList.add('reveal-right');
+  });
+  const fb=$('feedback');
+  if (val===null){ fb.textContent='⌛ TIME'; fb.classList.add('miss'); }
+  else { fb.textContent = ok ? '⚡ DERIVED' : '✕ MISSED'; fb.classList.add(ok?'good':'bad'); }
+  $('explain').innerHTML = richHTML(trial.explain);
+  drawEntailMap(trial.graph, ok);
+  recordResult(ok);
+  showNext(()=>runForgeTrial());
+}
+
+function showNext(fn){
+  const fr=$('flow-row'); fr.innerHTML='';
+  const b=document.createElement('button'); b.className='big-btn primary'; b.textContent='Next trial';
+  b.onclick=fn; fr.appendChild(b);
+  const s=document.createElement('button'); s.className='big-btn ghost'; s.textContent='Stop'; s.style.flex='0 0 90px';
+  s.onclick=stopTraining; fr.appendChild(s);
+  state._next=fn;
+}
+function stopTraining(){
+  state.running=false; state.phase='idle'; stopClock(); clearTrialUI();
+  $('rule-banner').textContent='';
+  const fr=$('flow-row'); fr.innerHTML='';
+  const b=document.createElement('button'); b.className='big-btn primary'; b.textContent='Begin training';
+  b.onclick=beginActive; fr.appendChild(b);
+  renderIdle();
+}
+function beginActive(){
+  state.running=true;
+  if (state.active==='forge') runForgeTrial();
+  else if (state.active==='mirror') runMirrorTrial();
+  else if (state.active==='stream') startStream();
+  else if (state.active==='lens') runLensTrial();
+}
+
+/* ============================================================
+   MIRROR — deictic (perspective) engine
+   ============================================================ */
+const OBJECTS = ['the GOLDEN KEY','the VIOLET ORB','the SILVER BLADE','the EMBER STONE'];
+const PLACES  = ['the TOWER','the GARDEN','the CAVERN','the SHORE'];
+const ACTS    = ['READING the codex','FORGING sigils','CHARTING stars','TENDING the flame'];
+
+const MIRROR_LEVELS = [
+  null,
+  { axes:['object'], rev:0, t:14 },   // 1 simple I–YOU
+  { axes:['object'], rev:1, t:13 },   // 2 single reversal
+  { axes:['place'],  rev:1, t:12 },   // 3 place, single reversal (either axis)
+  { axes:['place'],  rev:2, t:12 },   // 4 double reversal
+  { axes:['time'],   rev:1, t:11 },   // 5 now–then enters
+  { axes:['place','time','object'], rev:2, t:10 } // 6 mixed doubles
+];
+function mirrorConfig(level){
+  if (level < MIRROR_LEVELS.length) return MIRROR_LEVELS[level];
+  const extra = level - (MIRROR_LEVELS.length - 1);
+  return { axes:['place','time','object'], rev: Math.min(3, 2 + Math.floor(extra/2)),
+           t: Math.max(6, 10 - extra) };
+}
+function other(p){ return p==='I' ? 'YOU' : 'I'; }
+
+function genMirrorTrial(level){
+  const cfg = mirrorConfig(level);
+  const axis = pick(cfg.axes);
+  const premises = [], foils = [];
+  let question, answer, explainBits = [];
+
+  if (axis === 'object' || axis === 'place'){
+    const pool = axis==='object' ? OBJECTS : PLACES;
+    const [vI, vYou, foil] = shuffle(pool).slice(0,3);
+    foils.push(foil);
+    if (axis==='object'){
+      premises.push(['I have ', {b:vI}, '.']);
+      premises.push(['YOU have ', {b:vYou}, '.']);
+    } else {
+      premises.push(['I am ', {r:'HERE'}, ' in ', {b:vI}, '.']);
+      premises.push(['YOU are ', {r:'THERE'}, ' in ', {b:vYou}, '.']);
+    }
+    // reversals
+    const revPerson = cfg.rev >= 1 && (axis==='object' ? true : Math.random()<0.5 || cfg.rev>=2);
+    const revPlace  = axis==='place' && (cfg.rev >= 2 || (cfg.rev>=1 && !revPerson));
+    const target = pick(['I','YOU']);
+    let eff = revPerson ? other(target) : target;
+    let val = eff==='I' ? vI : vYou;
+    if (revPlace) val = (val===vI) ? vYou : vI;
+    answer = val;
+    const clauses = [];
+    if (revPerson) clauses.push('I were YOU');
+    if (revPlace) clauses.push('HERE were THERE');
+    const ifPart = clauses.length ? 'If '+clauses.join(' and ')+', ' : '';
+    question = axis==='object'
+      ? [ifPart + (ifPart?'what would ':'What do ') , {b:target}, (ifPart?' have?':' have?')]
+      : [ifPart + (ifPart?'where would ':'Where is ') , {b:target}, ' be?'];
+    if (!ifPart && axis==='place') question = ['Where ', (target==='I'?'am ':'are '), {b:target}, '?'];
+    if (revPerson) explainBits.push(['Swap ',{r:'I↔YOU'},': ',{b:target},' points to ',{b:other(target)},"'s slot. "]);
+    if (revPlace)  explainBits.push(['Swap ',{r:'HERE↔THERE'},': the place flips. ']);
+    if (revPerson && revPlace && axis==='place')
+      explainBits.push(['Two swaps on the same axis pair ',{r:'cancel'},' back for the same person. ']);
+    if (!clauses.length) explainBits.push(['No reversal — read the premise directly. ']);
+    explainBits.push(['Answer: ',{b:answer},'.']);
+    return { premises, question, answer, options: shuffle([vI, vYou, foil]), explain: explainBits.flat() };
+  }
+
+  // time axis: NOW / EARLIER about I
+  const [aNow, aThen, foil] = shuffle(ACTS).slice(0,3);
+  foils.push(foil);
+  premises.push([{r:'NOW'},' I am ', {b:aNow}, '.']);
+  premises.push([{r:'EARLIER'},' I was ', {b:aThen}, '.']);
+  const revTime = cfg.rev >= 1;
+  const askNow = Math.random()<0.5;
+  let val = askNow ? aNow : aThen;
+  if (revTime) val = (val===aNow) ? aThen : aNow;
+  answer = val;
+  question = [(revTime ? 'If NOW were EARLIER, what would I be doing ' : 'What am I doing '),
+              {r: askNow ? 'NOW' : 'EARLIER'}, '?'];
+  if (revTime) explainBits.push(['Swap ',{r:'NOW↔EARLIER'},': the times trade places. ']);
+  explainBits.push(['Answer: ',{b:answer},'.']);
+  return { premises, question, answer, options: shuffle([aNow, aThen, foil]), explain: explainBits.flat() };
+}
+
+function runMirrorTrial(){
+  clearTrialUI();
+  const m = state.modes.mirror, cfg = mirrorConfig(m.level);
+  const trial = state.trial = genMirrorTrial(m.level);
+  state.phase='ask';
+  $('rule-banner').innerHTML = 'Perspective frame · <b>'+cfg.rev+' reversal'+(cfg.rev===1?'':'s')+'</b>';
+  const tz=$('task-zone');
+  const pDiv=document.createElement('div'); pDiv.className='premises';
+  trial.premises.forEach((p,i)=>{
+    const line=document.createElement('div'); line.className='premise-line';
+    line.style.animationDelay=(i*0.07)+'s'; line.innerHTML=richHTML(p);
+    pDiv.appendChild(line);
+  });
+  const qDiv=document.createElement('div'); qDiv.className='question-box'; qDiv.innerHTML=richHTML(trial.question);
+  tz.appendChild(pDiv); tz.appendChild(qDiv);
+  const az=$('answer-zone');
+  const col=document.createElement('div'); col.className='answers vertical';
+  trial.options.forEach(opt=>{
+    const b=document.createElement('button'); b.className='ans-btn opt'; b.textContent=opt.replace(/^the /,'');
+    b.dataset.val=opt;
+    b.onclick=()=>answerMirror(opt,b);
+    col.appendChild(b);
+  });
+  az.appendChild(col);
+  startClock(cfg.t, ()=>answerMirror(null,null));
+}
+function answerMirror(val, btn){
+  if (state.phase!=='ask') return;
+  state.phase='feedback'; stopClock();
+  const trial=state.trial, ok = val===trial.answer;
+  document.querySelectorAll('#answer-zone .ans-btn').forEach(b=>{
+    b.disabled=true;
+    if (b===btn) b.classList.add(ok?'picked-right':'picked-wrong');
+    else if (b.dataset.val===trial.answer) b.classList.add('reveal-right');
+  });
+  const fb=$('feedback');
+  if (val===null){ fb.textContent='⌛ TIME'; fb.classList.add('miss'); }
+  else { fb.textContent = ok ? '◉ SHIFTED' : '✕ LOST FRAME'; fb.classList.add(ok?'good':'bad'); }
+  $('explain').innerHTML = richHTML(trial.explain);
+  recordResult(ok);
+  showNext(()=>runMirrorTrial());
+}
+
+/* ============================================================
+   STREAM — relational n-back engine
+   ============================================================ */
+const DIR_GLYPH = ['▲','▶','▼','◀'];
+const DIR_NAME  = ['UP','RIGHT','DOWN','LEFT'];
+const COLORS = [ {hex:'#ffd700', name:'GOLD'}, {hex:'#8b7cf6', name:'VIOLET'} ];
+const STREAM_RULES = {
+  sameDir:  { label:'SAME direction as', test:(c,r)=>c.dir===r.dir },
+  oppDir:   { label:'OPPOSITE direction to', test:(c,r)=>c.dir===((r.dir+2)%4) },
+  morePips: { label:'MORE dots than', test:(c,r)=>c.pips>r.pips },
+  conj:     { label:'SAME direction AND color as', test:(c,r)=>c.dir===r.dir && c.color===r.color }
+};
+const STREAM_LEVELS = [
+  null,
+  { n:1, rules:['sameDir'], t:3.4 },
+  { n:1, rules:['oppDir'],  t:3.4 },
+  { n:2, rules:['sameDir'], t:3.2 },
+  { n:2, rules:['morePips'],t:3.2 },
+  { n:2, rules:['oppDir'],  t:3.2 },
+  { n:2, rules:['sameDir','morePips'], t:3.2 },
+  { n:3, rules:['sameDir'], t:3.0 },
+  { n:3, rules:['sameDir','oppDir'], t:3.0 },
+  { n:3, rules:['conj'],    t:3.0 }
+];
+function streamConfig(level){
+  if (level < STREAM_LEVELS.length) return STREAM_LEVELS[level];
+  const extra = level - (STREAM_LEVELS.length - 1);
+  return { n:3, rules:['sameDir','oppDir','morePips','conj'], t: Math.max(2.2, 3.0 - extra*0.15) };
+}
+const stream = { hist:[], idx:0, ruleId:null, curLevel:0 };
+
+function randStim(){ return { dir:rnd(4), color:rnd(2), pips:1+rnd(5) }; }
+function forceStim(rule, ref){
+  const s = randStim();
+  if (rule==='sameDir') s.dir = ref.dir;
+  else if (rule==='oppDir') s.dir = (ref.dir+2)%4;
+  else if (rule==='morePips'){ if (ref.pips>=5) return null; s.pips = ref.pips + 1 + rnd(5-ref.pips); }
+  else if (rule==='conj'){ s.dir=ref.dir; s.color=ref.color; }
+  return s;
+}
+function avoidStim(rule, ref){
+  for (let k=0;k<40;k++){ const s=randStim(); if (!STREAM_RULES[rule].test(s,ref)) return s; }
+  return randStim();
+}
+function startStream(){
+  clearTrialUI();
+  stream.hist=[]; stream.idx=0;
+  stream.curLevel = state.modes.stream.level;
+  const tz=$('task-zone');
+  tz.innerHTML = '<div class="stim-card" id="stim-card"><div class="stim-observe" id="stim-observe"></div>'+
+                 '<div class="stim-arrow" id="stim-arrow"></div><div class="stim-pips" id="stim-pips"></div></div>';
+  const az=$('answer-zone');
+  const row=document.createElement('div'); row.className='answers';
+  const bm=document.createElement('button'); bm.className='ans-btn yes'; bm.id='stream-match'; bm.textContent='MATCH';
+  const bn=document.createElement('button'); bn.className='ans-btn no'; bn.id='stream-nomatch'; bn.textContent='NO MATCH';
+  bm.onclick=()=>answerStream(true); bn.onclick=()=>answerStream(false);
+  row.appendChild(bm); row.appendChild(bn); az.appendChild(row);
+  const fr=$('flow-row'); fr.innerHTML='';
+  const s=document.createElement('button'); s.className='big-btn ghost'; s.textContent='Stop';
+  s.onclick=stopTraining; fr.appendChild(s);
+  nextStreamTrial();
+}
+function renderStim(stim){
+  const c = COLORS[stim.color];
+  $('stim-arrow').textContent = DIR_GLYPH[stim.dir];
+  $('stim-arrow').style.color = c.hex;
+  const pipBox = $('stim-pips'); pipBox.innerHTML=''; pipBox.style.color = c.hex;
+  for (let i=0;i<stim.pips;i++){ const p=document.createElement('div'); p.className='stim-pip'; pipBox.appendChild(p); }
+}
+function nextStreamTrial(){
+  if (state.modes.stream.level !== stream.curLevel){ startStream(); return; }   // level changed → rebuild
+  const cfg = streamConfig(stream.curLevel);
+  const card=$('stim-card'); card.classList.remove('fb-good','fb-bad');
+  $('feedback').textContent=''; $('feedback').className='feedback'; $('explain').innerHTML='';
+  const warmup = stream.idx < cfg.n;
+  let stim, isMatch=null;
+  stream.ruleId = cfg.rules[stream.idx % cfg.rules.length];
+  if (warmup){
+    stim = randStim();
+  } else {
+    const ref = stream.hist[stream.idx - cfg.n];
+    isMatch = Math.random() < 0.45;
+    if (isMatch){
+      stim = forceStim(stream.ruleId, ref);
+      if (!stim){ isMatch=false; stim = avoidStim(stream.ruleId, ref); }
+    } else stim = avoidStim(stream.ruleId, ref);
+  }
+  stream.hist.push(stim); stream.idx++;
+  state.trial = { isMatch, warmup, rule:stream.ruleId, n:cfg.n };
+  renderStim(stim);
+  $('rule-banner').innerHTML = 'MATCH = <b>'+STREAM_RULES[stream.ruleId].label+'</b> the item <b>'+cfg.n+'</b> back';
+  $('stim-observe').textContent = warmup ? 'OBSERVE' : '';
+  $('stream-match').disabled = warmup; $('stream-nomatch').disabled = warmup;
+  if (warmup){
+    state.phase='wait';
+    setTimeout(()=>{ if (state.running && state.active==='stream') nextStreamTrial(); }, 1500);
+  } else {
+    state.phase='ask';
+    startClock(cfg.t, ()=>answerStream(null));
+  }
+}
+function answerStream(saidMatch){
+  if (state.phase!=='ask') return;
+  state.phase='wait'; stopClock();
+  const t=state.trial;
+  const ok = saidMatch !== null && saidMatch === t.isMatch;
+  const card=$('stim-card'); card.classList.add(ok?'fb-good':'fb-bad');
+  const fb=$('feedback');
+  if (saidMatch===null){ fb.textContent='⌛ LAPSE'; fb.classList.add('miss'); }
+  else { fb.textContent = ok ? '⚡' : '✕ '+(t.isMatch?'IT MATCHED':'NO MATCH'); fb.classList.add(ok?'good':'bad'); }
+  recordResult(ok);
+  setTimeout(()=>{ if (state.running && state.active==='stream') nextStreamTrial(); }, 650);
+}
+
+/* ============================================================
+   LENS — category perception engine (ground-truth streaming)
+   ============================================================ */
+const LENS_OPS = ['SAME','DIFFERENT','OPPOSITE','COMPARISON','CONTAINS','PART-OF','SEQUENCE'];
+const LENS_EXPLAIN = {
+  SAME:'Identical figures — coordination (=). Nothing more specific applies.',
+  DIFFERENT:'Equal counts, one attribute flipped — distinction (≠), and no more specific relation fits.',
+  OPPOSITE:'Mirror-inverted poles — opposition (⇄) is more specific than DIFFERENT.',
+  COMPARISON:'Identical elements, unequal quantity — more/less (>) is more specific than DIFFERENT.',
+  CONTAINS:'One boundary encloses the other figure — containment (⊃).',
+  'PART-OF':'The displaced piece belongs to the whole — composition (∈), not two separate things.',
+  SEQUENCE:'Frame ① becomes frame ② — temporal order (→).'
+};
+const LENS_LEVELS = [
+  null,
+  { ops:['SAME','DIFFERENT','COMPARISON'], t:12, dual:false },
+  { ops:['SAME','DIFFERENT','COMPARISON','OPPOSITE','CONTAINS'], t:10, dual:false },
+  { ops:LENS_OPS, t:9, dual:false },
+  { ops:LENS_OPS, t:6, dual:false },
+  { ops:LENS_OPS, t:5, dual:false },
+  { ops:LENS_OPS, t:10, dual:true }
+];
+function lensConfig(level){
+  if (level < LENS_LEVELS.length) return LENS_LEVELS[level];
+  const extra = level - (LENS_LEVELS.length-1);
+  return { ops:LENS_OPS, t: Math.max(4, 9 - extra), dual:true };
+}
+const SCENE_COLORS = ['#ffd700','#8b7cf6','#2ecc71','#e94560','#00d9ff'];
+function svgShape(type,x,y,s,fill){
+  if (type==='circle') return '<circle cx="'+x+'" cy="'+y+'" r="'+s+'" fill="'+fill+'"/>';
+  if (type==='square') return '<rect x="'+(x-s)+'" y="'+(y-s)+'" width="'+(2*s)+'" height="'+(2*s)+'" rx="4" fill="'+fill+'"/>';
+  if (type==='diamond') return '<rect x="'+(x-s)+'" y="'+(y-s)+'" width="'+(2*s)+'" height="'+(2*s)+'" rx="4" fill="'+fill+'" transform="rotate(45 '+x+' '+y+')"/>';
+  return '<polygon points="'+x+','+(y-s)+' '+(x+s)+','+(y+s)+' '+(x-s)+','+(y+s)+'" fill="'+fill+'"/>'; // triangle up
+}
+function svgArrow(x,y,s,fill,up){
+  return up ? '<polygon points="'+x+','+(y-s)+' '+(x+s*0.8)+','+(y+s)+' '+(x-s*0.8)+','+(y+s)+'" fill="'+fill+'"/>'
+            : '<polygon points="'+x+','+(y+s)+' '+(x+s*0.8)+','+(y-s)+' '+(x-s*0.8)+','+(y-s)+'" fill="'+fill+'"/>';
+}
+function svgCluster(cx,cy,count,fill){
+  let s=''; const cols=3;
+  for (let i=0;i<count;i++){
+    const gx = cx + ((i%cols)-1)*22, gy = cy + (Math.floor(i/cols)-0.5)*22;
+    s += '<circle cx="'+gx+'" cy="'+gy+'" r="8" fill="'+fill+'"/>';
+  }
+  return s;
+}
+function wrapScene(inner){ return '<svg viewBox="0 0 320 170">'+inner+'</svg>'; }
+
+const SCENES = {
+  SAME(){ const t=pick(['circle','square','triangle','diamond']), c=pick(SCENE_COLORS);
+    return wrapScene(svgShape(t,105,85,30,c)+svgShape(t,215,85,30,c)); },
+  DIFFERENT(){ const c=pick(SCENE_COLORS);
+    if (Math.random()<0.5){ const [t1,t2]=shuffle(['circle','square','triangle','diamond']).slice(0,2);
+      return wrapScene(svgShape(t1,105,85,30,c)+svgShape(t2,215,85,30,c)); }
+    const t=pick(['circle','square','diamond']); const [c1,c2]=shuffle(SCENE_COLORS).slice(0,2);
+    return wrapScene(svgShape(t,105,85,30,c1)+svgShape(t,215,85,30,c2)); },
+  OPPOSITE(){ const c=pick(SCENE_COLORS), up=Math.random()<0.5;
+    return wrapScene(svgArrow(105,85,32,c,up)+svgArrow(215,85,32,c,!up)); },
+  COMPARISON(){ const c=pick(SCENE_COLORS); let a=1+rnd(3), b=4+rnd(3); if (Math.random()<0.5) [a,b]=[b,a];
+    return wrapScene(svgCluster(95,85,a,c)+svgCluster(225,85,b,c)); },
+  CONTAINS(){ const c1=pick(SCENE_COLORS), c2=pick(SCENE_COLORS.filter(x=>x!==c1));
+    const t=pick(['circle','square','triangle']);
+    return wrapScene('<circle cx="105" cy="85" r="52" fill="none" stroke="'+c1+'" stroke-width="4"/>'+
+      svgShape(t,105,85,18,c2)+svgShape(t,245,85,18,c2)); },
+  'PART-OF'(){ const c=pick(SCENE_COLORS);
+    return wrapScene(
+      '<path d="M 130 85 L 130 33 A 52 52 0 1 0 181 90 Z" fill="'+c+'" transform="rotate(8 130 85)"/>'+
+      '<path d="M 232 62 L 232 24 A 40 40 0 0 1 266 46 Z" fill="'+c+'" opacity="0.9"/>'+
+      '<line x1="172" y1="58" x2="224" y2="44" stroke="#4a4458" stroke-width="2" stroke-dasharray="5 5"/>'); },
+  SEQUENCE(){ const c=pick(SCENE_COLORS), t=pick(['circle','square','triangle']);
+    return wrapScene(
+      '<rect x="20" y="25" width="125" height="120" rx="12" fill="none" stroke="#1c1a28"/>'+
+      '<rect x="175" y="25" width="125" height="120" rx="12" fill="none" stroke="#1c1a28"/>'+
+      '<text x="34" y="47" fill="#5a5570" font-size="15" font-weight="900">①</text>'+
+      '<text x="189" y="47" fill="#5a5570" font-size="15" font-weight="900">②</text>'+
+      svgShape(t,82,90,13,c)+svgShape(t,237,90,32,c)+
+      '<text x="160" y="92" fill="#4a4458" font-size="18" text-anchor="middle">➜</text>'); }
+};
+const DUAL_SCENES = [
+  { ans:['CONTAINS','COMPARISON'], make(){ const c1=pick(SCENE_COLORS), c2=pick(SCENE_COLORS.filter(x=>x!==c1));
+      let a=1+rnd(2), b=4+rnd(3); if (Math.random()<0.5) [a,b]=[b,a];
+      return wrapScene('<circle cx="90" cy="85" r="56" fill="none" stroke="'+c1+'" stroke-width="4"/>'+svgCluster(90,85,a,c2)+
+        '<circle cx="230" cy="85" r="56" fill="none" stroke="'+c1+'" stroke-width="4"/>'+svgCluster(230,85,b,c2)); } },
+  { ans:['OPPOSITE','COMPARISON'], make(){ const c=pick(SCENE_COLORS); const up=Math.random()<0.5;
+      let svg=''; const a=1+rnd(2), b=3+rnd(3);
+      for (let i=0;i<a;i++) svg+=svgArrow(70+i*36,60,16,c,up);
+      for (let i=0;i<b;i++) svg+=svgArrow(70+i*36,115,16,c,!up);
+      return wrapScene(svg); } },
+  { ans:['SEQUENCE','COMPARISON'], make(){ const c=pick(SCENE_COLORS);
+      return wrapScene(
+        '<rect x="20" y="25" width="125" height="120" rx="12" fill="none" stroke="#1c1a28"/>'+
+        '<rect x="175" y="25" width="125" height="120" rx="12" fill="none" stroke="#1c1a28"/>'+
+        '<text x="34" y="47" fill="#5a5570" font-size="15" font-weight="900">①</text>'+
+        '<text x="189" y="47" fill="#5a5570" font-size="15" font-weight="900">②</text>'+
+        svgCluster(82,92,2,c)+svgCluster(237,92,5,c)); } }
+];
+
+function runLensTrial(){
+  clearTrialUI();
+  const m = state.modes.lens, cfg = lensConfig(m.level);
+  state.phase='ask';
+  let scene, answers;
+  const dual = cfg.dual && Math.random()<0.6;
+  if (dual){ const d=pick(DUAL_SCENES); scene=d.make(); answers=d.ans.slice(); }
+  else { const op=pick(cfg.ops); scene=SCENES[op](); answers=[op]; }
+  state.trial = { answers, dual, picked:[] };
+  $('rule-banner').innerHTML = dual
+    ? 'TWO relations hold — select <b>both</b>, then confirm'
+    : 'Name the <b>most specific</b> relation that holds';
+  const tz=$('task-zone');
+  tz.innerHTML = '<div class="scene-box">'+scene+'</div>';
+  const az=$('answer-zone');
+  const grid=document.createElement('div'); grid.className='chip-grid';
+  cfg.ops.forEach(op=>{
+    const b=document.createElement('button'); b.className='ans-btn opt'; b.textContent=op; b.dataset.op=op;
+    b.onclick=()=>lensPick(op,b);
+    grid.appendChild(b);
+  });
+  az.appendChild(grid);
+  if (dual){
+    const fr=$('flow-row'); fr.innerHTML='';
+    const c=document.createElement('button'); c.className='big-btn primary'; c.id='lens-confirm';
+    c.textContent='Confirm pair'; c.disabled=true; c.onclick=lensConfirm; fr.appendChild(c);
+    const s=document.createElement('button'); s.className='big-btn ghost'; s.textContent='Stop'; s.style.flex='0 0 90px';
+    s.onclick=stopTraining; fr.appendChild(s);
+  }
+  startClock(cfg.t, ()=>finishLens(null));
+}
+function lensPick(op, btn){
+  if (state.phase!=='ask') return;
+  const t=state.trial;
+  if (!t.dual){ finishLens([op], btn); return; }
+  if (t.picked.includes(op)){ t.picked=t.picked.filter(x=>x!==op); btn.classList.remove('selected'); }
+  else if (t.picked.length<2){ t.picked.push(op); btn.classList.add('selected'); }
+  const c=$('lens-confirm'); if (c) c.disabled = t.picked.length!==2;
+}
+function lensConfirm(){ finishLens(state.trial.picked.slice()); }
+function finishLens(picked){
+  if (state.phase!=='ask') return;
+  state.phase='feedback'; stopClock();
+  const t=state.trial;
+  const ok = picked!==null && picked.length===t.answers.length &&
+             t.answers.every(a=>picked.includes(a));
+  document.querySelectorAll('#answer-zone .ans-btn').forEach(b=>{
+    b.disabled=true;
+    const isAns = t.answers.includes(b.dataset.op);
+    const wasPicked = picked && picked.includes(b.dataset.op);
+    if (wasPicked) b.classList.add(isAns?'picked-right':'picked-wrong');
+    else if (isAns) b.classList.add('reveal-right');
+  });
+  const fb=$('feedback');
+  if (picked===null){ fb.textContent='⌛ TIME'; fb.classList.add('miss'); }
+  else { fb.textContent = ok ? '👁 SEEN' : '✕ MISREAD'; fb.classList.add(ok?'good':'bad'); }
+  $('explain').innerHTML = t.answers.map(a=>'<span class="rel">'+a+'</span> — '+LENS_EXPLAIN[a]).join('<br>');
+  recordResult(ok);
+  showNext(()=>runLensTrial());
+}
+
+/* ============================================================
+   Tabs, idle screens, progress, keyboard, init
+   ============================================================ */
+const MODE_META = {
+  forge:  { title:'FORGE · DERIVED RELATIONS', idle:'Premises state a few relations between nonsense tokens. The probe asks one you were <b>never told</b> — derive it before the bar empties. YES · NO · and from LV4, CANNOT TELL.' },
+  mirror: { title:'MIRROR · PERSPECTIVE', idle:'I↔YOU, HERE↔THERE, NOW↔EARLIER. Hold the frame while it flips — once, twice, then more. Two swaps of one pair cancel; that is the whole art.' },
+  stream: { title:'STREAM · RELATIONAL N-BACK', idle:'Hold the last <b>n</b> stimuli while judging whether the current one bears the stated <b>relation</b> to the item n back. The rule is shown every trial — at higher levels it switches under you.' },
+  lens:   { title:'LENS · CATEGORY PERCEPTION', idle:'Ontological streaming, with ground truth. Each scene is drawn to embody one relation — name the <b>most specific</b> one fast. High levels hide two at once.' },
+  codex:  { title:'CODEX · THE REFACTORED ONTOLOGY' }
+};
+function renderIdle(){
+  const tz=$('task-zone');
+  tz.innerHTML = '<div class="question-box" style="font-size:1rem; font-weight:700; color:#a79fce; line-height:1.6;">'
+    + MODE_META[state.active].idle + '</div>';
+}
+function switchTab(mode){
+  stopClock(); state.running=false; state.phase='idle'; state.active = mode==='codex' ? state.active : mode;
+  document.querySelectorAll('.tab').forEach(t=>{ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+  const tb=$('tab-'+mode); tb.classList.add('active'); tb.setAttribute('aria-selected','true');
+  clearTrialUI(); $('rule-banner').textContent='';
+  const isCodex = mode==='codex';
+  ['mastery','flow-row'].forEach(id=>$(id).style.display = isCodex?'none':'');
+  document.querySelector('.stats').style.display = isCodex?'none':'grid';
+  document.querySelector('.timer-container').style.display = isCodex?'none':'';
+  $('feedback').style.display = isCodex?'none':'';
+  $('explain').style.display = isCodex?'none':'';
+  document.querySelector('.level-chip').style.visibility = isCodex?'hidden':'visible';
+  setTitle(MODE_META[mode].title, isCodex);
+  if (isCodex){
+    $('task-zone').innerHTML='';
+    $('task-zone').appendChild($('codex-template').content.cloneNode(true));
+  } else {
+    const fr=$('flow-row'); fr.innerHTML='';
+    const b=document.createElement('button'); b.className='big-btn primary'; b.textContent='Begin training';
+    b.onclick=beginActive; fr.appendChild(b);
+    renderIdle(); renderMastery(); renderStats();
+  }
+}
+MODES.concat(['codex']).forEach(m=>{ $('tab-'+m).onclick=()=>switchTab(m); });
+
+/* progress save / load */
+function progressCode(){
+  const o={};
+  MODES.forEach(m=>{ const s=state.modes[m]; o[m]=[s.level,s.peak,s.trials,s.correct]; });
+  return btoa(JSON.stringify(o));
+}
+$('progress-btn').onclick=()=>{ $('progress-text').value=progressCode(); $('progress-modal').classList.add('show'); };
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.modal').classList.remove('show'));
+$('copy-progress').onclick=()=>{
+  $('progress-text').select();
+  try { document.execCommand('copy'); toast('COPIED', true); } catch(e){ toast('SELECT & COPY MANUALLY'); }
+};
+$('load-progress').onclick=()=>{
+  try {
+    const o=JSON.parse(atob($('progress-text').value.trim()));
+    MODES.forEach(m=>{ if (o[m]){ const s=state.modes[m];
+      [s.level,s.peak,s.trials,s.correct]=o[m].map(Number); s.window=[]; s.streak=0; }});
+    $('progress-modal').classList.remove('show');
+    renderStats(); renderMastery(); toast('PROGRESS LOADED', true);
+  } catch(e){ toast('INVALID CODE'); }
+};
+$('reset-btn').onclick=()=>{
+  const s=state.modes[state.active];
+  s.level=1; s.peak=1; s.trials=0; s.correct=0; s.streak=0; s.window=[];
+  stopTraining(); renderStats(); renderMastery(); toast('MODE RESET');
+};
+
+/* keyboard: 1/2/3 answer · space = next · J/F match · K/D no-match */
+document.addEventListener('keydown', e=>{
+  if (e.target.tagName==='TEXTAREA') return;
+  const k=e.key.toLowerCase();
+  if (state.phase==='ask'){
+    if (state.active==='stream'){
+      if (k==='j'||k==='f'){ answerStream(true); return; }
+      if (k==='k'||k==='d'){ answerStream(false); return; }
+    }
+    const btns=[...document.querySelectorAll('#answer-zone .ans-btn')];
+    const i=['1','2','3','4','5','6','7'].indexOf(e.key);
+    if (i>-1 && btns[i]) btns[i].click();
+  } else if (state.phase==='feedback' && (k===' '||k==='enter')){
+    e.preventDefault(); if (state._next) state._next();
+  }
+});
+
+switchTab('forge');
+</script>
+</body>
+</html>
