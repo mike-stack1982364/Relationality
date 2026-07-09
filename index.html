@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🜍 Deception — The Three Vows 🜍</title>
+<style>
+:root {
+  --gold-grad: linear-gradient(to right, #bf953f 0%, #fcf6ba 20%, #b38728 40%, #fbf5b7 60%, #aa771c 80%, #bf953f 100%);
+  --violet-grad: linear-gradient(to right, #7c5cff 0%, #c9b8ff 20%, #6b4de0 40%, #e2d9ff 60%, #5936c9 80%, #7c5cff 100%);
+  --bg:#010103; --panel:#0a0c10; --ink:#eee;
+  --gold:#ffd700; --gold-dim:#bf953f; --violet:#8b7cf6;
+  --green:#2ecc71; --red:#e74c3c; --lie:#e94560; --cyan:#00d9ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background:var(--bg); color:var(--ink); min-height:100vh;
+  display:flex; flex-direction:column; align-items:center;
+  padding:10px; overflow-x:hidden; touch-action:manipulation;
+}
+.container { max-width:520px; width:100%; position:relative; z-index:1; }
+
+.emblem { display:block; margin:14px auto 2px; width:64px; height:64px;
+  filter:drop-shadow(0 0 14px rgba(255,215,0,0.55)); }
+h1 {
+  margin:2px 0 0; font-size:clamp(1.9rem, 10vw, 3.2rem); text-align:center;
+  letter-spacing:7px; font-weight:900; background:var(--gold-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 12px rgba(255,215,0,0.85));
+  text-transform:uppercase; animation:shimmer 6s infinite linear; background-size:200% auto;
+  padding-left:7px;
+}
+@keyframes shimmer { to { background-position:200% center; } }
+.module-badge {
+  margin:0 0 4px; text-align:center;
+  font-size:clamp(0.8rem, 4vw, 1.2rem); font-weight:900;
+  letter-spacing:8px; text-transform:uppercase; padding-left:8px;
+  background:var(--violet-grad);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 14px rgba(139,124,246,0.95)) drop-shadow(0 0 26px rgba(89,54,201,0.5));
+  animation:shimmer 6s infinite linear; background-size:200% auto;
+}
+.tagline { text-align:center; font-size:0.6rem; color:#4a4458; letter-spacing:2.5px;
+  text-transform:uppercase; margin-bottom:14px; font-weight:700; }
+
+/* ===== Arena ===== */
+.arena {
+  background:#040406; padding:20px 16px 16px; border-radius:26px;
+  border:1px solid #111; min-height:430px; display:flex; flex-direction:column;
+  box-shadow:inset 0 0 60px rgba(0,0,0,0.9);
+}
+.mode-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+.mode-title { font-size:0.7rem; font-weight:900; letter-spacing:2.2px; color:var(--violet); text-transform:uppercase; }
+.mode-title.gold { color:var(--gold-dim); }
+.level-chip { font-size:0.72rem; font-weight:900; color:var(--gold);
+  letter-spacing:1px; text-shadow:0 0 10px rgba(255,215,0,0.5); }
+@keyframes lvlUp { 0%{transform:scale(1)} 50%{transform:scale(1.55); color:var(--green)} 100%{transform:scale(1)} }
+@keyframes lvlDown { 0%{transform:scale(1)} 50%{transform:scale(0.7); color:var(--lie)} 100%{transform:scale(1)} }
+.lvl-flash { display:inline-block; }
+.lvl-flash.up { animation:lvlUp 0.7s ease-out; }
+.lvl-flash.down { animation:lvlDown 0.7s ease-out; }
+
+.rule-banner { text-align:center; font-size:0.68rem; font-weight:800; letter-spacing:1.2px;
+  color:#8d84b8; text-transform:uppercase; margin-bottom:10px; min-height:16px; line-height:1.5; }
+.rule-banner b { color:var(--violet); }
+.rule-banner .gold { color:var(--gold); }
+.rule-banner .lie { color:var(--lie); }
+
+/* ===== Cell grids ===== */
+.cell-grid { display:grid; gap:8px; margin:2px 0 12px; }
+.cols-2 { grid-template-columns:repeat(2,1fr); }
+.cols-3 { grid-template-columns:repeat(3,1fr); }
+.gcell {
+  position:relative; background:#08080e; border:1px solid #1a1826; border-radius:14px;
+  aspect-ratio:1; overflow:hidden; transition:border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+}
+.gcell svg { width:100%; height:100%; display:block; }
+.gcell.pickable { cursor:pointer; }
+.gcell.pickable:active { transform:scale(0.96); }
+.gcell.sel { border-color:var(--violet); box-shadow:0 0 16px rgba(139,124,246,0.5), inset 0 0 12px rgba(139,124,246,0.15); }
+.gcell.truth { border-color:var(--green) !important; box-shadow:0 0 18px rgba(46,204,113,0.55) !important; }
+.gcell.lieglow { border-color:var(--lie) !important; box-shadow:0 0 18px rgba(233,69,96,0.55) !important; }
+.gcell.missing { border:1px dashed #3a3452; display:flex; align-items:center; justify-content:center;
+  color:#5a5570; font-weight:900; font-size:1.7rem; }
+.gcell .badge {
+  position:absolute; top:5px; left:7px; font-size:0.62rem; font-weight:900;
+  color:#6d6590; letter-spacing:1px; pointer-events:none;
+}
+.witness-box {
+  border:1px solid rgba(255,215,0,0.35); border-radius:16px; padding:8px;
+  margin-bottom:10px; background:rgba(255,215,0,0.03);
+}
+.witness-label { font-size:0.55rem; letter-spacing:2px; text-transform:uppercase;
+  color:var(--gold-dim); font-weight:900; text-align:center; margin-bottom:6px; }
+.witness-pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; max-width:200px; margin:0 auto; }
+
+/* ===== Claims (Testimony) ===== */
+.claims { display:flex; flex-direction:column; gap:8px; }
+.claim-btn {
+  display:flex; align-items:center; gap:10px; padding:13px 12px; border-radius:13px;
+  border:2px solid #1c1a28; background:#0a0912; color:#cfc9ea; font-weight:800;
+  font-size:0.95rem; cursor:pointer; font-family:inherit; text-align:left;
+  transition:0.15s; touch-action:manipulation; letter-spacing:0.3px;
+}
+.claim-btn .idx { color:#5a5570; font-size:0.7rem; font-weight:900; }
+.claim-btn b { color:var(--gold); }
+.claim-btn .rel { color:var(--violet); font-weight:900; }
+.claim-btn .not { color:var(--lie); font-weight:900; }
+.claim-btn:active { transform:scale(0.98); }
+.claim-btn:focus-visible { outline:2px solid var(--violet); outline-offset:2px; }
+.claim-btn.picked-right { background:rgba(46,204,113,0.14) !important; border-color:var(--green) !important; }
+.claim-btn.picked-wrong { background:rgba(231,76,60,0.14) !important; border-color:var(--red) !important; }
+.claim-btn.reveal-lie { border-color:var(--lie) !important; color:#fff; }
+.claim-btn.reveal-right { border-color:var(--green) !important; }
+.claim-btn:disabled { opacity:0.45; pointer-events:none; }
+.claim-btn.reveal-lie, .claim-btn.picked-right, .claim-btn.picked-wrong { opacity:1 !important; }
+
+/* ===== Options row (Weave) ===== */
+.gopts { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.gopt { padding:4px; border-radius:12px; border:2px solid #1c1a28; background:#0a0912;
+  cursor:pointer; transition:0.15s; touch-action:manipulation; }
+.gopt svg { width:100%; height:58px; display:block; }
+.gopt:active { transform:scale(0.96); }
+.gopt:focus-visible { outline:2px solid var(--violet); outline-offset:2px; }
+.gopt.picked-right { border-color:var(--green) !important; box-shadow:0 0 14px rgba(46,204,113,0.5); }
+.gopt.picked-wrong { border-color:var(--red) !important; }
+.gopt.reveal-right { border-color:var(--green) !important; }
+.gopt:disabled { opacity:0.4; pointer-events:none; }
+.gopt.picked-right, .gopt.picked-wrong, .gopt.reveal-right { opacity:1 !important; }
+
+/* ===== Timer / feedback ===== */
+.timer-container { width:100%; height:8px; background:#111; margin-top:12px; border-radius:4px; overflow:hidden; }
+.timer-bar { width:100%; height:100%; background:var(--violet); transition:width 0.1s linear; }
+.timer-bar.hot { background:var(--lie); }
+.feedback { min-height:28px; text-align:center; font-weight:900; font-size:1.2rem;
+  margin-top:10px; letter-spacing:1px; }
+.feedback.good { color:var(--green); text-shadow:0 0 16px rgba(46,204,113,0.6); }
+.feedback.bad { color:var(--red); text-shadow:0 0 16px rgba(231,76,60,0.5); }
+.feedback.miss { color:var(--lie); }
+.explain { text-align:center; font-size:0.78rem; color:#9a92c4; line-height:1.55;
+  margin-top:5px; min-height:20px; padding:0 4px; }
+.explain b { color:var(--gold); } .explain .rel { color:var(--violet); font-weight:800; }
+.explain .lie { color:var(--lie); font-weight:800; }
+
+.flow-row { display:flex; gap:10px; margin-top:13px; }
+.big-btn { flex:1; padding:15px; border-radius:14px; border:none; font-weight:900;
+  cursor:pointer; text-transform:uppercase; font-family:inherit; font-size:0.92rem;
+  letter-spacing:1.5px; transition:0.2s; touch-action:manipulation; }
+.big-btn.primary { background:linear-gradient(135deg, var(--violet), #5936c9); color:#fff;
+  box-shadow:0 0 20px rgba(139,124,246,0.35); }
+.big-btn.gold { background:linear-gradient(135deg, var(--gold), #b38728); color:#000; }
+.big-btn.ghost { background:#0c0b14; color:#8d84b8; border:1px solid #1c1a28; }
+.big-btn:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+.big-btn:disabled { opacity:0.2; pointer-events:none; }
+
+/* ===== Mastery / stats ===== */
+.mastery { margin-top:10px; }
+.mastery-track { display:flex; gap:4px; }
+.mastery-cell { flex:1; height:7px; border-radius:3px; background:#14121c; }
+.mastery-cell.hit { background:var(--green); box-shadow:0 0 6px rgba(46,204,113,0.6); }
+.mastery-cell.err { background:#3a1220; }
+.mastery-note { font-size:0.55rem; color:#4a4458; letter-spacing:1.2px; text-transform:uppercase;
+  margin-top:5px; text-align:center; }
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:14px; }
+.stat-box { background:#08080c; padding:10px 4px; border-radius:12px; border:1px solid #111; text-align:center; }
+.stat-label { font-size:0.5rem; color:#444; text-transform:uppercase; font-weight:800; letter-spacing:0.5px; }
+.stat-value { font-size:1rem; font-weight:900; color:var(--gold-dim); }
+
+/* ===== Codex ===== */
+.codex { line-height:1.55; font-size:0.85rem; color:#cfc9ea; }
+.codex h2 { font-size:0.78rem; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold);
+  margin:18px 0 8px; text-shadow:0 0 12px rgba(255,215,0,0.35); }
+.codex h2:first-child { margin-top:2px; }
+.codex p { margin-bottom:9px; color:#a79fce; font-size:0.79rem; }
+.codex p b { color:#e8e4ff; }
+.codex p .lie { color:var(--lie); font-weight:800; }
+.op-table { width:100%; border-collapse:collapse; margin:8px 0 12px; font-size:0.7rem; }
+.op-table th { text-align:left; color:#5a5570; font-size:0.56rem; letter-spacing:1px;
+  text-transform:uppercase; padding:5px 6px; border-bottom:1px solid #1c1a28; }
+.op-table td { padding:7px 6px; border-bottom:1px solid #101018; color:#b8b0dd; vertical-align:top; }
+.op-table td:first-child { color:var(--violet); font-weight:900; font-size:0.95rem; text-align:center; width:32px; }
+.op-table td b { color:#fff; }
+.op-table td .lie { color:var(--lie); font-weight:900; }
+.provenance { font-size:0.67rem; color:#5a5570; border-left:2px solid #1c1a28;
+  padding-left:10px; margin:10px 0; line-height:1.55; }
+
+/* ===== Toast / modal / footer ===== */
+.toast { position:fixed; top:18px; left:50%; transform:translateX(-50%) translateY(-80px);
+  background:linear-gradient(135deg, var(--violet), #5936c9); color:#fff;
+  font-weight:900; letter-spacing:2px; text-transform:uppercase; font-size:0.8rem;
+  padding:14px 26px; border-radius:14px; z-index:300; opacity:0;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.35s;
+  box-shadow:0 10px 40px rgba(89,54,201,0.6); pointer-events:none; text-align:center; }
+.toast.gold { background:linear-gradient(135deg, var(--gold), #b38728); color:#000;
+  box-shadow:0 10px 40px rgba(255,215,0,0.4); }
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:200;
+  align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto;
+  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+.modal.show { display:flex; }
+.modal-inner { background:var(--panel); padding:26px 22px; border-radius:20px; border:1px solid #333;
+  max-width:520px; width:100%; position:relative; box-shadow:0 25px 80px rgba(0,0,0,0.9); }
+.modal-close { position:absolute; top:10px; right:12px; background:none; border:none; color:#666;
+  font-size:1.5rem; cursor:pointer; padding:4px 8px; font-family:inherit; }
+.modal h3 { color:var(--gold); font-size:0.85rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
+.modal textarea { width:100%; min-height:110px; background:#000; color:#8d84b8; border:1px solid #222;
+  border-radius:10px; padding:10px; font-size:0.68rem; font-family:monospace; margin-bottom:10px; }
+.footer-row { display:flex; gap:8px; margin-top:12px; }
+.small-btn { flex:1; padding:11px 6px; border-radius:10px; border:1px solid #1c1a28; background:#0c0b14;
+  color:#8d84b8; font-weight:800; font-size:0.62rem; letter-spacing:1px; text-transform:uppercase;
+  cursor:pointer; font-family:inherit; touch-action:manipulation; }
+.small-btn:focus-visible { outline:2px solid var(--violet); outline-offset:2px; }
+.disclaimer { font-size:0.55rem; color:#332f42; text-align:center; letter-spacing:1px;
+  margin:14px 0 30px; line-height:1.6; text-transform:uppercase; }
+
+.question-box { text-align:center; font-weight:700; margin:4px 0 12px;
+  font-size:1rem; color:#a79fce; line-height:1.6; padding:0 4px; }
+.question-box b { color:var(--gold); }
+
+@keyframes fadeIn { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+.fade { animation:fadeIn 0.3s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  h1, .module-badge { animation:none; }
+  .fade { animation:none; }
+}
+</style>
+</head>
+<body>
+<main class="container">
+  <svg class="emblem" viewBox="0 0 100 100" aria-hidden="true">
+    <g fill="none" stroke="#ffd700" stroke-width="3.2" stroke-linecap="round">
+/* ===== Single-practice additions ===== */
+.seal { display:inline-block; font-size:0.56rem; font-weight:900; letter-spacing:1.5px;
+  color:#000; background:linear-gradient(135deg,var(--gold),#b38728); border-radius:6px;
+  padding:2px 6px; margin-right:6px; vertical-align:1px; }
+.seal.v2 { background:linear-gradient(135deg,var(--violet),#5936c9); color:#fff; }
+.seal.v3 { background:linear-gradient(135deg,var(--lie),#a12744); color:#fff; }
+.strip-label { font-size:0.55rem; letter-spacing:2px; text-transform:uppercase;
+  color:#5a5570; font-weight:900; text-align:center; margin:2px 0 4px; }
+.spindle { display:flex; align-items:center; justify-content:center; color:#3a3452;
+  font-size:1.5rem; font-weight:900; }
+.footer-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:12px; }
+.opchain { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:2px 0 12px; }
+.opchip { display:flex; flex-direction:column; align-items:center; gap:1px; min-width:52px;
+  padding:7px 9px; border-radius:12px; border:1px solid #2a2540; background:#0c0b16;
+  color:var(--violet); font-weight:900; font-size:1.15rem; }
+.opchip i { font-style:normal; font-size:0.5rem; letter-spacing:1.5px; color:#6d6590; text-transform:uppercase; }
+.profile-grid { display:grid; grid-template-columns:1fr auto auto; gap:4px 10px; font-size:0.68rem; margin:6px 0 2px; }
+.profile-grid .ph { color:#5a5570; font-size:0.52rem; letter-spacing:1px; text-transform:uppercase; font-weight:900; }
+.profile-grid .pk { color:#b8b0dd; } .profile-grid .pv { color:var(--gold-dim); font-weight:900; text-align:right; }
+.profile-grid .pe { color:var(--lie); font-weight:900; text-align:right; }
+.overlay-inner { background:var(--panel); padding:24px 18px 18px; border-radius:20px;
+  border:1px solid #333; max-width:520px; width:100%; position:relative;
+  box-shadow:0 25px 80px rgba(0,0,0,0.9); }
+.gz-head { font-size:0.75rem; font-weight:900; letter-spacing:2px; color:var(--gold);
+  text-transform:uppercase; margin-bottom:10px; text-align:center; }
+@media (prefers-reduced-motion: reduce) {
+  h1, .module-badge { animation:none; }
+  .fade { animation:none; }
+}
+</style>
+</head>
+<body>
+</style>
+</head>
+<body>
+<main class="container">
+  <svg class="emblem" viewBox="0 0 100 100" aria-hidden="true">
+    <g fill="none" stroke="#ffd700" stroke-width="3.2" stroke-linecap="round">
+      <path d="M50 50 q 2 -10 12 -12 q 14 -3 20 8" transform="rotate(0 50 50)"/>
+      <path d="M50 50 q 2 -10 12 -12 q 14 -3 20 8" transform="rotate(120 50 50)"/>
+      <path d="M50 50 q 2 -10 12 -12 q 14 -3 20 8" transform="rotate(240 50 50)"/>
+    </g>
+    <circle cx="50" cy="50" r="3.4" fill="#8b7cf6"/>
+  </svg>
+  <h1>Deception</h1>
+  <div class="module-badge">The Three Vows</div>
+  <div class="tagline">One practice · Seven windings · Where is the deception?</div>
+
+  <div class="arena" id="arena">
+    <div class="mode-head">
+      <div class="mode-title">THE TRIAL</div>
+      <div class="level-chip" id="level-wrap">LV <span class="lvl-flash" id="level-num">1</span></div>
+    </div>
+    <div class="rule-banner" id="rule-banner"></div>
+    <div id="task-zone" style="flex:1; display:flex; flex-direction:column; justify-content:center;"></div>
+    <div id="answer-zone"></div>
+    <div class="timer-container"><div class="timer-bar" id="timer-bar"></div></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="explain" id="explain"></div>
+    <div class="flow-row" id="flow-row">
+      <button class="big-btn primary" id="begin-btn">Take the vows</button>
+    </div>
+    <div class="mastery" id="mastery">
+      <div class="mastery-track" id="mastery-track"></div>
+      <div class="mastery-note">Mastery window · 10 of 12 true sights advance · the seven forms braid as you rise</div>
+    </div>
+    <div class="stats">
+      <div class="stat-box"><div class="stat-label">Trials</div><div class="stat-value" id="st-trials">0</div></div>
+      <div class="stat-box"><div class="stat-label">Accuracy</div><div class="stat-value" id="st-acc">—</div></div>
+      <div class="stat-box"><div class="stat-label">Streak</div><div class="stat-value" id="st-streak">0</div></div>
+      <div class="stat-box"><div class="stat-label">Peak LV</div><div class="stat-value" id="st-peak">1</div></div>
+    </div>
+  </div>
+
+  <div class="footer-grid">
+    <button class="small-btn" id="guide-btn">Guide</button>
+    <button class="small-btn" id="codex-btn">Codex</button>
+    <button class="small-btn" id="gauge-btn">Gauge</button>
+    <button class="small-btn" id="progress-btn">Save / Load</button>
+    <button class="small-btn" id="reset-btn">Reset</button>
+  </div>
+
+  <div class="disclaimer">
+    Alpha · Progress lives in this session unless exported · Reasoning training is promising, far transfer unproven — run the Gauge before and after, believe your own data
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="progress-modal" role="dialog" aria-modal="true" aria-label="Save or load progress">
+  <div class="modal-inner">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <h3>Progress code</h3>
+    <p style="font-size:0.68rem; color:#8d84b8; margin-bottom:8px;">Copy to save your level and Gauge history. Paste a saved code and press Load to restore. Trial CSV exports the full response log.</p>
+    <textarea id="progress-text" spellcheck="false"></textarea>
+    <div class="footer-row" style="margin-top:0;">
+      <button class="small-btn" id="copy-progress">Copy</button>
+      <button class="small-btn" id="load-progress">Load</button>
+      <button class="small-btn" id="csv-btn">Trial CSV</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="gauge-modal" role="dialog" aria-modal="true" aria-label="Gauge transfer probe">
+  <div class="overlay-inner">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <div class="gz-head">Gauge · Transfer Probe</div>
+    <div class="rule-banner" id="gz-banner"></div>
+    <div id="gz-task"></div>
+    <div id="gz-answer"></div>
+    <div class="flow-row" id="gz-flow"></div>
+  </div>
+</div>
+
+<div class="modal" id="guide-modal" role="dialog" aria-modal="true" aria-label="How to play">
+  <div class="overlay-inner">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <div class="codex">
+      <h2>How to play</h2>
+      <p><b>One game, one question:</b> every trial hides exactly one deception. Find it before the bar empties. Answers advance a rolling mastery window — <b>10 hits in 12</b> raises your level, 6 or fewer lowers it — and higher levels braid in new trial-forms ("windings") and thicker veils. Press <b>Take the vows</b> and everything else is learned by playing; this page is the reference.</p>
+      <h2>The seven windings</h2>
+      <table class="op-table">
+        <tr><th></th><th>You see</th><th>You do</th></tr>
+        <tr><td>👁</td><td>A field of figures, a named relation / a glyph / an <b>axis to aim at</b> / a witness pair</td><td>Tap the <b>two</b> cells (one cell, for a Balance) that carry the true relation</td></tr>
+        <tr><td>🕸</td><td>Cells woven in pairs across a central spindle ✦</td><td>Induce the field's law; tap the <b>one cell</b> that betrays its partner</td></tr>
+        <tr><td>⇄</td><td>Beads: three slots, 0–2 pips each, read <b>left → right</b></td><td>Tap the <b>two beads</b> whose codes mirror (higher levels: mirror <i>then turn</i> each digit +1)</td></tr>
+        <tr><td>⚖</td><td>Lettered figures and testimonies about them</td><td>Tap the <b>one lying claim</b></td></tr>
+        <tr><td>✋</td><td>Two threads of three cells — or a seed plus a chain of gesture-chips</td><td>Judge if the threads share <b>one gesture</b>; or enact the chain in your mind and tap the <b>result</b> (top levels: the <b>seed</b>, unwinding it)</td></tr>
+        <tr><td>🧵</td><td>A weave of rules running left → right, one cell missing</td><td>Induce the rules; tap the <b>true completion</b> among near-misses</td></tr>
+        <tr><td>🜂</td><td>A complete weave</td><td>Tap the <b>one broken thread</b></td></tr>
+      </table>
+      <p><b>Controls:</b> tap cells, claims, or options. Keyboard: <b>1–9</b> select, <b>space / enter</b> next trial. The timer bar burns red near the end; a lapse counts as a miss. <b>Veils</b> in the banner (<span class="lie">ignore HUE</span>, <span class="lie">NOISE</span>) name an attribute that varies meaninglessly — practise not looking at it.</p>
+      <h2>Reading the beads</h2>
+      <p>Each bead is one of the <b>27</b> ternary codes (3×3×3) — Tenen's full counting set as pure pointers. Left slot first: <b>1·0·2</b> mirrors <b>2·0·1</b>. In <i>turned-mirror</i> trials, reverse then add one to every digit (2 turns to 0): <b>1·0·2 → 2·0·1 → 0·1·2</b>.</p>
+      <h2>Your failure profile</h2>
+      <p>Every wrong answer is one of the Twelve Deceptions. The trial names the one you fell for; this table remembers. From level 9 the game <b>aims at your weakest</b> — the lies you fall for most begin appearing more often.</p>
+      <div class="profile-grid" id="profile-grid"></div>
+      <h2>The greater meaning</h2>
+      <p>The Three Vows are yours, not the game's — a self-organising principle: do your best, not perfectly, aligning intent with real constraints, moment by moment. Deception here is what stands between intent and truth: the noise of one's own inconsistencies, errors and lapses. The practice is one act with three faces — <b>spot</b> the deception, <b>describe</b> it against what is claimed, <b>remove</b> it and restore the pattern — repeated until seeing through noise becomes a habit of mind. The Gauge (footer) is your honest measure: Form A before training, Form B after a block; believe the between-form change, not the level counter.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="codex-modal" role="dialog" aria-modal="true" aria-label="Codex">
+  <div class="overlay-inner">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <div class="codex">
+      <h2>The name and the vows</h2>
+      <p>Cognition on its way to truth is mostly at war with its own noise — inconsistencies, errors, lapses: <b>deceptions</b>. Fluid intelligence, on this reading, is the capacity to see through that noise and re-organise cognition for higher agency. The Three Vows named here belong to the player; this game does not presume their content. In play they appear as three faces of one act — <b>spot</b> the deception (Vow I), <b>describe</b> it against what is claimed (Vow II), <b>remove</b> it and restore the pattern (Vow III). One practice, one question, seven windings.</p>
+
+      <h2>What Meru actually claims</h2>
+      <p>Read at the source, Tenen's work rests on precise structures. The 27-letter alphabet is a <b>3×3×3 ternary matrix</b> — each letter a triplet of 0/1/2 — and letters pair as <b>reversed base-3 codes</b>: Lamed (102) with Resh (201), He (011) with Mem (110), Bet (001) with Yod (100), the initial Bet with final Zadi (222 ≡ −001). The 28 letters of Genesis 1:1, strung as a <b>bead chain</b>, pair off completely only when the chain is wound at exactly <b>7 turns</b> — pairs introduced in an <b>AABA woven pattern</b>. The first word splits into <i>fire</i> + <i>thorn</i>: an asymmetric <b>vortex flame seated inside a perfectly symmetric tetrahedron</b> ("the Light in the Meeting Tent"), whose silhouettes through each face yield the letter-forms — <b>many appearances, one asymmetric gesture</b>, modelled on the human hand. And <i>B'limah</i>, the untranslatable opening of Sefer Yetzirah, resolves as a <b>pairing-key</b>: without the key, the undivided 28-letter string admits hundreds of false parses.</p>
+
+      <h2>The spotlight, the pointer, the fishing pole</h2>
+      <p>Three further essences, read at the source. Tenen: <b>"We aim the spotlight of awareness… We specify choice by direction. Our natural pointer is our hand"</b> — the 27 letters as <b>27 pointing directions</b>, a base space for attention itself. Here that is literal: the AIM prompts ask you to point attention down an axis (HANDEDNESS, NUMBER, THE VESSEL) and read off what it reveals; the veils train the same spotlight to <i>exclude</i>. His FAQ names the mechanism of study: the letter-sequence taken as <b>"gestures in the mind… meditational exercises that enhance particular mental skills"</b> — "not a fish… a fishing pole." The Rite enacts exactly this: chains of gestures performed on a seed purely in imagination, then unwound in reverse at the summit. And the Bead Chain's code space is not decoration: 3×3×3 = <b>27</b>, the full counting set itself, each bead a pure ternary pointer, paired as Tenen pairs the letters.</p>
+
+      <h2>Three · Seven · Twelve</h2>
+      <p>The whole practice keeps Sefer Yetzirah's partition that Tenen builds on — 3 mothers, 7 doubles, 12 elementals: <b>three</b> faces of the act (spot · describe · remove), <b>seven</b> windings of the trial, <b>twelve</b> canonical deceptions (echoing Arthur Young's twelve-fold geometry of meaning, which Tenen cites as the geometry of pointing). Your failure profile is kept against the Twelve, and from level 9 the game aims its forgeries at your weakest — the spotlight turned on the player.</p>
+
+      <h2>Extrapolation — claim into mechanic</h2>
+      <table class="op-table">
+        <tr><th></th><th>Meru structure</th><th>Trial form it becomes</th></tr>
+        <tr><td>⇄</td><td><b>Reversed ternary codes</b></td><td>THE BEAD CHAIN — two beads carry mirrored 3-digit codes; anagram and off-code beads deceive</td></tr>
+        <tr><td>🕸</td><td><b>Woven letter pairs (AABA)</b></td><td>THE WOVEN FIELD — cells pair across the spindle; one betrays its partner</td></tr>
+        <tr><td>🜂</td><td><b>Flame in the tent</b> (asymmetry in symmetry)</td><td>Chirality everywhere; THE BROKEN THREAD — the single asymmetry in a lawful fabric</td></tr>
+        <tr><td>✋</td><td><b>One gesture, many silhouettes</b></td><td>ONE GESTURE — do two threads share a generating rule? · witness-pair induction</td></tr>
+        <tr><td>🔑</td><td><b>B'limah as pairing-key</b></td><td>Veils and lures — surface parses deceive; structure is the key</td></tr>
+        <tr><td>7</td><td><b>7-turn winding</b></td><td>Seven trial-forms braided in one practice — it pairs only when all wind together</td></tr>
+        <tr><td>3</td><td><b>3×9 matrix, three mothers</b></td><td>Every relation as state · claim · gesture — the three vows as modes; BALANCE triads at depth</td></tr>
+      </table>
+
+      <h2>The operator basis</h2>
+      <table class="op-table">
+        <tr><th></th><th>Operator</th><th>As state · as claim · as gesture</th></tr>
+        <tr><td>=</td><td><b>SAME</b></td><td>Identical twins · "A ≡ B" · KEEP</td></tr>
+        <tr><td>⇄</td><td><b>OPPOSITE</b></td><td>Mirror twins (chirality) · "A ⇄ B" · MIRROR each step</td></tr>
+        <tr><td>≠</td><td><b>DIFFERENT</b></td><td>One attribute apart · negation traps · PERMUTE (3-cycle)</td></tr>
+        <tr><td>&gt;</td><td><b>COMPARISON</b></td><td>Unequal count · "A &gt; B" · GROW / SWELL · BALANCE (the mean between extremes)</td></tr>
+        <tr><td>⊃</td><td><b>ENFOLDMENT</b></td><td>Ring holding its figure · "A ⊃ B" · ENFOLD deeper</td></tr>
+        <tr><td>→</td><td><b>SEQUENCE</b></td><td>Position in the chain · order claims · TURN a quarter each step</td></tr>
+      </table>
+
+      <h2>The deception taxonomy</h2>
+      <p>Every wrong option is a named lie drawn from how reasoning fails. <span class="lie">Surface lure</span> — shared colour and figure, broken structure. <span class="lie">Twin-in-the-mirror</span> — identical where mirrored was owed. <span class="lie">Direction flip</span>, <span class="lie">label swap</span>, <span class="lie">polarity swap</span>, <span class="lie">off-by-one</span>, <span class="lie">negation veil</span> — the five forgeries of testimony. <span class="lie">Frozen / overrun / stranger thread</span> — the classic matrix foils. <span class="lie">Anagram bead</span> — right digits, wrong order; <span class="lie">off-code bead</span> — reversed but one digit slipped. <span class="lie">Noise veil</span> — an attribute that varies meaninglessly while you try to attend past it. Errors are named on feedback: you learn your own failure profile.</p>
+
+      <h2>Why this can train fluid reasoning</h2>
+      <p>Every trial demands fresh <b>rule induction</b> under engineered interference — nothing is template-recognisable across the generators' combinatorial space. Difficulty compounds along the g-loaded dimensions: relations integrated at once (to three simultaneous weave-rules and ordered triples), surface–structure conflict, negation, symbolic recoding and reversal, relation-of-relations (One Gesture), attentional veils, and time. The seven forms interleave within a single ladder, so each trial also demands task-set reconfiguration — and answers are machine-verified unique, so feedback is the one place deception never enters.</p>
+
+      <h2>Honesty</h2>
+      <p>Far transfer from any trained task to general fluid intelligence remains unproven. The <b>Gauge</b> exists for that reason: fixed, non-adaptive, feedback-free matrix forms. Run Form A before training and Form B after a block; trust the between-form change over any in-game level. If the Gauge doesn't move, the levels are skill, not transfer — worth knowing either way.</p>
+
+      <div class="provenance">Provenance: ternary-mirror pairing, 7-turn bead-chain autocorrelation, AABA weave, flame-and-tetrahedron model, gesture-silhouette letters, and B'limah-as-key after Stan Tenen / Meru Foundation (meru.org: "A Woven Pattern of Symmetrical Letter Pairs…", Scientific Abstract, "Tefillin in Hand", "Scientists and Wordsmiths", the Meru FAQ ("gestures in the mind… a fishing pole"), and "The Hand that Aims the Spotlight in the Theater of Consciousness", 1997 — source of the 27 pointing directions and the spotlight thesis) — used as design structure, not endorsed cosmology. Ontological-category practice after B. Woodson's thread; foil architecture after Carpenter–Just–Shell; surface–structure deception after Gentner; complexity after Halford; adaptive mastery after SMART-style relational training. The Three Vows are the player's own.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DECEPTION — THE THREE VOWS · one practice, seven windings
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const rnd = n => Math.floor(Math.random()*n);
+const pick = a => a[rnd(a.length)];
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];} return a; };
+const clone = o => JSON.parse(JSON.stringify(o));
+
+const state = { running:false, phase:'idle', trial:null, form:null,
+  timerId:null, deadlineAt:0, _askAt:0, _next:null,
+  level:1, peak:1, trials:0, correct:0, streak:0, window:[] };
+const WINDOW_SIZE=12, ADVANCE_AT=10, DROP_AT=6;
+const LOG=[];
+/* The Twelve Deceptions — canonical failure modes (after Young's 12-fold geometry of meaning, SY's 12 elementals) */
+const CANON={
+ surface:'Surface Lure — shared skin, broken bone',
+ twin:'Twin-in-the-Mirror — identity where opposition was owed',
+ polarity:'Polarity Swap — ≡ passed off as ⇄',
+ direction:'Direction Flip — the vessel named as the held',
+ label:'Label Swap — a truth re-aimed at a lookalike',
+ offbyone:'Off-by-One — the almost-right count',
+ negation:'Negation Veil — a NOT wrapped around truth',
+ frozen:'Frozen Thread — the rule stopped a step early',
+ overrun:'Overrun Thread — the rule ran a step past',
+ stranger:'Stranger Thread — another line\u2019s answer',
+ anagram:'Anagram Bead — right digits, wrong order',
+ noise:'Noise Veil — meaningless variation seizing the eye'};
+const lieStats={}; Object.keys(CANON).forEach(k=>lieStats[k]={s:0,e:0});
+function biasPick(pairs){ /* pairs: [{v,key}] — aim at the player's weakest deceptions */
+  const total=Object.values(lieStats).reduce((a,x)=>a+x.s,0);
+  if(state.level<9||total<8) return pick(pairs).v;
+  const w=pairs.map(p=>{const st=lieStats[p.key]||{s:0,e:0};return (st.e+1)/(st.s+2);});
+  let r=Math.random()*w.reduce((a,b)=>a+b,0);
+  for(let i=0;i<pairs.length;i++){ r-=w[i]; if(r<=0) return pairs[i].v; }
+  return pairs[pairs.length-1].v;
+}
+
+function toast(msg,gold){ const t=$('toast'); t.textContent=msg; t.classList.toggle('gold',!!gold);
+  t.classList.add('show'); clearTimeout(toast._id); toast._id=setTimeout(()=>t.classList.remove('show'),2200); }
+function renderMastery(){
+  const w=state.window, track=$('mastery-track'); track.innerHTML='';
+  for(let i=0;i<WINDOW_SIZE;i++){ const c=document.createElement('div'); c.className='mastery-cell';
+    if(i<w.length) c.classList.add(w[i]?'hit':'err'); track.appendChild(c); }
+}
+function renderStats(){
+  $('st-trials').textContent=state.trials;
+  $('st-acc').textContent=state.trials?Math.round(100*state.correct/state.trials)+'%':'—';
+  $('st-streak').textContent=state.streak;
+  $('st-peak').textContent=state.peak;
+  $('level-num').textContent=state.level;
+}
+function flashLevel(dir){ const el=$('level-num'); el.classList.remove('up','down'); void el.offsetWidth; el.classList.add(dir); }
+function recordResult(ok,fellKey){
+  const planted=state.trial&&state.trial.lieKey;
+  if(planted&&lieStats[planted]) lieStats[planted].s++;
+  const fk=(!ok&&(fellKey||planted)); if(fk&&lieStats[fk]) lieStats[fk].e++;
+  LOG.push([state.form,state.level,ok?1:0,state._askAt?Date.now()-state._askAt:'',new Date().toISOString()]);
+  state.trials++; if(ok){state.correct++;state.streak++;} else state.streak=0;
+  state.window.push(!!ok); if(state.window.length>WINDOW_SIZE) state.window.shift();
+  if(state.window.length===WINDOW_SIZE){
+    const hits=state.window.filter(Boolean).length;
+    if(hits>=ADVANCE_AT){ state.level++; state.peak=Math.max(state.peak,state.level); state.window=[];
+      flashLevel('up'); toast('THE TRIAL DEEPENS → LV '+state.level, true); }
+    else if(hits<=DROP_AT && state.level>1){ state.level--; state.window=[];
+      flashLevel('down'); toast('THE TRIAL EASES → LV '+state.level); }
+  }
+  renderMastery(); renderStats();
+}
+function startClock(seconds,onExpire){
+  stopClock(); state._askAt=Date.now();
+  const bar=$('timer-bar'); bar.style.width='100%'; bar.classList.remove('hot');
+  state.deadlineAt=Date.now()+seconds*1000;
+  state.timerId=setInterval(()=>{
+    const left=state.deadlineAt-Date.now(), frac=Math.max(0,left/(seconds*1000));
+    bar.style.width=(frac*100)+'%'; if(frac<0.25) bar.classList.add('hot');
+    if(left<=0){ stopClock(); onExpire(); }
+  },80);
+}
+function stopClock(){ if(state.timerId){ clearInterval(state.timerId); state.timerId=null; } }
+function clearTrialUI(){
+  $('task-zone').innerHTML=''; $('answer-zone').innerHTML='';
+  $('feedback').textContent=''; $('feedback').className='feedback';
+  $('explain').innerHTML=''; $('timer-bar').style.width='0%';
+}
+function showNext(){
+  const fr=$('flow-row'); fr.innerHTML='';
+  const b=document.createElement('button'); b.className='big-btn primary'; b.textContent='Next trial';
+  b.onclick=runTrial; fr.appendChild(b);
+  const s=document.createElement('button'); s.className='big-btn ghost'; s.textContent='Stop'; s.style.flex='0 0 90px';
+  s.onclick=stopTraining; fr.appendChild(s);
+  state._next=runTrial;
+}
+function stopTraining(){
+  state.running=false; state.phase='idle'; state._next=null; stopClock(); clearTrialUI();
+  $('rule-banner').textContent='';
+  const fr=$('flow-row'); fr.innerHTML='';
+  const b=document.createElement('button'); b.className='big-btn primary'; b.textContent='Take the vows';
+  b.onclick=()=>{ state.running=true; runTrial(); }; fr.appendChild(b);
+  renderIdle();
+}
+function renderIdle(){
+  $('task-zone').innerHTML='<div class="question-box">One practice: a fabric of figures, and somewhere in it a <b>deception</b> — a false pair, a lying testimony, a broken thread, a mirrored code. Spot it, name it, repair it. The seven forms braid as you rise; the trial serves whichever winding comes next.</div>';
+}
+const AXIS_WORD={SAME:'LIKENESS',OPPOSITE:'HANDEDNESS',DIFFERENT:'ONE STEP',COMPARISON:'NUMBER',ENFOLDMENT:'THE VESSEL'};
+const SEAL={1:'<span class="seal">VOW I</span>',2:'<span class="seal v2">VOW II</span>',3:'<span class="seal v3">VOW III</span>'};
+
+/* ============================================================
+   Glyph engine — figures with chirality, counts, nesting, codes
+   ============================================================ */
+const HUES=['#ffd700','#8b7cf6','#00d9ff','#2ecc71','#e94560'];
+const KINDS=['spiral','flame','crescent','tri','gem'];
+const CHIRAL={spiral:true,flame:true,crescent:true,tri:false,gem:false};
+const SIZES=[8,11.5,15];
+function glyphPath(kind,R){
+  if(kind==='spiral'){ let d='M 0 0'; for(let t=0;t<=4.7;t+=0.24){ const r=R*t/4.7;
+      d+=' L '+(r*Math.cos(t*1.75)).toFixed(1)+' '+(r*Math.sin(t*1.75)).toFixed(1); } return {d,stroke:true}; }
+  if(kind==='flame'){ const r=R*0.92;
+    return {d:'M 0 '+(-r*1.15)+' C '+(r*0.95)+' '+(-r*0.25)+' '+(r*0.62)+' '+(r*0.72)+' 0 '+r+
+      ' C '+(-r*0.3)+' '+(r*0.55)+' '+(-r*0.42)+' '+(-r*0.05)+' 0 '+(-r*1.15)+' Z',stroke:false}; }
+  if(kind==='crescent'){ const r=R;
+    return {d:'M 0 '+(-r)+' A '+r+' '+r+' 0 0 1 0 '+r+' A '+(r*2.4).toFixed(1)+' '+(r*2.4).toFixed(1)+' 0 0 0 0 '+(-r)+' Z',stroke:false}; }
+  if(kind==='tri'){ const r=R*1.05;
+    return {d:'M 0 '+(-r)+' L '+(r*0.9)+' '+(r*0.75)+' L '+(-r*0.9)+' '+(r*0.75)+' Z',stroke:false}; }
+  const r=R*0.95;
+  return {d:'M 0 '+(-r)+' L '+r+' 0 L 0 '+r+' L '+(-r)+' 0 Z',stroke:false};
+}
+/* spec: {kind,hue,count,size,chir,depth,orient} or {code:[d,d,d],hue} */
+function cellSVG(spec, badge){
+  const S=100, cx=S/2, cy=S/2;
+  if(spec.code){ /* bead: three ordered slots of 0–2 pips, read left to right */
+    const col=HUES[spec.hue!==undefined?spec.hue:0];
+    let inner='<line x1="18" y1="78" x2="82" y2="78" stroke="#2a2540" stroke-width="2"/>';
+    spec.code.forEach((d,s)=>{
+      const x=30+s*20;
+      inner+='<circle cx="'+x+'" cy="78" r="3" fill="#5a5570"/>';
+      for(let p=0;p<d;p++) inner+='<circle cx="'+x+'" cy="'+(64-p*16)+'" r="7" fill="'+col+'"/>';
+      if(d===0) inner+='<circle cx="'+x+'" cy="64" r="7" fill="none" stroke="#6d6590" stroke-width="2.4" stroke-dasharray="3 3"/>';
+    });
+    return '<svg viewBox="0 0 100 100">'+inner+'</svg>'+(badge?'<span class="badge">'+badge+'</span>':'');
+  }
+  let R=SIZES[(spec.size||1)-1];
+  const n=spec.count||1;
+  let gap=2*R+6, width=(n-1)*gap+2*R;
+  if(width>88){ const f=88/width; R*=f; gap=2*R+6; width=(n-1)*gap+2*R; }
+  const x0=cx-(n-1)*gap/2;
+  const col=HUES[spec.hue];
+  const g=glyphPath(spec.kind,R);
+  let inner='';
+  for(let i=0;i<n;i++){
+    const tx=x0+i*gap;
+    const rot=(spec.orient||0)*90;
+    inner+='<g transform="translate('+tx+' '+cy+') rotate('+rot+') scale('+(spec.chir||1)+',1)">'+
+      '<path d="'+g.d+'" '+(g.stroke?('fill="none" stroke="'+col+'" stroke-width="2.6" stroke-linecap="round"'):('fill="'+col+'"'))+'/></g>';
+  }
+  let rings='';
+  for(let d=0; d<(spec.depth||0); d++){
+    const rr=(n>1?(n-1)*gap/2+R:R)+8+d*7;
+    rings+='<circle cx="'+cx+'" cy="'+cy+'" r="'+Math.min(rr,46)+'" fill="none" stroke="#8d84b8" stroke-width="2.2" opacity="0.9"/>';
+  }
+  return '<svg viewBox="0 0 100 100">'+rings+inner+'</svg>'+(badge?'<span class="badge">'+badge+'</span>':'');
+}
+function randSpec(o){
+  o=o||{};
+  const kind=o.kind||pick(KINDS);
+  return { kind, hue:o.hue!==undefined?o.hue:rnd(HUES.length),
+    count:o.count!==undefined?o.count:1+rnd(3),
+    size:o.size!==undefined?o.size:1+rnd(2),
+    chir:CHIRAL[kind]?(o.chir!==undefined?o.chir:(Math.random()<0.5?1:-1)):1,
+    depth:o.depth!==undefined?o.depth:0,
+    orient:kind==='tri'?(o.orient!==undefined?o.orient:rnd(4)):0 };
+}
+function shiftCount(c){ return c>=4?3:c+1; }
+function shiftSize(s){ return s>=3?2:s+1; }
+function shiftHue(h){ return (h+1)%HUES.length; }
+function otherKind(k){ return pick(KINDS.filter(x=>x!==k)); }
+function normChir(s){ if(!CHIRAL[s.kind]) s.chir=1; if(s.kind!=='tri') s.orient=0; return s; }
+
+/* ============================================================
+   Relation predicates (veil-aware)
+   ============================================================ */
+function hueEq(a,b,veil){ return veil==='hue' ? true : a.hue===b.hue; }
+function sizeEq(a,b,veil){ return veil==='size' ? true : a.size===b.size; }
+const PRED={
+  SAME:(a,b,v)=> a.depth===0&&b.depth===0&&a.kind===b.kind&&hueEq(a,b,v)&&a.count===b.count&&sizeEq(a,b,v)&&a.chir===b.chir&&a.orient===b.orient,
+  OPPOSITE:(a,b,v)=> a.depth===0&&b.depth===0&&a.kind===b.kind&&CHIRAL[a.kind]&&a.chir!==b.chir&&hueEq(a,b,v)&&a.count===b.count&&sizeEq(a,b,v),
+  DIFFERENT:(a,b,v)=>{ if(a.depth||b.depth||a.count!==b.count||!sizeEq(a,b,v)||a.chir!==b.chir) return false;
+    const kd=a.kind!==b.kind, hd=(v==='hue')?false:(a.hue!==b.hue);
+    return (kd?1:0)+(hd?1:0)===1; },
+  COMPARISON:(a,b,v)=> a.depth===0&&b.depth===0&&a.kind===b.kind&&hueEq(a,b,v)&&a.chir===b.chir&&sizeEq(a,b,v)&&a.count!==b.count,
+  ENFOLD:(a,b,v)=> a.depth===1&&b.depth===0&&a.kind===b.kind&&hueEq(a,b,v)
+};
+function pairSat(rel,a,b,v){
+  if(rel==='ENFOLDMENT') return PRED.ENFOLD(a,b,v)||PRED.ENFOLD(b,a,v);
+  return PRED[rel](a,b,v);
+}
+const REL_GLYPH={SAME:'=',OPPOSITE:'⇄',DIFFERENT:'≠',COMPARISON:'>',ENFOLDMENT:'⊃'};
+const REL_HINT={
+  SAME:'identical twins — every attribute equal',
+  OPPOSITE:'mirror twins — equal in all but handedness',
+  DIFFERENT:'one attribute apart, all else equal',
+  COMPARISON:'same figure, unequal count',
+  ENFOLDMENT:'a ring holding the same figure that stands bare elsewhere'
+};
+</script>
+<script>
+/* ============================================================
+   Generators — verified engines, unified config
+   ============================================================ */
+function makePairFor(rel,veil){
+  const chiralKinds=KINDS.filter(k=>CHIRAL[k]);
+  if(rel==='SAME'){ const a=randSpec({depth:0}); return [a,clone(a)]; }
+  if(rel==='OPPOSITE'){ const a=randSpec({kind:pick(chiralKinds),depth:0}); const b=clone(a); b.chir=-a.chir; return [a,b]; }
+  if(rel==='DIFFERENT'){ const a=randSpec({depth:0}); const b=clone(a);
+    if(veil!=='hue' && Math.random()<0.5){ b.hue=(a.hue+1+rnd(HUES.length-1))%HUES.length; }
+    else { let nk; do{nk=pick(KINDS);}while(nk===a.kind); b.kind=nk;
+      b.chir=CHIRAL[nk]?a.chir* (CHIRAL[a.kind]?1:1):1; if(!CHIRAL[nk]) b.chir=1; if(!CHIRAL[a.kind]) a.chir=1;
+      b.orient=nk==='tri'?a.orient:0; }
+    if(a.chir!==b.chir){ b.chir=a.chir=1; }
+    return [a,b]; }
+  if(rel==='COMPARISON'){ const a=randSpec({depth:0,count:1+rnd(2)}); const b=clone(a);
+    b.count=a.count+1+rnd(4-a.count); return [a,b]; }
+  /* ENFOLDMENT */
+  const b=randSpec({depth:0,count:1}); const a=clone(b); a.depth=1; return [a,b];
+}
+function shiftCount(c){ return c>=4?3:c+1; }
+function shiftSize(s){ return s>=3?2:s+1; }
+function shiftHue(h){ return (h+1)%HUES.length; }
+function otherKind(k){ return pick(KINDS.filter(x=>x!==k)); }
+function normChir(s){ if(!CHIRAL[s.kind]) s.chir=1; if(s.kind!=='tri') s.orient=0; return s; }
+/* Lures share the target's surface (hue+figure) but are structurally broken —
+   and are guaranteed distinct from the target cells so uniqueness can hold. */
+function lureFor(rel,target,veil){
+  const [A]=target;
+  const perturbY=(y)=>{ /* break a non-count attribute, respecting the veil */
+    if(veil!=='hue'){ y.hue=shiftHue(y.hue); }
+    else if(veil!=='size'){ y.size=shiftSize(y.size); }
+    else { y.kind=otherKind(y.kind); normChir(y); }
+    return y; };
+  if(rel==='SAME'){
+    const x=normChir(clone(A)); x.count=shiftCount(A.count);
+    const y=clone(x);
+    if(CHIRAL[x.kind]&&Math.random()<0.5){ y.chir=-x.chir; }
+    else { y.count=shiftCount(x.count); if(y.count===A.count) y.count=shiftCount(y.count); }
+    return {pair:[x,y], name:'Surface lure — twins in colour and figure, broken in structure',key:'surface'};
+  }
+  if(rel==='OPPOSITE'){
+    const x=normChir(clone(A)); x.count=shiftCount(A.count);
+    const y=clone(x); y.chir=-x.chir; perturbY(y);
+    return {pair:[x,y], name:'Surface lure — mirrored, but not otherwise equal',key:'surface'};
+  }
+  if(rel==='COMPARISON'){
+    const x=normChir(clone(A)); x.size=veil==='size'?x.size:x.size; x.count=1;
+    const y=clone(x); y.count=3+rnd(2); perturbY(y);
+    return {pair:[x,y], name:'Noisy comparison — counts differ but so does the figure',key:'surface'};
+  }
+  if(rel==='ENFOLDMENT'){
+    const b=randSpec({depth:0,count:1}); const a=clone(b); a.depth=1;
+    perturbY(a);
+    return {pair:[a,b], name:'False vessel — the ring holds a stranger, not this figure',key:'label'};
+  }
+  /* DIFFERENT: too-different pair, distinct from target */
+  const x=normChir(clone(A)); x.count=shiftCount(A.count);
+  const y=clone(x); y.kind=otherKind(x.kind); normChir(y);
+  if(veil!=='hue') y.hue=shiftHue(y.hue); else y.size=shiftSize(y.size);
+  return {pair:[x,y], name:'Too different — two attributes apart is no longer ≠',key:'stranger'};
+}
+function countPairs(grid,rel,veil){
+  const hits=[];
+  for(let i=0;i<grid.length;i++)for(let j=i+1;j<grid.length;j++)
+    if(pairSat(rel,grid[i],grid[j],veil)) hits.push([i,j]);
+  return hits;
+}
+function genSightTrial(cfg){
+  if(cfg.balance && Math.random()<0.34){
+    for(let tries=0;tries<120;tries++){
+      const kind=pick(KINDS), hue=rnd(HUES.length);
+      const chir=CHIRAL[kind]?(Math.random()<0.5?1:-1):1;
+      const orient=kind==='tri'?rnd(4):0;
+      const mk=(count,size)=>({kind,hue,count,size,chir,depth:0,orient});
+      const wit=[mk(1,1),mk(3,3)];
+      const ansSpec=mk(2,2);
+      const grid=[ansSpec,
+        Object.assign(mk(1,3),{_l:'Extreme lure — carries one pole, not the balance',_k:'surface'}),
+        Object.assign(mk(3,1),{_l:'Extreme lure — carries one pole, not the balance',_k:'surface'}),
+        Object.assign(mk(2,2),{hue:shiftHue(hue),_l:'Right balance, wrong thread — the mean of another line',_k:'stranger'})];
+      while(grid.length<cfg.cells) grid.push(randSpec({depth:0}));
+      const g2=shuffle(grid);
+      const matches=g2.map((s,i)=>i).filter(i=>PRED.SAME(g2[i],ansSpec,null));
+      if(matches.length!==1) continue;
+      const ln={},lk={}; g2.forEach((s,i)=>{ if(s._l) ln[i]=s._l; if(s._k) lk[i]=s._k; });
+      return {form:'balance',rel:'BALANCE',veil:null,grid:g2,answer:[matches[0]],
+        witness:wit,mode:'balance',lureNames:ln,lureKeys:lk,lieKey:'surface',pickN:1,t:cfg.t};
+    }
+  }
+  for(let tries=0;tries<120;tries++){
+    const rel=pick(cfg.rels), veil=cfg.veil||null;
+    let grid=[], lureNames={};
+    const target=makePairFor(rel,veil);
+    grid.push(...target);
+    let lureKeys={};
+    for(let i=0;i<cfg.lures;i++){ const L=lureFor(rel,target,veil);
+      lureNames[grid.length]=L.name; lureNames[grid.length+1]=L.name;
+      lureKeys[grid.length]=L.key; lureKeys[grid.length+1]=L.key; grid.push(...L.pair); }
+    while(grid.length<cfg.cells) grid.push(randSpec({depth:Math.random()<0.12?1:0}));
+    const order=shuffle(grid.map((_,i)=>i));
+    const g2=order.map(i=>grid[i]);
+    const ln2={},lk2={}; order.forEach((old,ni)=>{ if(lureNames[old]) ln2[ni]=lureNames[old]; if(lureKeys[old]) lk2[ni]=lureKeys[old]; });
+    const hits=countPairs(g2,rel,veil);
+    if(hits.length!==1) continue;
+    let witness=null;
+    if(cfg.mode==='induct'){
+      const w=makePairFor(rel,veil);
+      if(w[0].kind===g2[hits[0][0]].kind && w[0].hue===g2[hits[0][0]].hue) continue;
+      witness=w;
+    }
+    return {form:'pair',rel,veil,grid:g2,answer:hits[0],witness,mode:cfg.mode,lureNames:ln2,lureKeys:lk2,lieKey:(Object.values(lk2)[0]||'surface'),pickN:2,t:cfg.t};
+  }
+  /* fallback: minimal clean trial with enforced uniqueness */
+  for(let tries=0;tries<200;tries++){
+    const rel='SAME', target=makePairFor(rel,null);
+    const grid=shuffle([...target,randSpec({depth:0}),randSpec({depth:0})]);
+    const hits=countPairs(grid,rel,null);
+    if(hits.length===1)
+      return {form:'pair',rel,veil:null,grid,answer:hits[0],witness:null,mode:'named',lureNames:{},lureKeys:{},lieKey:'surface',pickN:2,t:14};
+  }
+  const fa=randSpec({depth:0,count:1,size:1,hue:0,kind:'gem'}); const fb=clone(fa);
+  const fc=clone(fa); fc.hue=1; fc.count=2;
+  const fd=clone(fa); fd.hue=2; fd.kind='tri'; fd.count=3;
+  return {form:'pair',rel:'SAME',veil:null,grid:[fa,fb,fc,fd],answer:[0,1],witness:null,mode:'named',lureNames:{},lureKeys:{},lieKey:'surface',pickN:2,t:14};
+}
+const BADGES='ABCDEF';
+function claimText(c){
+  const A='<b>'+BADGES[c.i]+'</b>', B=c.j!==undefined?'<b>'+BADGES[c.j]+'</b>':'';
+  let core;
+  if(c.type==='SAME') core=A+' <span class="rel">≡</span> '+B+' (identical)';
+  else if(c.type==='OPPOSITE') core=A+' <span class="rel">⇄</span> '+B+' (mirror twins)';
+  else if(c.type==='MORE') core=A+' <span class="rel">&gt;</span> '+B+' (more glyphs)';
+  else if(c.type==='ENFOLD') core=A+' <span class="rel">⊃</span> '+B+' (enfolds its figure)';
+  else core=A+' shows <span class="rel">'+c.n+'</span> glyph'+(c.n===1?'':'s');
+  return c.neg ? '<span class="not">NOT:</span> '+core : core;
+}
+function claimTruth(c,grid){
+  let v;
+  if(c.type==='SAME') v=PRED.SAME(grid[c.i],grid[c.j],null);
+  else if(c.type==='OPPOSITE') v=PRED.OPPOSITE(grid[c.i],grid[c.j],null);
+  else if(c.type==='MORE') v=grid[c.i].kind===grid[c.j].kind&&grid[c.i].hue===grid[c.j].hue&&grid[c.i].count>grid[c.j].count;
+  else if(c.type==='ENFOLD') v=PRED.ENFOLD(grid[c.i],grid[c.j],null);
+  else v=grid[c.i].count===c.n;
+  return c.neg ? !v : v;
+}
+const FORGE_KEYS={polaritySwap:'polarity',offByOne:'offbyone',labelSwap:'label',dirFlip:'direction',negation:'negation'};
+const FORGE_NAMES={polaritySwap:'Polarity swap — ≡ passed off as ⇄ (or the reverse)',
+  offByOne:'Off-by-one — the count was almost right',
+  labelSwap:'Label swap — a true claim re-aimed at a lookalike',
+  dirFlip:'Direction flip — the vessel named as the held',
+  negation:'Negation veil — a NOT wrapped around the truth'};
+function genTestimonyTrial(cfg){
+  for(let tries=0;tries<160;tries++){
+    /* build grid with planted structure */
+    const grid=[];
+    const p1=makePairFor(pick(['SAME','OPPOSITE']),null); grid.push(...p1);
+    const p2=makePairFor(pick(['COMPARISON','ENFOLDMENT']),null); grid.push(...p2);
+    /* plant a lookalike of a witness so label-swap lies are usually possible */
+    if(grid.length<cfg.cells){ const look=normChir(clone(p1[0]));
+      look.count=shiftCount(look.count); look.size=shiftSize(look.size);
+      look.depth=0; grid.push(look); }
+    while(grid.length<cfg.cells) grid.push(randSpec({depth:Math.random()<0.15?1:0}));
+    const g=shuffle(grid).slice(0,cfg.cells);
+    /* enumerate true claims */
+    const trueRel=[];
+    for(let i=0;i<g.length;i++)for(let j=0;j<g.length;j++){
+      if(i===j) continue;
+      if(i<j&&PRED.SAME(g[i],g[j],null)) trueRel.push({type:'SAME',i,j});
+      if(i<j&&PRED.OPPOSITE(g[i],g[j],null)) trueRel.push({type:'OPPOSITE',i,j});
+      if(g[i].kind===g[j].kind&&g[i].hue===g[j].hue&&g[i].count>g[j].count) trueRel.push({type:'MORE',i,j});
+      if(PRED.ENFOLD(g[i],g[j],null)) trueRel.push({type:'ENFOLD',i,j});
+    }
+    if(trueRel.length<1) continue;
+    /* forge one lie */
+    const forge=biasPick(cfg.forges.map(f=>({v:f,key:FORGE_KEYS[f]})));
+    let lie=null;
+    if(forge==='negation'){ const src=clone(pick(trueRel)); src.neg=true; lie={c:src,name:FORGE_NAMES.negation}; }
+    else if(forge==='offByOne'){ const i=rnd(g.length); const n=g[i].count+(Math.random()<0.5?1:-1);
+      if(n<1||n>4) continue; lie={c:{type:'COUNT',i,n},name:FORGE_NAMES.offByOne}; }
+    else if(forge==='polaritySwap'){ const src=pick(trueRel.filter(c=>c.type==='SAME'||c.type==='OPPOSITE'));
+      if(!src) continue; const c=clone(src); c.type=c.type==='SAME'?'OPPOSITE':'SAME'; lie={c,name:FORGE_NAMES.polaritySwap}; }
+    else if(forge==='dirFlip'){ const src=pick(trueRel.filter(c=>c.type==='MORE'||c.type==='ENFOLD'));
+      if(!src) continue; const c=clone(src); [c.i,c.j]=[c.j,c.i]; lie={c,name:FORGE_NAMES.dirFlip}; }
+    else { /* labelSwap: re-aim a true claim at a lookalike of its subject */
+      const src=pick(trueRel);
+      const looks=g.map((s,k)=>k).filter(k=>k!==src.i&&k!==src.j&&g[k].kind===g[src.i].kind&&g[k].hue===g[src.i].hue);
+      if(!looks.length) continue;
+      const c=clone(src); c.i=pick(looks); lie={c,name:FORGE_NAMES.labelSwap}; }
+    if(!lie||claimTruth(lie.c,g)) continue;
+    /* assemble true claims */
+    const pool=shuffle(trueRel).slice(0,cfg.claims-1);
+    while(pool.length<cfg.claims-1){ const i=rnd(g.length);
+      const c={type:'COUNT',i,n:g[i].count};
+      if(!pool.some(p=>p.type==='COUNT'&&p.i===i)) pool.push(c); }
+    const claims=shuffle([...pool.map(c=>({c,isLie:false})),{c:lie.c,isLie:true}]);
+    /* validate: exactly one false */
+    const falses=claims.filter(cl=>!claimTruth(cl.c,g));
+    if(falses.length!==1||falses[0].c!==lie.c) continue;
+    return {grid:g,claims,lieName:lie.name,lieKey:FORGE_KEYS[forge],t:cfg.t};
+  }
+  return null;
+}
+const WEAVE_RULES={
+  MIRROR:{glyph:'⇄', txt:'handedness flips each step', apply:(s,c)=>{ s.chir=(c%2===0?1:-1); }},
+  GROW:  {glyph:'>', txt:'one more glyph each step',   apply:(s,c)=>{ s.count=s.count+c; }},
+  SWELL: {glyph:'>', txt:'the figure swells each step', apply:(s,c)=>{ s.size=s.size+c; }},
+  TURN:  {glyph:'→', txt:'a quarter-turn each step',   apply:(s,c)=>{ s.orient=(s.orient+c)%4; }},
+  ENFOLD:{glyph:'⊃', txt:'one ring deeper each step',  apply:(s,c)=>{ s.depth=c; }},
+  PERMUTE:{glyph:'≠', txt:'hue cycles each step',      apply:(s,c,pal)=>{ s.hue=pal[(s.hueIdx+c)%3]; }}
+};
+function pickWeaveRules(n){
+  for(let tries=0;tries<40;tries++){
+    const cand=shuffle(Object.keys(WEAVE_RULES)), out=[];
+    for(const r of cand){
+      if(out.length>=n) break;
+      if(r==='TURN'&&out.includes('MIRROR')) continue;
+      if(r==='MIRROR'&&out.includes('TURN')) continue;
+      if(r==='GROW'&&out.includes('SWELL')) continue;
+      if(r==='SWELL'&&out.includes('GROW')) continue;
+      out.push(r);
+    }
+    if(out.length===n) return out;
+  }
+  return ['GROW'];
+}
+function weaveBases(rules,rows){
+  const useTurn=rules.includes('TURN'), useMirror=rules.includes('MIRROR');
+  const kinds=useTurn?['tri','tri','tri']
+    : useMirror?shuffle(KINDS.filter(k=>CHIRAL[k])).slice(0,rows)
+    : shuffle(KINDS).slice(0,rows);
+  const pal=shuffle(HUES.map((_,i)=>i)).slice(0,3);
+  const hues=rules.includes('PERMUTE')?null:shuffle(HUES.map((_,i)=>i)).slice(0,rows);
+  const bases=[];
+  for(let r=0;r<rows;r++){
+    bases.push({ kind:kinds[r], hueIdx:r, hue:hues?hues[r]:pal[r%3],
+      count:rules.includes('GROW')?1+rnd(2):1+rnd(2),
+      size:rules.includes('SWELL')?1:1+rnd(2),
+      chir:1, depth:0, orient:useTurn?rnd(4):0 });
+  }
+  return {bases,pal};
+}
+function weaveCell(rules,base,c,pal){
+  const s=clone(base);
+  if(rules.includes('GROW')) s.count=base.count;      /* apply() adds c */
+  rules.forEach(r=>WEAVE_RULES[r].apply(s,c,pal));
+  if(!rules.includes('MIRROR')) s.chir=CHIRAL[s.kind]?1:1;
+  if(s.count>4)s.count=4; if(s.size>3)s.size=3; if(s.depth>2)s.depth=2;
+  delete s.hueIdx; return s;
+}
+function ruledAttrs(rules){
+  const map={MIRROR:'chir',GROW:'count',SWELL:'size',TURN:'orient',ENFOLD:'depth',PERMUTE:'hue'};
+  return rules.map(r=>map[r]);
+}
+function specKey(s){ return [s.kind,s.hue,s.count,s.size,s.chir,s.depth,s.orient].join('|'); }
+/* Noise veil: one unruled attribute varies meaninglessly across the fabric */
+function applyWeaveNoise(grid,rules){
+  const ruled=ruledAttrs(rules);
+  const attr=['size','count','orient'].find(a=>!ruled.includes(a));
+  if(!attr) return null;
+  grid.forEach(s=>{ if(!s) return;
+    if(attr==='size') s.size=1+rnd(3);
+    else if(attr==='count') s.count=1+rnd(3);
+    else s.orient=rnd(4); });
+  return attr;
+}
+function genWeaveTrial(cfg){
+  const mode=cfg.mode==='mixed'?pick(['missing','corrupt']):cfg.mode;
+  for(let tries=0;tries<80;tries++){
+    const rules=pickWeaveRules(cfg.nRules);
+    const {bases,pal}=weaveBases(rules,cfg.rows);
+    /* GROW/SWELL range check across 3 steps */
+    if(rules.includes('GROW')&&bases.some(b=>b.count+2>4)) continue;
+    if(rules.includes('SWELL')&&bases.some(b=>b.size+2>3)) continue;
+    const grid=[];
+    for(let r=0;r<cfg.rows;r++) for(let c=0;c<3;c++) grid.push(weaveCell(rules,bases[r],c,pal));
+    if(mode==='missing'){
+      const correct=grid[grid.length-1];
+      const lastBase=bases[cfg.rows-1];
+      const cand=[];
+      /* frozen: one rule stopped a step early (others correct) */
+      rules.forEach(r=>{ const f=clone(correct);
+        const frozen=weaveCell(rules,lastBase,1,pal);
+        const a=ruledAttrs([r])[0]; f[a]=frozen[a];
+        cand.push({spec:f, broke:r, kindTxt:'frozen thread — '+WEAVE_RULES[r].glyph+' stopped one step early',key:'frozen'}); });
+      /* overrun: one rule ran a step too far (others correct) */
+      rules.forEach(r=>{ const f=clone(correct);
+        const over=weaveCell(rules,lastBase,3,pal);
+        const a=ruledAttrs([r])[0]; f[a]=over[a];
+        cand.push({spec:f, broke:r, kindTxt:'overrun thread — '+WEAVE_RULES[r].glyph+' ran one step too far',key:'overrun'}); });
+      /* stranger: another row's completion */
+      if(cfg.rows>1){ const f=weaveCell(rules,bases[cfg.rows-2],2,pal);
+        cand.push({spec:f, broke:'row', kindTxt:'stranger thread — another row\u2019s weave',key:'stranger'}); }
+      /* far stranger: right weave, foreign figure — guaranteed distinct */
+      { const f=normChir(Object.assign(clone(correct),{kind:pick(KINDS.filter(k=>k!==correct.kind))}));
+        cand.push({spec:f, broke:'row', kindTxt:'stranger thread — a figure from no row',key:'stranger'}); }
+      const seen={}; seen[specKey(correct)]=true;
+      const uniq=[];
+      for(const f of cand){ const k=specKey(f.spec);
+        if(seen[k]) continue; seen[k]=true; uniq.push(f); if(uniq.length===3) break; }
+      if(uniq.length<3) continue;
+      const noiseAttr=cfg.noise?applyWeaveNoise(grid,rules):null;
+      const opts=shuffle([{spec:correct,broke:null,kindTxt:null},...uniq]);
+      return {mode,rules,pal,grid,rows:cfg.rows,opts,correct:opts.findIndex(o=>o.broke===null),
+        noiseAttr,lieKey:noiseAttr?'noise':'frozen',t:cfg.t};
+    }
+    /* corrupt mode */
+    const r=1+rnd(cfg.rows-1), c=1+rnd(2), idx=r*3+c;
+    const rule=pick(rules), attr=ruledAttrs([rule])[0];
+    const wrongStep=(c===2)?pick([0,1]):pick([0,2]);
+    const bad=weaveCell(rules,bases[r],wrongStep,pal);
+    const corrupted=clone(grid[idx]); corrupted[attr]=bad[attr];
+    if(specKey(corrupted)===specKey(grid[idx])) continue;
+    grid[idx]=corrupted;
+    /* validate exactly one inconsistent cell on ruled attrs */
+    let badCount=0;
+    for(let rr=0;rr<cfg.rows;rr++)for(let cc=0;cc<3;cc++){
+      const should=weaveCell(rules,bases[rr],cc,pal), is=grid[rr*3+cc];
+      const off=ruledAttrs(rules).some(a=>should[a]!==is[a]);
+      if(off) badCount++;
+    }
+    if(badCount!==1) continue;
+    const noiseAttr=cfg.noise?applyWeaveNoise(grid,rules):null;
+    return {mode,rules,pal,grid,rows:cfg.rows,corruptIdx:idx,brokeRule:rule,
+      noiseAttr,lieKey:noiseAttr?'noise':(wrongStep<c?'frozen':'overrun'),t:cfg.t};
+  }
+  return genWeaveTrial({rows:2,nRules:1,mode:'missing',t:18});
+}
+function weaveRuleBanner(rules){
+  return rules.map(r=>'<b>'+WEAVE_RULES[r].glyph+'</b> '+WEAVE_RULES[r].txt).join(' · ');
+}
+</script>
+<script>
+/* ============================================================
+   NEW WINDINGS — Woven Field · Bead Chain · One Gesture
+   ============================================================ */
+const FIELD_LAWS={
+  MIRROR:{word:'mirrors', ok:(a,b)=>PRED.OPPOSITE(a,b,null),
+    make:()=>{const a=randSpec({kind:pick(KINDS.filter(k=>CHIRAL[k])),depth:0});const b=clone(a);b.chir=-a.chir;return[a,b];},
+    deceits:[
+      {v:'twin',key:'twin',name:'Twin-in-the-Mirror — identical where mirrored was owed',ap:(c,p)=>{c.chir=p.chir;}},
+      {v:'hue',key:'label',name:'Label Swap — the partner answers in another colour',ap:c=>{c.hue=shiftHue(c.hue);}},
+      {v:'count',key:'offbyone',name:'Off-by-One — the partner answers with the wrong number',ap:c=>{c.count=shiftCount(c.count);}},
+      {v:'kind',key:'stranger',name:'Stranger Thread — a different figure answers',ap:c=>{c.kind=otherKind(c.kind);normChir(c);}}]},
+  SAME:{word:'identical twins', ok:(a,b)=>PRED.SAME(a,b,null),
+    make:()=>{const a=randSpec({depth:0});return[a,clone(a)];},
+    deceits:[
+      {v:'mirror',key:'twin',name:'Mirror-in-the-Twin — mirrored where identity was owed',ap:(c)=>{if(CHIRAL[c.kind])c.chir=-c.chir;else c.orient=(c.orient+2)%4,c.kind='tri';}},
+      {v:'hue',key:'label',name:'Label Swap — the partner answers in another colour',ap:c=>{c.hue=shiftHue(c.hue);}},
+      {v:'count',key:'offbyone',name:'Off-by-One — the partner answers with the wrong number',ap:c=>{c.count=shiftCount(c.count);}},
+      {v:'kind',key:'stranger',name:'Stranger Thread — a different figure answers',ap:c=>{c.kind=otherKind(c.kind);normChir(c);}}]},
+  STEP:{word:'a single step (+1 glyph)', ok:(a,b)=>a.depth===0&&b.depth===0&&a.kind===b.kind&&a.hue===b.hue&&a.chir===b.chir&&a.size===b.size&&Math.abs(a.count-b.count)===1,
+    make:()=>{const a=randSpec({depth:0,count:1+rnd(3)});const b=clone(a);b.count=a.count+(a.count>=4?-1:1);return[a,b];},
+    deceits:[
+      {v:'frozen',key:'frozen',name:'Frozen Step — the partner failed to advance',ap:(c,p)=>{c.count=p.count;}},
+      {v:'over',key:'overrun',name:'Overrun Step — the partner leapt two',ap:(c,p)=>{c.count=p.count>=3?p.count-2:p.count+2;}},
+      {v:'hue',key:'label',name:'Label Swap — the partner answers in another colour',ap:c=>{c.hue=shiftHue(c.hue);}},
+      {v:'kind',key:'stranger',name:'Stranger Thread — a different figure answers',ap:c=>{c.kind=otherKind(c.kind);normChir(c);}}]}
+};
+function genFieldTrial(cfg){
+  const lawName=cfg.rule||pick(cfg.rules||['MIRROR']);
+  const LAW=FIELD_LAWS[lawName];
+  for(let tries=0;tries<160;tries++){
+    const cells=new Array(9).fill(null);
+    for(let i=0;i<4;i++){ const [a,b]=LAW.make(); cells[i]=a; cells[8-i]=b; }
+    cells[4]={spindle:true};
+    const t=pick([0,1,2,3,5,6,7,8]), p=8-t;
+    const c=clone(cells[t]);
+    const de=biasPick(LAW.deceits.map(d=>({v:d,key:d.key})));
+    de.ap(c,cells[p]); cells[t]=c;
+    let broken=[];
+    for(let i=0;i<4;i++) if(!LAW.ok(cells[i],cells[8-i])) broken.push(i);
+    if(broken.length!==1||broken[0]!==Math.min(t,p)) continue;
+    return {form:'field', cells, answer:[t,p], law:lawName, lawWord:LAW.word,
+      deceit:de.name, lieKey:de.key, pickN:1, t:cfg.t, named:cfg.named};
+  }
+  return genFieldTrial({rule:'MIRROR',t:14,named:true});
+}
+
+function genBeadTrial(cfg){
+  const mode=cfg.mode||'rev';
+  const D=()=>rnd(3), key=c=>c.join(''), rev=c=>c.slice().reverse();
+  const partner = mode==='revshift' ? (c=>rev(c).map(d=>(d+1)%3)) : rev;
+  const mate=(a,b)=>key(partner(a))===key(b)||key(partner(b))===key(a);
+  const randCode=()=>{let c;do{c=[D(),D(),D()];}while(c[0]+c[1]+c[2]===0);return c;};
+  for(let tries=0;tries<200;tries++){
+    let X; do{ X=randCode(); } while(mode==='rev'&&key(X)===key(rev(X)));
+    const P=partner(X);
+    if(P[0]+P[1]+P[2]===0) continue;
+    const hue=rnd(HUES.length);
+    const cells=[{code:X,hue},{code:P,hue}];
+    if(cfg.lures){
+      const lurePool=[];
+      const perms=[[0,2,1],[1,0,2],[1,2,0],[2,0,1]].map(p=>p.map(i=>X[i]))
+        .filter(c=>c[0]+c[1]+c[2]>0&&key(c)!==key(X)&&key(c)!==key(P));
+      if(perms.length) lurePool.push({code:pick(perms),_l:CANON.anagram,_k:'anagram'});
+      { const oc=P.slice(); const sI=rnd(3); oc[sI]=(oc[sI]+1+rnd(2))%3;
+        if(oc[0]+oc[1]+oc[2]>0&&key(oc)!==key(X)&&key(oc)!==key(P))
+          lurePool.push({code:oc,_l:CANON.offbyone,_k:'offbyone'}); }
+      if(mode==='revshift'){ const fr=rev(X);
+        if(fr[0]+fr[1]+fr[2]>0&&key(fr)!==key(X)&&key(fr)!==key(P))
+          lurePool.push({code:fr,_l:'Frozen Thread — reversed, but the turn was never made',_k:'frozen'}); }
+      const chosen=lurePool.length?[biasPick(lurePool.map(l=>({v:l,key:l._k})))]:[];
+      shuffle(lurePool).concat(chosen).forEach(l=>{
+        if(cells.length<cfg.cells-1&&!cells.some(c=>key(c.code)===key(l.code)))
+          cells.push({code:l.code,hue,_l:l._l,_k:l._k}); });
+    }
+    while(cells.length<cfg.cells){ const c=randCode();
+      if(!cells.some(x=>key(x.code)===key(c))) cells.push({code:c,hue}); }
+    const g=shuffle(cells).slice(0,cfg.cells);
+    const hits=[];
+    for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++)
+      if(mate(g[i].code,g[j].code)) hits.push([i,j]);
+    if(hits.length!==1) continue;
+    const gi=g[hits[0][0]].code, gj=g[hits[0][1]].code;
+    if(!((key(gi)===key(X)&&key(gj)===key(P))||(key(gi)===key(P)&&key(gj)===key(X)))) continue;
+    const ln={},lk={}; g.forEach((c,i)=>{ if(c._l) ln[i]=c._l; if(c._k) lk[i]=c._k; });
+    return {form:'bead', mode, cells:g, answer:hits[0], lureNames:ln, lureKeys:lk,
+      lieKey: mode==='revshift'?'frozen':'anagram', pickN:2, t:cfg.t};
+  }
+  return {form:'bead', mode:'rev', cells:[{code:[0,1,2],hue:0},{code:[2,1,0],hue:0},{code:[1,0,2],hue:0,_l:CANON.anagram,_k:'anagram'},{code:[0,2,2],hue:0}],
+    answer:[0,1], lureNames:{2:CANON.anagram}, lureKeys:{2:'anagram'}, lieKey:'anagram', pickN:2, t:16};
+}
+
+/* THE RITE — chained gestures applied in the mind; inverse rites unwind them */
+const RITE_OPS={MIRROR:{glyph:'⇄',word:'mirror'},GROW:{glyph:'>',word:'grow'},SWELL:{glyph:'◇',word:'swell'},TURN:{glyph:'→',word:'turn'},ENFOLD:{glyph:'⊃',word:'enfold'},PERMUTE:{glyph:'≠',word:'permute'}};
+function applyOp(sp,op,pal){ const s=clone(sp);
+  if(op==='MIRROR') s.chir=-s.chir;
+  else if(op==='GROW') s.count=Math.min(4,s.count+1);
+  else if(op==='SWELL') s.size=Math.min(3,s.size+1);
+  else if(op==='TURN') s.orient=(s.orient+1)%4;
+  else if(op==='ENFOLD') s.depth=Math.min(2,s.depth+1);
+  else s.hue=pal[(pal.indexOf(s.hue)+1)%3];
+  return s; }
+function genRiteTrial(cfg){
+  for(let tries=0;tries<200;tries++){
+    const nOps=cfg.nOps||2;
+    const pool=shuffle(['GROW','SWELL','TURN','ENFOLD','PERMUTE','MIRROR']);
+    const ops=[];
+    for(const o of pool){ if(ops.length>=nOps)break;
+      if(o==='TURN'&&ops.includes('MIRROR'))continue;
+      if(o==='MIRROR'&&ops.includes('TURN'))continue;
+      ops.push(o); }
+    if(ops.length<nOps) continue;
+    if(cfg.parity&&ops.includes('MIRROR')) ops.splice(rnd(ops.length+1),0,'MIRROR');
+    const seq=shuffle(ops);
+    const pal=shuffle(HUES.map((_,i)=>i)).slice(0,3);
+    const needTri=seq.includes('TURN'), needChir=seq.includes('MIRROR');
+    const kind=needTri?'tri':(needChir?pick(KINDS.filter(k=>CHIRAL[k])):pick(KINDS));
+    const seed=normChir({kind,hue:pal[0],count:1,size:1,chir:1,depth:0,orient:needTri?rnd(4):0});
+    let out=clone(seed); seq.forEach(o=>out=applyOp(out,o,pal));
+    if(specKey(out)===specKey(seed)&&seq.length===2) continue;
+    const inv=!!cfg.inv&&Math.random()<0.5;
+    const shown=inv?out:seed, correct=inv?seed:out;
+    const cand=[];
+    seq.forEach((op,i)=>{
+      if(inv) cand.push({spec:applyOp(seed,op,pal),key:'frozen',
+        txt:'Frozen Thread — the '+RITE_OPS[op].word+' was never unwound'});
+      else { let f=clone(seed); seq.filter((_,j)=>j!==i).forEach(o=>f=applyOp(f,o,pal));
+        cand.push({spec:f,key:'frozen',txt:'Frozen Thread — the '+RITE_OPS[op].word+' was skipped'}); }
+    });
+    seq.forEach(op=>{ if(inv)return;
+      cand.push({spec:applyOp(clone(out),op,pal),key:'overrun',
+        txt:'Overrun Thread — the '+RITE_OPS[op].word+' ran twice'}); });
+    if(inv) cand.push({spec:applyOp(applyOp(clone(seed),seq[0],pal),seq[0],pal),key:'overrun',
+      txt:'Overrun Thread — unwound a step too far'});
+    const unused=Object.keys(RITE_OPS).filter(o=>!seq.includes(o)
+      &&!(o==='TURN'&&(seq.includes('MIRROR')||kind!=='tri'))
+      &&!(o==='MIRROR'&&(seq.includes('TURN')||!CHIRAL[kind])));
+    if(unused.length){ const u=pick(unused);
+      let f; if(inv) f=applyOp(clone(seed),u,pal);
+      else { f=clone(seed); seq.slice(0,-1).forEach(o=>f=applyOp(f,o,pal)); f=applyOp(f,u,pal); }
+      cand.push({spec:f,key:'stranger',txt:'Stranger Thread — a gesture from outside the rite'}); }
+    if(seq.filter(o=>o==='MIRROR').length===2){
+      const f=inv?applyOp(clone(seed),'MIRROR',pal):applyOp(clone(out),'MIRROR',pal);
+      cand.push({spec:f,key:'twin',txt:'Twin-in-the-Mirror — the double mirror counted as one'});
+    }
+    const seen={}; seen[specKey(correct)]=1;
+    const foils=[];
+    for(const f of shuffle(cand)){ const k2=specKey(f.spec);
+      if(seen[k2])continue; seen[k2]=1; foils.push(f); if(foils.length===3)break; }
+    if(foils.length<3) continue;
+    const opts=shuffle([{spec:correct,key:null,txt:null},...foils]);
+    return {form:'rite',seq,pal,shown,inv,opts,correct:opts.findIndex(o=>o.key===null),
+      lieKey: seq.filter(o=>o==='MIRROR').length===2?'twin':'frozen', t:cfg.t};
+  }
+  return genRiteTrial({nOps:2,t:16});
+}
+function runRite(cfg){
+  clearTrialUI();
+  state.form='rite';
+  const trial=state.trial=genRiteTrial(cfg);
+  state.phase='ask';
+  $('rule-banner').innerHTML=SEAL[2]+(trial.inv
+    ? 'The gestures below were <span class="gold">already performed</span> on a seed to make this form — unwind them: tap the <b>seed</b>'
+    : 'Perform the gestures below <span class="gold">in the mind</span>, in one pass over the seed — tap the <b>result</b>');
+  const chips=trial.seq.map(o=>'<span class="opchip">'+RITE_OPS[o].glyph+'<i>'+RITE_OPS[o].word+'</i></span>').join('');
+  $('task-zone').innerHTML=
+    '<div class="witness-box fade"><div class="witness-label">'+(trial.inv?'The final form':'The seed')+'</div>'+
+    '<div class="witness-pair" style="grid-template-columns:1fr;max-width:110px"><div class="gcell">'+cellSVG(trial.shown)+'</div></div></div>'+
+    '<div class="opchain">'+chips+'</div>';
+  const g=document.createElement('div'); g.className='gopts';
+  trial.opts.forEach((o,i)=>{ const b=document.createElement('button'); b.className='gopt';
+    b.innerHTML=cellSVG(o.spec); b.onclick=()=>finishRite(i); g.appendChild(b); });
+  $('answer-zone').appendChild(g);
+  startClock(trial.t,()=>finishRite(null));
+}
+function finishRite(k){
+  if(state.phase!=='ask') return;
+  state.phase='feedback'; stopClock();
+  const t=state.trial;
+  const ok = k===t.correct;
+  const btns=$('answer-zone').querySelectorAll('.gopt');
+  btns.forEach((b,i)=>{ b.disabled=true;
+    if(i===t.correct) b.classList.add(i===k?'picked-right':'reveal-right');
+    else if(i===k) b.classList.add('picked-wrong'); });
+  const fb=$('feedback');
+  if(k===null){ fb.textContent='⌛ THE RITE LAPSED'; fb.classList.add('miss'); }
+  else { fb.textContent= ok?'✋ RITE COMPLETE':'✕ MISCAST'; fb.classList.add(ok?'good':'bad'); }
+  let ex='Rite: '+t.seq.map(o=>RITE_OPS[o].word).join(' · ')+(t.inv?' — unwound.':'.');
+  if(!ok&&k!==null&&t.opts[k].txt) ex+=' <span class="lie">'+t.opts[k].txt+'.</span>';
+  $('explain').innerHTML=ex;
+  recordResult(ok, k!==null&&!ok?t.opts[k].key:undefined); showNext();
+}
+
+function genGestureTrial(cfg){
+  for(let tries=0;tries<120;tries++){
+    const n=cfg.nRules||1;
+    const r1=pickWeaveRules(n);
+    const same=Math.random()<0.5;
+    let r2=r1.slice();
+    if(!same){
+      const idx=rnd(r2.length);
+      const alt=Object.keys(WEAVE_RULES).filter(r=>!r2.includes(r)
+        &&!(r==='TURN'&&r2.includes('MIRROR'))&&!(r==='MIRROR'&&r2.includes('TURN'))
+        &&!(r==='GROW'&&r2.includes('SWELL'))&&!(r==='SWELL'&&r2.includes('GROW')));
+      if(!alt.length) continue;
+      r2[idx]=pick(alt);
+    }
+    const A=weaveBases(r1,1), B=weaveBases(r2,1);
+    if(r1.includes('GROW')&&A.bases[0].count+2>4) continue;
+    if(r2.includes('GROW')&&B.bases[0].count+2>4) continue;
+    if(r1.includes('SWELL')&&A.bases[0].size>1) continue;
+    if(r2.includes('SWELL')&&B.bases[0].size>1) continue;
+    if(A.bases[0].kind===B.bases[0].kind&&A.bases[0].hue===B.bases[0].hue) continue;
+    const s1=[0,1,2].map(c=>weaveCell(r1,A.bases[0],c,A.pal));
+    const s2=[0,1,2].map(c=>weaveCell(r2,B.bases[0],c,B.pal));
+    const sig=s=>['chir','count','size','orient','depth','hue']
+      .filter(a=>!(s[0][a]===s[1][a]&&s[1][a]===s[2][a])).join(',');
+    if((sig(s1)===sig(s2))!==same) continue;
+    return {form:'gesture', s1, s2, r1, r2, answer: same?'yes':'no', t:cfg.t};
+  }
+  const b={kind:'gem',hue:0,count:1,size:1,chir:1,depth:0,orient:0};
+  const s=[0,1,2].map(c=>weaveCell(['GROW'],Object.assign({hueIdx:0},b),c,[0,1,2]));
+  return {form:'gesture', s1:s, s2:s.map(clone), r1:['GROW'], r2:['GROW'], answer:'yes', t:14};
+}
+
+/* ============================================================
+   THE LADDER — one level, seven windings braided
+   ============================================================ */
+const ALLR=['SAME','COMPARISON','DIFFERENT','OPPOSITE','ENFOLDMENT'];
+const ALLF=['polaritySwap','offByOne','labelSwap','dirFlip','negation'];
+const LADDER=[null,
+ {forms:{pair:1}, pair:{cells:4,rels:['SAME','COMPARISON'],mode:'named',lures:0,t:16}},
+ {forms:{pair:1}, pair:{cells:4,rels:['SAME','COMPARISON','DIFFERENT'],mode:'named',lures:1,t:14}},
+ {forms:{pair:2,testimony:1}, pair:{cells:6,rels:['SAME','COMPARISON','DIFFERENT','OPPOSITE'],mode:'named',lures:1,t:13},
+   testimony:{cells:4,claims:2,forges:['polaritySwap','offByOne'],t:16}},
+ {forms:{pair:1,testimony:1}, pair:{cells:6,rels:ALLR,mode:'named',lures:2,t:12},
+   testimony:{cells:4,claims:3,forges:['polaritySwap','offByOne','dirFlip'],t:15}},
+ {forms:{pair:1,testimony:1,weave:1}, pair:{cells:6,rels:ALLR,mode:'glyph',lures:2,t:11},
+   testimony:{cells:6,claims:3,forges:['polaritySwap','offByOne','labelSwap','dirFlip'],t:14},
+   weave:{rows:2,nRules:1,mode:'missing',t:18}},
+ {forms:{pair:1,testimony:1,weave:1,field:1}, pair:{cells:6,rels:ALLR,mode:'glyph',lures:2,t:11},
+   testimony:{cells:6,claims:3,forges:['polaritySwap','offByOne','labelSwap','dirFlip'],t:13},
+   weave:{rows:2,nRules:2,mode:'missing',t:16}, field:{rules:['MIRROR'],named:true,t:13}},
+ {forms:{pair:1,testimony:1,weave:1,field:1}, pair:{cells:9,rels:ALLR,mode:'aim',lures:2,t:13},
+   testimony:{cells:6,claims:4,forges:['polaritySwap','offByOne','labelSwap','dirFlip'],t:13},
+   weave:{rows:3,nRules:2,mode:'missing',t:16}, field:{rules:['MIRROR'],named:true,t:12}},
+ {forms:{pair:1,testimony:1,weave:2,field:1}, pair:{cells:9,rels:ALLR,mode:'aim',lures:2,t:12},
+   testimony:{cells:6,claims:4,forges:ALLF,t:12},
+   weave:{rows:3,nRules:2,mode:'mixed',t:15}, field:{rules:['MIRROR','SAME'],named:true,t:12}},
+ {forms:{pair:1,testimony:1,weave:1,field:1,gesture:1}, pair:{cells:9,rels:ALLR,mode:'induct',lures:2,t:12},
+   testimony:{cells:6,claims:4,forges:ALLF,t:12},
+   weave:{rows:3,nRules:2,mode:'mixed',t:14}, field:{rules:['MIRROR','SAME'],named:true,t:12},
+   gesture:{mode:'compare',nRules:1,t:14}},
+ {forms:{pair:1,testimony:1,weave:1,field:1,gesture:1,bead:1},
+   pair:{cells:9,rels:ALLR,mode:'induct',lures:2,veil:'hue',t:12},
+   testimony:{cells:6,claims:4,forges:ALLF,t:11},
+   weave:{rows:3,nRules:3,mode:'mixed',t:14}, field:{rules:['MIRROR','SAME','STEP'],named:true,t:11},
+   gesture:{mode:'compare',nRules:1,t:13}, bead:{mode:'rev',cells:6,lures:true,t:16}},
+ {forms:{pair:1,testimony:1,weave:1,field:1,gesture:1,bead:1},
+   pair:{cells:9,rels:ALLR,mode:'induct',lures:3,veil:'hue',balance:true,t:11},
+   testimony:{cells:6,claims:5,forges:ALLF,t:11},
+   weave:{rows:3,nRules:3,mode:'mixed',t:13}, field:{rules:['MIRROR','SAME','STEP'],named:true,t:11},
+   gesture:{mode:'enact',nOps:2,t:15}, bead:{mode:'rev',cells:6,lures:true,t:14}},
+ {forms:{pair:1,testimony:1,weave:2,field:1,gesture:1,bead:1},
+   pair:{cells:9,rels:ALLR,mode:'induct',lures:3,veil:'size',balance:true,t:10},
+   testimony:{cells:6,claims:5,forges:ALLF,t:10},
+   weave:{rows:3,nRules:3,mode:'mixed',noise:true,t:12}, field:{rules:['MIRROR','SAME','STEP'],named:false,t:10},
+   gesture:{mode:'enact',nOps:2,parity:true,t:14}, bead:{mode:'rev',cells:9,lures:true,t:14}},
+ {forms:{pair:1,testimony:1,weave:1,field:1,gesture:2,bead:1},
+   pair:{cells:9,rels:ALLR,mode:'induct',lures:3,veil:'hue',balance:true,t:10},
+   testimony:{cells:6,claims:5,forges:ALLF,t:10},
+   weave:{rows:3,nRules:3,mode:'mixed',noise:true,t:12}, field:{rules:['MIRROR','SAME','STEP'],named:false,t:10},
+   gesture:{mode:'mixed',nRules:2,nOps:3,parity:true,t:13}, bead:{mode:'revshift',cells:6,lures:true,t:16}},
+ {forms:{pair:1,testimony:1,weave:1,field:1,gesture:1,bead:2},
+   pair:{cells:9,rels:ALLR,mode:'induct',lures:3,veil:'size',balance:true,t:9},
+   testimony:{cells:6,claims:5,forges:ALLF,t:9},
+   weave:{rows:3,nRules:3,mode:'mixed',noise:true,t:11}, field:{rules:['MIRROR','SAME','STEP'],named:false,t:10},
+   gesture:{mode:'mixed',nRules:2,nOps:3,parity:true,t:12}, bead:{mode:'revshift',cells:9,lures:true,t:15}},
+ {forms:{pair:1,testimony:1,weave:1,field:1,gesture:1,bead:1},
+   pair:{cells:9,rels:ALLR,mode:'induct',lures:3,veil:'hue',balance:true,t:9},
+   testimony:{cells:6,claims:5,forges:ALLF,t:9},
+   weave:{rows:3,nRules:3,mode:'mixed',noise:true,t:11}, field:{rules:['MIRROR','SAME','STEP'],named:false,t:9},
+   gesture:{mode:'mixed',nRules:2,nOps:3,parity:true,inv:true,t:13}, bead:{mode:'revshift',cells:9,lures:true,t:14}}
+];
+function levelCfg(l){
+  if(l<LADDER.length) return LADDER[l];
+  const x=l-(LADDER.length-1), t=k=>Math.max(6,k-x);
+  return { forms:{pair:1,field:1,bead:1,testimony:1,gesture:1,weave:1},
+    pair:{cells:9,rels:ALLR,mode:'induct',lures:3,veil:pick(['hue','size']),balance:true,t:t(9)},
+    field:{rules:['MIRROR','SAME','STEP'],named:false,t:t(9)},
+    bead:{mode:'revshift',cells:9,lures:true,t:t(14)},
+    testimony:{cells:6,claims:5,forges:ALLF,t:t(9)},
+    gesture:{mode:'mixed',nRules:2,nOps:3,parity:true,inv:true,t:t(12)},
+    weave:{rows:3,nRules:3,mode:'mixed',noise:true,t:t(11)} };
+}
+function runTrial(){
+  clearTrialUI(); renderStats(); renderMastery();
+  const cfg=levelCfg(state.level);
+  const entries=Object.entries(cfg.forms);
+  const tot=entries.reduce((s,e)=>s+e[1],0);
+  let r=Math.random()*tot, form=entries[0][0];
+  for(const [f,w] of entries){ r-=w; if(r<=0){form=f;break;} }
+  state.form=form;
+  if(form==='pair') runPair(cfg.pair);
+  else if(form==='field') runField(cfg.field);
+  else if(form==='bead') runBead(cfg.bead);
+  else if(form==='testimony') runTestimonyF(cfg.testimony);
+  else if(form==='gesture'){
+    const gm=cfg.gesture.mode||'compare';
+    if(gm==='enact'||(gm==='mixed'&&Math.random()<0.5)) runRite(cfg.gesture);
+    else runGesture(cfg.gesture);
+  }
+  else runWeaveF(cfg.weave);
+}
+</script>
+<script>
+/* ============================================================
+   Runners — one screen, one question
+   ============================================================ */
+function cellsPickable(sel,handler){
+  document.querySelectorAll(sel).forEach(c=>c.onclick=()=>handler(+c.dataset.i,c));
+}
+function runPair(cfg){
+  clearTrialUI();
+  const trial=state.trial=genSightTrial(cfg);
+  state.form=trial.form||'pair';
+  trial.picked=[]; state.phase='ask';
+  const veilTxt=trial.veil?' · <span class="lie">VEIL: ignore '+trial.veil.toUpperCase()+'</span>':'';
+  if(trial.mode==='balance')
+    $('rule-banner').innerHTML=SEAL[1]+'The witness beads stand at <span class="gold">extremes</span> — tap the one figure that balances them'+veilTxt;
+  else if(trial.mode==='induct')
+    $('rule-banner').innerHTML=SEAL[1]+'The <span class="gold">witness pair</span> shares one relation — tap the pair that shares it'+veilTxt;
+  else if(trial.mode==='glyph')
+    $('rule-banner').innerHTML=SEAL[1]+'Tap the one pair bound by <b style="font-size:1rem">'+REL_GLYPH[trial.rel]+'</b>'+veilTxt;
+  else if(trial.mode==='aim')
+    $('rule-banner').innerHTML=SEAL[1]+'Aim the spotlight at <span class="gold">'+AXIS_WORD[trial.rel]+'</span> — tap the one pair that axis reveals'+veilTxt;
+  else
+    $('rule-banner').innerHTML=SEAL[1]+'Tap the one pair bound by <b>'+trial.rel+'</b> — '+REL_HINT[trial.rel]+veilTxt;
+  let html='';
+  if(trial.witness){
+    html+='<div class="witness-box fade"><div class="witness-label">'+(trial.mode==='balance'?'Witness extremes':'Witness pair')+'</div><div class="witness-pair">'+
+      '<div class="gcell">'+cellSVG(trial.witness[0])+'</div><div class="gcell">'+cellSVG(trial.witness[1])+'</div></div></div>';
+  }
+  const cols=trial.grid.length>4?3:2;
+  html+='<div class="cell-grid cols-'+cols+'" id="pick-grid">'+
+    trial.grid.map((s,i)=>'<div class="gcell pickable fade" data-i="'+i+'" style="animation-delay:'+(i*0.04)+'s">'+cellSVG(s)+'</div>').join('')+'</div>';
+  $('task-zone').innerHTML=html;
+  cellsPickable('#pick-grid .pickable',pickCell);
+  startClock(trial.t,()=>finishPick(null));
+}
+function runField(cfg){
+  clearTrialUI();
+  state.form='field';
+  const trial=state.trial=genFieldTrial(cfg);
+  trial.picked=[]; state.phase='ask';
+  $('rule-banner').innerHTML=SEAL[1]+(trial.named
+    ? 'The field is woven in <b>'+trial.lawWord+'</b> across the spindle — tap the one cell that betrays its partner'
+    : 'The field is woven by <span class="gold">one law</span> across the spindle — induce it, tap the cell that betrays it');
+  $('task-zone').innerHTML='<div class="cell-grid cols-3" id="pick-grid">'+
+    trial.cells.map((s,i)=> s.spindle
+      ? '<div class="gcell spindle fade">✦</div>'
+      : '<div class="gcell pickable fade" data-i="'+i+'" style="animation-delay:'+(i*0.03)+'s">'+cellSVG(s)+'</div>').join('')+'</div>';
+  cellsPickable('#pick-grid .pickable',pickCell);
+  startClock(trial.t,()=>finishPick(null));
+}
+function runBead(cfg){
+  clearTrialUI();
+  state.form='bead';
+  const trial=state.trial=genBeadTrial(cfg);
+  trial.picked=[]; state.phase='ask';
+  $('rule-banner').innerHTML=SEAL[1]+(trial.mode==='revshift'
+    ? 'Each bead reads <b>left → right</b> (0–2 pips). Two beads are <span class="gold">turned mirrors</span> — reverse the code, then turn every digit once (+1, and 2 becomes 0). Tap both.'
+    : 'Each bead reads <b>left → right</b>, three slots of 0–2 pips. Two beads are <span class="gold">ternary mirrors</span> — each reads the other reversed. Tap both.');
+  const cols=trial.cells.length>4?3:2;
+  $('task-zone').innerHTML='<div class="cell-grid cols-'+cols+'" id="pick-grid">'+
+    trial.cells.map((s,i)=>'<div class="gcell pickable fade" data-i="'+i+'" style="animation-delay:'+(i*0.04)+'s">'+cellSVG(s)+'</div>').join('')+'</div>';
+  cellsPickable('#pick-grid .pickable',pickCell);
+  startClock(trial.t,()=>finishPick(null));
+}
+function pickCell(i,el){
+  if(state.phase!=='ask') return;
+  const t=state.trial;
+  if(t.picked.includes(i)){ t.picked=t.picked.filter(x=>x!==i); el.classList.remove('sel'); return; }
+  t.picked.push(i); el.classList.add('sel');
+  if(t.picked.length===t.pickN) finishPick(t.picked.slice());
+}
+function finishPick(picked){
+  if(state.phase!=='ask') return;
+  state.phase='feedback'; stopClock();
+  const t=state.trial;
+  const ok = picked!==null && (t.pickN===1
+    ? t.answer.includes(picked[0])
+    : picked.slice().sort((a,b)=>a-b).join()===t.answer.slice().sort((a,b)=>a-b).join());
+  const cells=$('task-zone').querySelectorAll('#pick-grid .gcell');
+  t.answer.forEach(i=>cells[i].classList.add('truth'));
+  if(picked) picked.forEach(i=>{ if(!t.answer.includes(i)) cells[i].classList.add('lieglow'); });
+  cells.forEach(c=>c.classList.remove('pickable'));
+  const fb=$('feedback');
+  if(picked===null){ fb.textContent='⌛ THE MOMENT PASSED'; fb.classList.add('miss'); }
+  else { fb.textContent= ok?'👁 TRUE SIGHT':'✕ DECEIVED'; fb.classList.add(ok?'good':'bad'); }
+  let ex='';
+  if(t.form==='field'){
+    ex='The law: every cell answers its partner across the spindle in <b>'+t.lawWord+'</b>. <span class="lie">'+t.deceit+'.</span>';
+  } else if(t.form==='bead'){
+    const codes=t.answer.map(i=>t.cells[i].code.join('')).join(' ↔ ');
+    ex=(t.mode==='revshift'?'Turned-mirror pair: <b>':'Mirror pair: <b>')+codes+'</b>.';
+    if(!ok&&picked){ const l=t.lureNames[picked[0]]!==undefined?t.lureNames[picked[0]]:t.lureNames[picked[1]];
+      if(l) ex+=' <span class="lie">'+l+'.</span>'; }
+  } else if(t.mode==='balance'){
+    ex='<span class="rel">BALANCE</span> — the mean of the extremes on count and size, on the same thread.';
+    if(!ok&&picked&&t.lureNames[picked[0]]) ex+=' <span class="lie">'+t.lureNames[picked[0]]+'.</span>';
+  } else {
+    ex='<span class="rel">'+t.rel+'</span> '+REL_GLYPH[t.rel]+' — '+REL_HINT[t.rel]+'.';
+    if(!ok&&picked){ const lure=t.lureNames[picked[0]]||t.lureNames[picked[1]];
+      ex+=lure?' <span class="lie">'+lure+'.</span>':' <span class="lie">That pair does not satisfy the relation.</span>'; }
+    if(t.veil) ex+=' Veil: '+t.veil+' was noise this trial.';
+  }
+  $('explain').innerHTML=ex;
+  const fell=(!ok&&picked&&t.lureKeys)?(t.lureKeys[picked[0]]||t.lureKeys[picked[1]]):undefined;
+  recordResult(ok, fell||((!ok&&t.form==='field')?t.lieKey:undefined)); showNext();
+}
+
+function runTestimonyF(cfg){
+  clearTrialUI();
+  state.form='testimony';
+  let trial=genTestimonyTrial(cfg);
+  if(!trial) trial=genTestimonyTrial({cells:4,claims:2,forges:['polaritySwap','offByOne'],t:16});
+  state.trial=trial; state.phase='ask';
+  $('rule-banner').innerHTML=SEAL[2]+'One testimony is a <span class="lie">lie</span> — tap it';
+  const cols=trial.grid.length>4?3:2;
+  $('task-zone').innerHTML='<div class="cell-grid cols-'+cols+'">'+
+    trial.grid.map((s,i)=>'<div class="gcell fade" style="animation-delay:'+(i*0.04)+'s">'+cellSVG(s,BADGES[i])+'</div>').join('')+'</div>';
+  const box=document.createElement('div'); box.className='claims';
+  trial.claims.forEach((cl,k)=>{
+    const b=document.createElement('button'); b.className='claim-btn';
+    b.innerHTML='<span class="idx">'+(k+1)+'</span><span>'+claimText(cl.c)+'</span>';
+    b.onclick=()=>finishTestimony(k);
+    box.appendChild(b);
+  });
+  $('answer-zone').appendChild(box);
+  startClock(trial.t,()=>finishTestimony(null));
+}
+function finishTestimony(k){
+  if(state.phase!=='ask') return;
+  state.phase='feedback'; stopClock();
+  const t=state.trial;
+  const ok = k!==null && t.claims[k].isLie;
+  const btns=$('answer-zone').querySelectorAll('.claim-btn');
+  btns.forEach((b,i)=>{ b.disabled=true;
+    if(t.claims[i].isLie) b.classList.add(i===k&&ok?'picked-right':'reveal-lie');
+    else if(i===k) b.classList.add('picked-wrong'); });
+  const fb=$('feedback');
+  if(k===null){ fb.textContent='⌛ THE LIE STOOD'; fb.classList.add('miss'); }
+  else { fb.textContent= ok?'⚖ LIE EXPOSED':'✕ TRUTH ACCUSED'; fb.classList.add(ok?'good':'bad'); }
+  $('explain').innerHTML='<span class="lie">'+t.lieName+'.</span>'+(ok?'':' The claim you tapped was true of the figures.');
+  recordResult(ok); showNext();
+}
+
+function runGesture(cfg){
+  clearTrialUI();
+  state.form='gesture';
+  const trial=state.trial=genGestureTrial(cfg);
+  state.phase='ask';
+  $('rule-banner').innerHTML=SEAL[2]+'Two threads, two windings — do they share <span class="gold">one gesture</span> (the same generating rule'+((cfg.nRules||1)>1?'s':'')+')?';
+  $('task-zone').innerHTML=
+    '<div class="strip-label">Thread A</div><div class="cell-grid cols-3">'+
+    trial.s1.map(s=>'<div class="gcell fade">'+cellSVG(s)+'</div>').join('')+'</div>'+
+    '<div class="strip-label">Thread B</div><div class="cell-grid cols-3">'+
+    trial.s2.map(s=>'<div class="gcell fade">'+cellSVG(s)+'</div>').join('')+'</div>';
+  const box=document.createElement('div'); box.className='claims';
+  [['yes','ONE GESTURE — the same rules move both'],['no','TWO GESTURES — the windings differ']].forEach(([v,label],k)=>{
+    const b=document.createElement('button'); b.className='claim-btn';
+    b.innerHTML='<span class="idx">'+(k+1)+'</span><span>'+label+'</span>';
+    b.onclick=()=>finishGesture(v);
+    box.appendChild(b);
+  });
+  $('answer-zone').appendChild(box);
+  startClock(trial.t,()=>finishGesture(null));
+}
+function finishGesture(v){
+  if(state.phase!=='ask') return;
+  state.phase='feedback'; stopClock();
+  const t=state.trial;
+  const ok = v===t.answer;
+  const btns=$('answer-zone').querySelectorAll('.claim-btn');
+  btns.forEach((b,i)=>{ b.disabled=true;
+    const isAns=(i===0)===(t.answer==='yes');
+    const isPick=v!==null&&((v==='yes')===(i===0));
+    if(isAns&&isPick) b.classList.add('picked-right');
+    else if(isAns) b.classList.add('reveal-right');
+    else if(isPick) b.classList.add('picked-wrong'); });
+  const fb=$('feedback');
+  if(v===null){ fb.textContent='⌛ THE MOMENT PASSED'; fb.classList.add('miss'); }
+  else { fb.textContent= ok?'✋ GESTURE SEEN':'✕ DECEIVED'; fb.classList.add(ok?'good':'bad'); }
+  $('explain').innerHTML='Thread A: '+weaveRuleBanner(t.r1)+'. Thread B: '+weaveRuleBanner(t.r2)+
+    ' → <b>'+(t.answer==='yes'?'the same gesture':'different gestures')+'</b>.';
+  recordResult(ok); showNext();
+}
+
+function runWeaveF(cfg){
+  clearTrialUI();
+  state.form='weave';
+  const trial=state.trial=genWeaveTrial(cfg);
+  state.phase='ask';
+  const veilTxt=trial.noiseAttr?' · <span class="lie">NOISE: ignore '+trial.noiseAttr.toUpperCase()+'</span>':'';
+  if(trial.mode==='missing'){
+    $('rule-banner').innerHTML=SEAL[3]+'The weave runs left → right — <span class="gold">complete it</span>. Induce the rules yourself.'+veilTxt;
+    let html='<div class="cell-grid cols-3">';
+    trial.grid.forEach((s,i)=>{
+      if(i===trial.grid.length-1) html+='<div class="gcell missing fade">?</div>';
+      else html+='<div class="gcell fade" style="animation-delay:'+(i*0.03)+'s">'+cellSVG(s)+'</div>';
+    });
+    $('task-zone').innerHTML=html+'</div>';
+    const g=document.createElement('div'); g.className='gopts';
+    trial.opts.forEach((o,i)=>{ const b=document.createElement('button'); b.className='gopt';
+      b.innerHTML=cellSVG(o.spec); b.onclick=()=>finishWeave(i); g.appendChild(b); });
+    $('answer-zone').appendChild(g);
+  } else {
+    $('rule-banner').innerHTML=SEAL[3]+'One cell breaks the weave — <span class="lie">tap the broken thread</span>'+veilTxt;
+    $('task-zone').innerHTML='<div class="cell-grid cols-3" id="weave-grid">'+
+      trial.grid.map((s,i)=>'<div class="gcell pickable fade" data-i="'+i+'" style="animation-delay:'+(i*0.03)+'s">'+cellSVG(s)+'</div>').join('')+'</div>';
+    cellsPickable('#weave-grid .pickable',(i)=>finishWeave(i));
+  }
+  startClock(trial.t,()=>finishWeave(null));
+}
+function finishWeave(k){
+  if(state.phase!=='ask') return;
+  state.phase='feedback'; stopClock();
+  const t=state.trial;
+  let ok, ex;
+  if(t.mode==='missing'){
+    ok = k===t.correct;
+    const btns=$('answer-zone').querySelectorAll('.gopt');
+    btns.forEach((b,i)=>{ b.disabled=true;
+      if(i===t.correct) b.classList.add(i===k?'picked-right':'reveal-right');
+      else if(i===k) b.classList.add('picked-wrong'); });
+    ex='Weave: '+weaveRuleBanner(t.rules)+'.';
+    if(!ok&&k!==null&&t.opts[k].kindTxt) ex+=' <span class="lie">Your pick was a '+t.opts[k].kindTxt+'.</span>';
+    if(!ok&&k!==null&&t.opts[k].key) state._fell=t.opts[k].key;
+  } else {
+    ok = k===t.corruptIdx;
+    const cells=$('task-zone').querySelectorAll('#weave-grid .gcell');
+    cells[t.corruptIdx].classList.add('truth');
+    if(k!==null&&k!==t.corruptIdx) cells[k].classList.add('lieglow');
+    cells.forEach(c=>c.classList.remove('pickable'));
+    ex='Weave: '+weaveRuleBanner(t.rules)+'. <span class="lie">The broken thread violated '+
+       WEAVE_RULES[t.brokeRule].glyph+' ('+t.brokeRule.toLowerCase()+').</span>';
+  }
+  if(t.noiseAttr) ex+=' <span class="lie">Noise veil:</span> '+t.noiseAttr.toUpperCase()+' varied meaninglessly.';
+  const fb=$('feedback');
+  if(k===null){ fb.textContent='⌛ THE WEAVE UNRAVELLED'; fb.classList.add('miss'); }
+  else { fb.textContent= ok?'🕸 WEAVE RESTORED':'✕ WRONG THREAD'; fb.classList.add(ok?'good':'bad'); }
+  $('explain').innerHTML=ex;
+  recordResult(ok, state._fell); state._fell=undefined; showNext();
+}
+</script>
+<script>
+/* ============================================================
+   GAUGE — fixed-form matrix probe (overlay)
+   ============================================================ */
+function mulberry32(seed){ return function(){ seed|=0; seed=seed+0x6D2B79F5|0;
+  let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t;
+  return ((t^t>>>14)>>>0)/4294967296; }; }
+function shuffleR(rng,a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+const GAUGE_FORMS={A:11,B:47};
+const gauge={form:null,items:[],idx:0,score:0,t0:0,history:{A:[],B:[]}};
+function valueIdx(rule,r,c){ return rule==='row'?r:rule==='col'?c:rule==='d3'?(r+c)%3:(r+2*c)%3; }
+function makeGaugeItem(rng,tier){
+  const kinds=shuffleR(rng,['tri','gem','crescent']);
+  const hues=shuffleR(rng,[0,1,2]);
+  let rules;
+  if(tier===0) rules={kind:'row',hue:'col',count:'fix'};
+  else if(tier===1) rules={kind:'d3',hue:'row',count:'col'};
+  else rules={kind:'d3',hue:'d3b',count:rng()<0.5?'col':'d3'};
+  const spec=(r,c)=>({ kind:kinds[rules.kind==='fix'?0:valueIdx(rules.kind,r,c)],
+    hue:hues[rules.hue==='fix'?0:valueIdx(rules.hue,r,c)],
+    count:rules.count==='fix'?2:1+valueIdx(rules.count,r,c),
+    size:2, chir:1, depth:0, orient:0 });
+  const grid=[]; for(let r=0;r<3;r++)for(let c=0;c<3;c++) grid.push((r===2&&c===2)?null:spec(r,c));
+  const correct=spec(2,2);
+  const perturb=[ s=>({...s,kind:kinds[(kinds.indexOf(s.kind)+1)%3]}),
+    s=>({...s,hue:hues[(hues.indexOf(s.hue)+1)%3]}),
+    s=>({...s,count:s.count%3+1}) ];
+  const foils=shuffleR(rng,perturb).map(p=>p(correct));
+  const opts=shuffleR(rng,[correct,...foils]);
+  return {grid,opts,correct:opts.indexOf(correct)};
+}
+function buildGaugeItems(rng){ return [0,0,0,1,1,1,2,2].map(t=>makeGaugeItem(rng,t)); }
+function gaugeHistoryHTML(){
+  return ['A','B'].map(f=>gauge.history[f].map(h=>'Form '+f+': <b>'+h.score+'/8</b> · '+h.secs+'s').join('<br>'))
+    .filter(Boolean).join('<br>')||'';
+}
+function gaugeIdleUI(){
+  $('gz-banner').textContent='';
+  $('gz-task').innerHTML='<div class="question-box" style="font-size:0.82rem;">Fixed-form matrix probe — no feedback, no adaptivity, no deception. Run <b>Form A</b> before training and <b>Form B</b> after a block; the between-form change is your transfer evidence.</div>'+
+    (gauge.history.A.length||gauge.history.B.length?'<div class="explain" style="min-height:0">'+gaugeHistoryHTML()+'</div>':'');
+  $('gz-answer').innerHTML='';
+  const fr=$('gz-flow'); fr.innerHTML='';
+  ['A','B'].forEach(f=>{ const b=document.createElement('button');
+    b.className='big-btn '+(f==='A'?'primary':'gold'); b.textContent='Form '+f;
+    b.onclick=()=>startGauge(f); fr.appendChild(b); });
+}
+function startGauge(form){
+  gauge.form=form; gauge.idx=0; gauge.score=0; gauge.t0=Date.now();
+  gauge.items=buildGaugeItems(mulberry32(GAUGE_FORMS[form]));
+  $('gz-flow').innerHTML=''; nextGaugeItem();
+}
+function nextGaugeItem(){
+  if(gauge.idx>=8) return endGauge();
+  const item=gauge.items[gauge.idx];
+  $('gz-banner').innerHTML='Form <b>'+gauge.form+'</b> · item <b>'+(gauge.idx+1)+' / 8</b> · complete the matrix';
+  $('gz-task').innerHTML='<div class="cell-grid cols-3">'+
+    item.grid.map(c=>c?'<div class="gcell">'+cellSVG(c)+'</div>':'<div class="gcell missing">?</div>').join('')+'</div>';
+  const az=$('gz-answer'); az.innerHTML='';
+  const g=document.createElement('div'); g.className='gopts';
+  item.opts.forEach((o,i)=>{ const b=document.createElement('button'); b.className='gopt';
+    b.innerHTML=cellSVG(o);
+    b.onclick=()=>{ if(i===item.correct) gauge.score++; gauge.idx++; nextGaugeItem(); };
+    g.appendChild(b); });
+  az.appendChild(g);
+}
+function endGauge(){
+  const secs=Math.round((Date.now()-gauge.t0)/1000);
+  gauge.history[gauge.form].push({score:gauge.score,secs});
+  $('gz-banner').textContent='';
+  $('gz-task').innerHTML='<div class="question-box">Form '+gauge.form+': <b>'+gauge.score+' / 8</b> in '+secs+'s</div>'+
+    '<div class="explain" style="min-height:0">'+gaugeHistoryHTML()+'<br><br>Retest with the other form after a training block — between-form change, not within-form repetition, is the signal.</div>';
+  $('gz-answer').innerHTML='';
+  const fr=$('gz-flow'); fr.innerHTML='';
+  const b=document.createElement('button'); b.className='big-btn primary'; b.textContent='Back';
+  b.onclick=gaugeIdleUI; fr.appendChild(b);
+}
+
+/* ============================================================
+   Wiring — overlays, progress, keyboard, init
+   ============================================================ */
+$('begin-btn').onclick=()=>{ state.running=true; runTrial(); };
+$('codex-btn').onclick=()=>{ $('codex-modal').classList.add('show'); };
+$('guide-btn').onclick=()=>{ renderProfile(); $('guide-modal').classList.add('show'); };
+function renderProfile(){
+  const g=$('profile-grid');
+  let h='<span class="ph">Deception</span><span class="ph">Seen</span><span class="ph">Fell</span>';
+  Object.keys(CANON).forEach(k=>{ const st=lieStats[k];
+    h+='<span class="pk">'+CANON[k].split(' —')[0]+'</span><span class="pv">'+st.s+'</span><span class="pe">'+st.e+'</span>'; });
+  g.innerHTML=h;
+}
+$('gauge-btn').onclick=()=>{ if(state.running) stopTraining(); gaugeIdleUI(); $('gauge-modal').classList.add('show'); };
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.modal').classList.remove('show'));
+
+function progressCode(){
+  return btoa(JSON.stringify({l:state.level,p:state.peak,tr:state.trials,c:state.correct,g:gauge.history,ls:lieStats}));
+}
+$('progress-btn').onclick=()=>{ $('progress-text').value=progressCode(); $('progress-modal').classList.add('show'); };
+$('copy-progress').onclick=()=>{ $('progress-text').select();
+  try{ document.execCommand('copy'); toast('COPIED',true); }catch(e){ toast('SELECT & COPY MANUALLY'); } };
+$('load-progress').onclick=()=>{
+  try{ const o=JSON.parse(atob($('progress-text').value.trim()));
+    state.level=+o.l||1; state.peak=+o.p||state.level; state.trials=+o.tr||0; state.correct=+o.c||0;
+    state.window=[]; state.streak=0;
+    if(o.g) gauge.history=o.g;
+    if(o.ls) Object.keys(CANON).forEach(k=>{ if(o.ls[k]) lieStats[k]=o.ls[k]; });
+    $('progress-modal').classList.remove('show');
+    renderStats(); renderMastery(); toast('PROGRESS LOADED',true);
+  }catch(e){ toast('INVALID CODE'); } };
+$('csv-btn').onclick=()=>{ $('progress-text').value='form,level,correct,rt_ms,time\n'+LOG.map(r=>r.join(',')).join('\n'); };
+$('reset-btn').onclick=()=>{
+  state.level=1; state.peak=1; state.trials=0; state.correct=0; state.streak=0; state.window=[];
+  stopTraining(); renderStats(); renderMastery(); toast('THE TRIAL RESET');
+};
+
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='TEXTAREA') return;
+  if(state.phase==='ask'){
+    const az=[...document.querySelectorAll('#answer-zone .claim-btn, #answer-zone .gopt')];
+    const cells=[...document.querySelectorAll('#task-zone .pickable')];
+    const i=['1','2','3','4','5','6','7','8','9'].indexOf(e.key);
+    if(i>-1){ if(az[i]) az[i].click(); else if(cells[i]) cells[i].click(); }
+  } else if(state.phase==='feedback'&&(e.key===' '||e.key.toLowerCase()==='enter')){
+    e.preventDefault(); if(state._next) state._next();
+  }
+});
+
+renderIdle(); renderMastery(); renderStats();
+</script>
+</body>
+</html>
