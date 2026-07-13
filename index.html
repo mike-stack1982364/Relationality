@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Ontological Deception V23</title>
+<title>Ontological Deception V24</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f6fc;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#31275c}
 #game{position:fixed;inset:0;width:100%;height:100%;border:0;background:#f7f6fc;visibility:hidden}
@@ -16,7 +16,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f6fc;fon
 </head>
 <body>
 <iframe id="game" title="Ontological Deception"></iframe>
-<main id="boot"><section id="boot-card"><div id="boot-title">ONTOLOGICAL DECEPTION · V23</div><div id="boot-status">Loading the relational engine…</div><div id="boot-error" role="alert"></div></section></main>
+<main id="boot"><section id="boot-card"><div id="boot-title">ONTOLOGICAL DECEPTION · V24</div><div id="boot-status">Loading the relational engine…</div><div id="boot-error" role="alert"></div></section></main>
 <script>
 (()=>{
 'use strict';
@@ -35,8 +35,9 @@ const parts=[
   'assets/relational-v22-part4a.js?v=20260713b',
   'assets/relational-v22-part4b.js?v=20260713b',
   'assets/relational-v22-part4c.js?v=20260713b',
-  'assets/relational-v22-part4d.js?v=20260713c',
-  'assets/relational-v23-visual.js?v=20260713b'
+  'assets/relational-v22-part4d.js?v=20260713d',
+  'assets/relational-v23-visual.js?v=20260713c',
+  'assets/relational-v24-layout.js?v=20260713a'
 ];
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function fail(e){status.textContent='The game could not initialise.';errorBox.style.display='block';errorBox.textContent=String(e&&e.stack||e);console.error(e)}
@@ -65,7 +66,7 @@ async function bootGame(){
     if(!html.includes('Build V20')||!html.includes('begin-btn'))throw new Error('Stable base integrity check failed.');
     const loaded=new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Game frame timed out.')),10000);frame.onload=()=>{clearTimeout(timer);resolve()}});
     frame.srcdoc=html;await loaded;const d=await waitForBase();
-    status.textContent='Activating graphical ontological relationality…';
+    status.textContent='Activating bounded graphical relationality…';
     const responses=await Promise.all(parts.map(u=>fetch(u,{cache:'no-store'})));
     const failed=responses.find(r=>!r.ok);if(failed)throw new Error('A relational module returned HTTP '+failed.status+'.');
     const code=(await Promise.all(responses.map(r=>r.text()))).join('\n;\n');
@@ -73,8 +74,10 @@ async function bootGame(){
     if(!frame.contentWindow.__RELATIONAL_V21__)throw new Error('V21 base relational integrity check failed.');
     if(!frame.contentWindow.__RELATIONAL_V22__)throw new Error('V22 ontological engine integrity check failed.');
     if(!frame.contentWindow.__RELATIONAL_V23__)throw new Error('V23 graphical engine integrity check failed.');
-    const test=frame.contentWindow.__V23_VISUAL_TEST__;if(!test||!test.ok||!test.trials)throw new Error('V23 rendered-trial simulation check failed.');
-    d.title='Ontological Deception V23';document.title='Ontological Deception V23';
+    if(!frame.contentWindow.__RELATIONAL_V24__)throw new Error('V24 bounded-layout integrity check failed.');
+    const test=frame.contentWindow.__V24_VISUAL_TEST__,layout=frame.contentWindow.__V24_LAYOUT_TEST__;
+    if(!test||!test.ok||!test.trials||!layout||!layout.ok||!layout.layouts)throw new Error('V24 rendered DOM simulation check failed.');
+    d.title='Ontological Deception V24';document.title='Ontological Deception V24';
     frame.style.visibility='visible';boot.style.display='none';
   }catch(e){fail(e)}
 }
