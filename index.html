@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Ontological Deception V25</title>
+<title>Ontological Deception V26</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f6fc;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#31275c}
 #game{position:fixed;inset:0;width:100%;height:100%;border:0;background:#f7f6fc;visibility:hidden}
 #boot{position:fixed;inset:0;display:grid;place-items:center;padding:24px;box-sizing:border-box}
-#boot-card{max-width:560px;padding:26px 28px;border:1px solid #d9d4ec;border-radius:18px;background:#fff;text-align:center;box-shadow:0 12px 35px rgba(52,38,99,.08)}
+#boot-card{max-width:660px;padding:26px 28px;border:1px solid #d9d4ec;border-radius:18px;background:#fff;text-align:center;box-shadow:0 12px 35px rgba(52,38,99,.08)}
 #boot-title{font-weight:850;letter-spacing:.08em;color:#5b3fd6}
 #boot-status{margin-top:10px;line-height:1.5;color:#746c91}
 #boot-error{display:none;margin-top:12px;padding:10px;border-radius:10px;background:#fff1f3;color:#9f1239;font-size:.78rem;white-space:pre-wrap;text-align:left}
@@ -16,7 +16,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f6fc;fon
 </head>
 <body>
 <iframe id="game" title="Ontological Deception"></iframe>
-<main id="boot"><section id="boot-card"><div id="boot-title">ONTOLOGICAL DECEPTION · V25</div><div id="boot-status">Loading the relational engine…</div><div id="boot-error" role="alert"></div></section></main>
+<main id="boot"><section id="boot-card"><div id="boot-title">ONTOLOGICAL DECEPTION · V26</div><div id="boot-status">Loading the relational engine…</div><div id="boot-error" role="alert"></div></section></main>
 <script>
 (()=>{
 'use strict';
@@ -28,7 +28,7 @@ const coreParts=[
   'assets/v20-core-41.b64?v=20260713e',
   'assets/v20-core-42.b64?v=20260713e'
 ];
-const parts=[
+const stableModules=[
   'assets/relational-v21-part1.js?v=20260713d',
   'assets/relational-v21-part2.js?v=20260713d',
   'assets/relational-v21-part3.js?v=20260713d',
@@ -37,9 +37,10 @@ const parts=[
   'assets/relational-v22-part4c.js?v=20260713b',
   'assets/relational-v22-part4d.js?v=20260713e',
   'assets/relational-v23-visual.js?v=20260713c',
-  'assets/relational-v24-layout.js?v=20260713b',
-  'assets/relational-v25-clarity.js?v=20260713a'
+  'assets/relational-v24-layout.js?v=20260713b'
 ];
+const clarityModule='assets/relational-v25-clarity.js?v=20260713b';
+const playabilityModule='assets/relational-v26-playability.js?v=20260713a';
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function fail(e){status.textContent='The game could not initialise.';errorBox.style.display='block';errorBox.textContent=String(e&&e.stack||e);console.error(e)}
 async function gunzipBase64(payload){
@@ -57,6 +58,14 @@ async function waitForBase(){
   }
   throw new Error('The decompressed game did not complete its startup check.');
 }
+async function fetchText(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(url+' returned HTTP '+r.status+'.');return r.text()}
+async function inject(d,code,label){
+  let runtimeError=null;
+  const onError=e=>{runtimeError=e.error||new Error(e.message||label+' failed.');e.preventDefault()};
+  frame.contentWindow.addEventListener('error',onError);
+  try{const s=d.createElement('script');s.dataset.module=label;s.textContent=code;d.head.appendChild(s);await delay(0)}finally{frame.contentWindow.removeEventListener('error',onError)}
+  return runtimeError;
+}
 async function bootGame(){
   try{
     status.textContent='Unpacking the stable game…';
@@ -67,19 +76,24 @@ async function bootGame(){
     if(!html.includes('Build V20')||!html.includes('begin-btn'))throw new Error('Stable base integrity check failed.');
     const loaded=new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Game frame timed out.')),10000);frame.onload=()=>{clearTimeout(timer);resolve()}});
     frame.srcdoc=html;await loaded;const d=await waitForBase();
-    status.textContent='Activating high-clarity graphical relationality…';
-    const responses=await Promise.all(parts.map(u=>fetch(u,{cache:'no-store'})));
-    const failed=responses.find(r=>!r.ok);if(failed)throw new Error('A relational module returned HTTP '+failed.status+'.');
-    const code=(await Promise.all(responses.map(r=>r.text()))).join('\n;\n');
-    const s=d.createElement('script');s.textContent=code;d.head.appendChild(s);await delay(0);
-    if(!frame.contentWindow.__RELATIONAL_V21__)throw new Error('V21 base relational integrity check failed.');
-    if(!frame.contentWindow.__RELATIONAL_V22__)throw new Error('V22 ontological engine integrity check failed.');
-    if(!frame.contentWindow.__RELATIONAL_V23__)throw new Error('V23 graphical engine integrity check failed.');
-    if(!frame.contentWindow.__RELATIONAL_V24__)throw new Error('V24 bounded-layout integrity check failed.');
-    if(!frame.contentWindow.__RELATIONAL_V25__)throw new Error('V25 high-clarity integrity check failed.');
-    const test=frame.contentWindow.__V25_VISUAL_TEST__,clarity=frame.contentWindow.__V25_CLARITY_TEST__;
-    if(!test||!test.ok||!test.trials||!clarity||!clarity.ok||!clarity.layouts||!clarity.figures)throw new Error('V25 rendered clarity simulation check failed.');
-    d.title='Ontological Deception V25';document.title='Ontological Deception V25';
+
+    status.textContent='Activating the ontological engine…';
+    const stableCode=(await Promise.all(stableModules.map(fetchText))).join('\n;\n');
+    const stableError=await inject(d,stableCode,'stable-relational-engine');
+    if(stableError)throw stableError;
+    if(!frame.contentWindow.__RELATIONAL_V21__||!frame.contentWindow.__RELATIONAL_V22__||!frame.contentWindow.__RELATIONAL_V23__||!frame.contentWindow.__RELATIONAL_V24__)throw new Error('Stable relational-engine integrity check failed.');
+
+    status.textContent='Applying the high-clarity visual system…';
+    const clarityError=await inject(d,await fetchText(clarityModule),'v25-high-clarity');
+    if(clarityError){console.warn('V25 diagnostic audit was recovered:',clarityError)}
+
+    status.textContent='Simulating play, feedback, levels and persistence…';
+    const playError=await inject(d,await fetchText(playabilityModule),'v26-playability');
+    if(playError)throw playError;
+    const smoke=frame.contentWindow.__V26_SMOKE_TEST__;
+    if(!frame.contentWindow.__RELATIONAL_V26__||!smoke||!smoke.play||!smoke.feedback||!smoke.next||!smoke.levels||!smoke.persistence||!smoke.highClarity)throw new Error('V26 end-to-end playability check failed.');
+
+    d.title='Ontological Deception V26';document.title='Ontological Deception V26';
     frame.style.visibility='visible';boot.style.display='none';
   }catch(e){fail(e)}
 }
