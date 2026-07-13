@@ -2,7 +2,7 @@
 (()=>{
 const bridge=window.__V22_RENDER_BRIDGE__;
 if(!bridge)throw new Error('V26 requires the V22 render bridge.');
-const report={generated:0,rendered:0,play:false,feedback:false,next:false,levels:false,persistence:false,highClarity:false,errors:[]};
+const report={generated:0,rendered:0,play:false,feedback:false,next:false,levels:false,persistence:'not-tested',highClarity:false,errors:[]};
 function assert(condition,message){if(!condition)throw new Error(message)}
 function generateSmoke(){
   const levels=[1,5,10,15];
@@ -49,7 +49,8 @@ function detachedRenderSmoke(){
 }
 function actualPlaySmoke(){
   const storeKey='ontological-deception-v22-progress';
-  const rawStore=(()=>{try{return localStorage.getItem(storeKey)}catch(e){return null}})();
+  let storageAvailable=true,rawStore=null;
+  try{rawStore=localStorage.getItem(storeKey)}catch(e){storageAvailable=false;report.persistence='unavailable'}
   const snapshot={running:state.running,phase:state.phase,level:state.level,auto:state.auto,trial:state.trial,askAt:state._askAt,ontology:state.ontology};
   const oldRecord=recordResult;
   const autoBox=document.getElementById('auto-chk');
@@ -85,17 +86,19 @@ function actualPlaySmoke(){
     select.value='15';apply.click();
     assert(Number(state.level)===15,'Level 15 could not be selected.');
     report.levels=true;
-    try{
-      const saved=JSON.parse(localStorage.getItem(storeKey)||'null');
-      assert(saved&&Number(saved.level)===15,'Selected level was not persisted.');
-      report.persistence=true;
-    }catch(e){throw new Error('Persistence verification failed: '+e.message)}
+    if(storageAvailable){
+      try{
+        const saved=JSON.parse(localStorage.getItem(storeKey)||'null');
+        assert(saved&&Number(saved.level)===15,'Selected level was not persisted.');
+        report.persistence='passed';
+      }catch(e){throw new Error('Persistence verification failed: '+e.message)}
+    }
   }finally{
     try{stopClock()}catch(e){}
     recordResult=oldRecord;
     Object.assign(state,snapshot);
     if(autoBox&&oldAutoChecked!==null)autoBox.checked=oldAutoChecked;
-    try{if(rawStore===null)localStorage.removeItem(storeKey);else localStorage.setItem(storeKey,rawStore)}catch(e){}
+    if(storageAvailable){try{if(rawStore===null)localStorage.removeItem(storeKey);else localStorage.setItem(storeKey,rawStore)}catch(e){}}
     try{v22ClampLevelAndSync()}catch(e){}
     renderIdle();
   }
@@ -107,5 +110,5 @@ window.__V25_CLARITY_TEST__=Object.assign({},window.__V25_CLARITY_TEST__||{},{ok
 window.__V26_SMOKE_TEST__=report;
 window.__RELATIONAL_V26__=true;
 const badge=document.querySelector('.module-badge');if(badge)badge.textContent='RELATIONALITY V26';
-console.log('RELATIONALITY V26 playable · '+report.generated+' generated · '+report.rendered+' rendered · play/feedback/next/level/persistence passed');
+console.log('RELATIONALITY V26 playable · '+report.generated+' generated · '+report.rendered+' rendered · play/feedback/next/level passed · persistence '+report.persistence);
 })();
