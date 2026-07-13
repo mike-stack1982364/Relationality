@@ -36,6 +36,7 @@ const stableModules=[
   'assets/relational-v22-part4b.js?v=20260713b',
   'assets/relational-v22-part4c.js?v=20260713b',
   'assets/relational-v22-part4d.js?v=20260713e',
+  'assets/relational-runtime-budget.js?v=20260713a',
   'assets/relational-v23-visual.js?v=20260713c',
   'assets/relational-v24-layout.js?v=20260713b'
 ];
@@ -81,7 +82,7 @@ async function bootGame(){
     const stableCode=(await Promise.all(stableModules.map(fetchText))).join('\n;\n');
     const stableError=await inject(d,stableCode,'stable-relational-engine');
     if(stableError)throw stableError;
-    if(!frame.contentWindow.__RELATIONAL_V21__||!frame.contentWindow.__RELATIONAL_V22__||!frame.contentWindow.__RELATIONAL_V23__||!frame.contentWindow.__RELATIONAL_V24__)throw new Error('Stable relational-engine integrity check failed.');
+    if(!frame.contentWindow.__RELATIONAL_V21__||!frame.contentWindow.__RELATIONAL_V22__||!frame.contentWindow.__RELATIONAL_RUNTIME_BUDGET__||!frame.contentWindow.__RELATIONAL_V23__||!frame.contentWindow.__RELATIONAL_V24__)throw new Error('Stable relational-engine integrity check failed.');
 
     status.textContent='Applying the high-clarity visual system…';
     const clarityError=await inject(d,await fetchText(clarityModule),'v25-high-clarity');
