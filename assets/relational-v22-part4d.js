@@ -26,7 +26,16 @@ window.__V22_RENDER_BRIDGE__={
   },
   runSelfTest(rounds){return v22SelfTest(Math.max(1,Number(rounds)||1))},
   regenerate(){if(state.running)runTrial();else renderIdle()},
-  validateTrial(t){return v22ValidateTrial(t)}
+  validateTrial(t){return v22ValidateTrial(t)},
+  generateAt(level,base,p,demand){
+    const prior=state.level;
+    try{
+      state.level=v22Clamp(level,1,V22_MAX_LEVEL);
+      const family=V22_FAMILY[base],cell={base,p,family,key:v22Key(base,p,family)};
+      return v22Generate(cell,demand||v22DemandFor(base,p));
+    }finally{state.level=prior}
+  },
+  bases:V22_BASES.slice(),frames:['a','i','o']
 };
 window.__RELATIONAL_V22__=true;
 try{console.log('RELATIONALITY V22 active · '+v22TestReport.trials+' generator simulations passed · persistent level '+state.level+(v22Restored?' restored':''))}catch(e){}
