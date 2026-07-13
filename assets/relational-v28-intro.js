@@ -48,7 +48,7 @@ function ensureBeginButton(){
   if(next&&next.parentElement)next.parentElement.insertBefore(begin,next);
   else if(autoRow&&autoRow.parentElement)autoRow.insertAdjacentElement('afterend',begin);
   else {
-    const host=document.querySelector('.controls,.control-panel,.side-panel,.right-panel,.hud')||document.getElementById('task-zone')||document.body;
+    const host=document.querySelector('.controls,.control-panel,.side-panel,.right-panel,.hud')||document.body;
     host.appendChild(begin);
   }
   report.createdBegin=true;
@@ -62,11 +62,11 @@ function ensureIntro(){
   const answers=document.getElementById('answer-zone');
   const feedback=document.getElementById('feedback');
   const explain=document.getElementById('explain');
-  const begin=ensureBeginButton();
   const next=document.getElementById('next-btn');
   const stop=document.getElementById('stop-btn');
   if(rule)rule.innerHTML='<span>THE TRIAL</span><span>LV '+Math.max(1,Math.min(15,Number(state.level)||1))+'</span>';
   if(task)task.innerHTML='<div class="v28-intro-copy"><span class="v28-lead">One practice: a fabric of figures, and somewhere in it a <strong>deception</strong>.</span>A false pair, a lying testimony, a broken thread, a mirrored code, an invalid partition or a projection that does not preserve its structure. Resolve each trial with one answer. Its presentation changes as you rise; the hidden 27-fold curriculum determines which relation, observer frame and transfer demand the next trial must strengthen.</div>';
+  const begin=ensureBeginButton();
   if(answers)answers.innerHTML='';
   if(feedback){feedback.textContent='';feedback.className='feedback'}
   if(explain)explain.innerHTML='';
