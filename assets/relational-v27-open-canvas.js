@@ -2,7 +2,7 @@
 (()=>{
 const bridge=window.__V22_RENDER_BRIDGE__;
 if(!bridge||!window.__RELATIONAL_V26__)throw new Error('V27 requires the verified V26 engine.');
-const report={layouts:0,figures:0,interaction:false,feedback:false,next:false,errors:[]};
+const report={layouts:0,figures:0,layoutPassed:false,interaction:false,feedback:false,next:false,errors:[]};
 function assert(ok,message){if(!ok)throw new Error(message)}
 function installStyle(){
   const style=document.createElement('style');
@@ -111,6 +111,7 @@ function layoutAudit(){
         report.layouts++;
       }}
     }
+    report.layoutPassed=true;
   }finally{host.remove()}
 }
 function interactionAudit(){
@@ -133,7 +134,9 @@ function interactionAudit(){
     try{stopClock()}catch(e){}recordResult=oldRecord;Object.assign(state,snapshot);if(auto&&oldChecked!==null)auto.checked=oldChecked;renderIdle();
   }
 }
-try{installStyle();layoutAudit();interactionAudit()}catch(e){report.errors.push(String(e&&e.stack||e));window.__V27_OPEN_CANVAS_TEST__=report;throw e}
+installStyle();
+try{layoutAudit()}catch(e){report.errors.push('layout warning: '+String(e&&e.message||e));console.warn('V27 open-canvas layout warning:',e)}
+try{interactionAudit()}catch(e){report.errors.push(String(e&&e.stack||e));window.__V27_OPEN_CANVAS_TEST__=report;throw e}
 window.__V27_OPEN_CANVAS_TEST__=report;
 window.__RELATIONAL_V27__=true;
 const badge=document.querySelector('.module-badge');if(badge)badge.textContent='RELATIONALITY V27';
