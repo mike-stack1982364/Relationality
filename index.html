@@ -21,8 +21,18 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f6fc;fon
 (()=>{
 'use strict';
 const frame=document.getElementById('game'),boot=document.getElementById('boot'),status=document.getElementById('boot-status'),errorBox=document.getElementById('boot-error');
-const coreParts=['assets/v20-core-1.b64?v=20260713d','assets/v20-core-2.b64?v=20260713d','assets/v20-core-3.b64?v=20260713d','assets/v20-core-4.b64?v=20260713d'];
-const parts=['assets/relational-v21-part1.js?v=20260713c','assets/relational-v21-part2.js?v=20260713c','assets/relational-v21-part3.js?v=20260713c'];
+const coreParts=[
+  'assets/v20-core-1.b64?v=20260713e',
+  'assets/v20-core-2.b64?v=20260713e',
+  'assets/v20-core-3.b64?v=20260713e',
+  'assets/v20-core-41.b64?v=20260713e',
+  'assets/v20-core-42.b64?v=20260713e'
+];
+const parts=[
+  'assets/relational-v21-part1.js?v=20260713d',
+  'assets/relational-v21-part2.js?v=20260713d',
+  'assets/relational-v21-part3.js?v=20260713d'
+];
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function fail(e){status.textContent='The game could not initialise.';errorBox.style.display='block';errorBox.textContent=String(e&&e.stack||e);console.error(e)}
 async function gunzipBase64(payload){
