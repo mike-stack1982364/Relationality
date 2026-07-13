@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const report={intro:false,start:false,returnToIntro:false,errors:[]};
+const report={intro:false,start:false,returnToIntro:false,createdBegin:false,errors:[]};
 function assert(ok,message){if(!ok)throw new Error(message)}
 function visible(el){if(!el)return false;const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0}
 function installStyle(){
@@ -15,6 +15,8 @@ function installStyle(){
   .v28-intro-copy strong{color:#9a6b0a;font-weight:900}
   .v28-intro-copy .v28-lead{display:block;margin-bottom:10px;color:#3f3861;font-size:1.05em}
   body.v28-idle #begin-btn{display:flex!important;width:100%!important;min-height:52px!important;align-items:center!important;justify-content:center!important;font-weight:900!important;letter-spacing:1.4px!important}
+  #begin-btn.v28-created-begin{border:0;border-radius:12px;background:linear-gradient(90deg,#5b35df,#6737d8);color:#fff;padding:13px 18px;cursor:pointer;font:inherit;box-shadow:0 8px 18px rgba(91,53,223,.2)}
+  #begin-btn.v28-created-begin:hover{filter:brightness(1.04)}
   body.v28-idle #next-btn,body.v28-idle #stop-btn{display:none!important}
   body.v28-idle .feedback{display:none!important}
   body.v28-idle .arena{align-items:stretch!important}
@@ -22,6 +24,35 @@ function installStyle(){
   @media(max-width:760px){body.v28-idle #task-zone{min-height:210px!important;padding:20px 8px 8px!important}.v28-intro-copy{font-size:.88rem;line-height:1.5}body.v28-idle .trial-panel{min-height:auto!important}}
   `;
   document.head.appendChild(style);
+}
+function ensureBeginButton(){
+  let begin=document.getElementById('begin-btn');
+  if(begin)return begin;
+  const next=document.getElementById('next-btn');
+  const stop=document.getElementById('stop-btn');
+  const auto=document.getElementById('auto-chk');
+  const autoRow=auto&&(auto.closest('label')||auto.closest('.auto-row')||auto.parentElement);
+  begin=document.createElement('button');
+  begin.id='begin-btn';begin.type='button';begin.textContent='TAKE THE VOWS';
+  begin.className=(next&&next.className)||(stop&&stop.className)||'v28-created-begin';
+  if(!begin.className)begin.className='v28-created-begin';
+  begin.dataset.v28Created='1';
+  begin.addEventListener('click',e=>{
+    e.preventDefault();
+    if(state.running)return;
+    document.body.classList.remove('v28-idle');
+    begin.style.display='none';
+    state.running=true;state.phase='ask';
+    runTrial();
+  });
+  if(next&&next.parentElement)next.parentElement.insertBefore(begin,next);
+  else if(autoRow&&autoRow.parentElement)autoRow.insertAdjacentElement('afterend',begin);
+  else {
+    const host=document.querySelector('.controls,.control-panel,.side-panel,.right-panel,.hud')||document.getElementById('task-zone')||document.body;
+    host.appendChild(begin);
+  }
+  report.createdBegin=true;
+  return begin;
 }
 function ensureIntro(){
   if(state&&state.running)return false;
@@ -31,7 +62,7 @@ function ensureIntro(){
   const answers=document.getElementById('answer-zone');
   const feedback=document.getElementById('feedback');
   const explain=document.getElementById('explain');
-  const begin=document.getElementById('begin-btn');
+  const begin=ensureBeginButton();
   const next=document.getElementById('next-btn');
   const stop=document.getElementById('stop-btn');
   if(rule)rule.innerHTML='<span>THE TRIAL</span><span>LV '+Math.max(1,Math.min(15,Number(state.level)||1))+'</span>';
@@ -53,14 +84,18 @@ renderIdle=function(){
   return result;
 };
 const originalRunTrial=runTrial;
-runTrial=function(){document.body.classList.remove('v28-idle');return originalRunTrial.apply(this,arguments)};
+runTrial=function(){
+  document.body.classList.remove('v28-idle');
+  const begin=document.getElementById('begin-btn');if(begin)begin.style.display='none';
+  return originalRunTrial.apply(this,arguments)
+};
 function audit(){
   const snapshot={running:state.running,phase:state.phase,level:state.level,auto:state.auto,trial:state.trial,askAt:state._askAt,ontology:state.ontology};
   const oldRecord=recordResult,auto=document.getElementById('auto-chk'),oldAuto=auto?auto.checked:null;
   try{
     recordResult=function(){return null};state.auto=false;if(auto)auto.checked=false;
     state.running=false;state.phase='idle';renderIdle();
-    const rule=document.getElementById('rule-banner'),task=document.getElementById('task-zone'),begin=document.getElementById('begin-btn');
+    const rule=document.getElementById('rule-banner'),task=document.getElementById('task-zone'),begin=ensureBeginButton();
     assert(document.body.classList.contains('v28-idle'),'Idle body state was not installed.');
     assert(rule&&/THE TRIAL/.test(rule.textContent),'THE TRIAL heading was not restored.');
     assert(task&&/One practice: a fabric of figures/.test(task.textContent),'Introductory trial copy was not restored.');
@@ -73,6 +108,7 @@ function audit(){
     try{stopClock()}catch(e){}
     state.running=false;state.phase='idle';renderIdle();
     assert(document.body.classList.contains('v28-idle')&&/THE TRIAL/.test(document.getElementById('rule-banner').textContent),'The intro did not return after leaving play.');
+    assert(visible(ensureBeginButton()),'The start control did not return with the intro.');
     report.returnToIntro=true;
   }finally{
     try{stopClock()}catch(e){}recordResult=oldRecord;Object.assign(state,snapshot);if(auto&&oldAuto!==null)auto.checked=oldAuto;
@@ -84,5 +120,5 @@ window.__V28_INTRO_TEST__=report;
 window.__RELATIONAL_V28__=true;
 const badge=document.querySelector('.module-badge');if(badge)badge.textContent='RELATIONALITY V28';
 renderIdle();
-console.log('RELATIONALITY V28 intro restored · intro/start/return passed');
+console.log('RELATIONALITY V28 intro restored · intro/start/return passed'+(report.createdBegin?' · start control recreated':''));
 })();
