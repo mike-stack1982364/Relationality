@@ -6,212 +6,36 @@
 <meta name="theme-color" content="#f6f4fb">
 <title>Ontological Deception · Meta-Logic × Meta-Distinction</title>
 <style>
-:root{
-  --ink:#2d2757;--muted:#706a88;--violet:#5b3fdb;--violet-dark:#4227b6;
-  --gold:#9b6c0a;--line:#d9d5e8;--panel:#fff;--ground:#f6f4fb;
-  --green:#13774e;--green-soft:#eef9f3;--red:#bd2451;--red-soft:#fff1f5;
-  --shadow:0 14px 34px rgba(45,39,87,.08)
-}
-*{box-sizing:border-box}
-html{min-height:100%;background:var(--ground)}
-body{margin:0;min-height:100vh;min-height:100dvh;background:radial-gradient(circle at 18% -8%,rgba(91,63,219,.08),transparent 34rem),var(--ground);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-button{font:inherit;color:inherit}[hidden]{display:none!important}
-.shell{width:min(1120px,100%);margin:0 auto;padding:clamp(14px,2.5vw,30px)}
-.brand{text-align:center;margin-bottom:clamp(14px,2vw,24px)}
-.brand h1{margin:0;color:var(--gold);font-size:clamp(1.9rem,4vw,3.55rem);font-weight:950;letter-spacing:.13em;line-height:1}
-.brand p{margin:.52rem 0 0;color:var(--violet);font-size:clamp(.72rem,1.25vw,.94rem);font-weight:900;letter-spacing:.22em;text-transform:uppercase}
-body.playing .brand{margin-bottom:10px}body.playing .brand h1{font-size:clamp(1.35rem,2.4vw,2.05rem)}body.playing .brand p{font-size:.64rem;margin-top:.25rem}
-.card{background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:21px;box-shadow:var(--shadow)}
-.intro{max-width:830px;margin:clamp(30px,7vh,78px) auto 0;padding:clamp(28px,5vw,52px);text-align:center}
-.intro h2{margin:0;font-size:clamp(1.85rem,3.2vw,2.9rem);line-height:1.12}
-.intro p{max-width:700px;margin:18px auto 0;color:var(--muted);font-size:clamp(1.04rem,1.6vw,1.28rem);font-weight:650;line-height:1.55}
-.intro .rule{display:inline-block;margin:24px 0 0;padding:12px 16px;border-radius:13px;background:#f1eefc;font-size:clamp(.93rem,1.35vw,1.1rem);font-weight:900}
-.primary{border:0;border-radius:14px;background:linear-gradient(135deg,var(--violet),var(--violet-dark));color:#fff;font-weight:950;letter-spacing:.055em;cursor:pointer;box-shadow:0 10px 20px rgba(91,63,219,.2)}
-.primary:hover{filter:brightness(1.04)}.primary:active{transform:translateY(1px)}
-#start{display:block;width:min(330px,100%);min-height:58px;margin:30px auto 0;font-size:1.03rem}
-.game-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
-.game-head .stream{font-size:.75rem;font-weight:950;letter-spacing:.18em;color:var(--violet);text-transform:uppercase}
-.game-head .score{font-size:.87rem;font-weight:850;color:var(--muted);white-space:nowrap}
-.prompt{padding:clamp(17px,2.6vw,27px);text-align:center;margin-bottom:15px}
-.prompt h2{margin:0;font-size:clamp(1.75rem,3.25vw,2.9rem);line-height:1.13;letter-spacing:-.02em}
-.prompt p{margin:8px auto 0;max-width:820px;color:var(--muted);font-size:clamp(1.02rem,1.8vw,1.34rem);font-weight:735;line-height:1.42}
-.problem{padding:clamp(14px,2.3vw,24px);margin-bottom:15px}
-.caption{margin:0 0 10px;color:#7b7394;font-size:.72rem;font-weight:950;letter-spacing:.16em;text-transform:uppercase}
-.examples{display:grid;gap:10px}.example,.query{min-height:112px;padding:12px;border:1px solid #e5e1ef;border-radius:15px;background:#faf9fd;display:flex;align-items:center;justify-content:center}.query{background:#f4f1ff;border-color:#d9d1f7}
-.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.option{position:relative;min-height:205px;padding:18px;border:2px solid var(--line);border-radius:20px;background:#fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 7px 18px rgba(45,39,87,.05)}
-.option:hover:not(:disabled){border-color:#aaa0df}.option:focus-visible{outline:4px solid rgba(91,63,219,.22);outline-offset:3px}.option:disabled{cursor:default}
-.option.correct{border-color:var(--green);background:var(--green-soft)}.option.wrong{border-color:var(--red);background:var(--red-soft)}
-.option .mark{position:absolute;top:12px;right:14px;display:none;font-size:1.35rem;font-weight:950}.option.correct .mark,.option.wrong .mark{display:block}.option.correct .mark{color:var(--green)}.option.wrong .mark{color:var(--red)}
-.feedback{margin-top:15px;padding:clamp(17px,2.4vw,24px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;border-width:2px}.feedback.good{background:var(--green-soft);border-color:#a8dcc5}.feedback.bad{background:var(--red-soft);border-color:#edb2c4}
-.feedback h3{margin:0;font-size:clamp(1.2rem,2vw,1.55rem)}.feedback p{margin:6px 0 0;color:#544d70;font-size:clamp(.98rem,1.45vw,1.12rem);font-weight:650;line-height:1.45}#next{min-width:176px;min-height:52px;padding:0 22px}
-.footer-note{text-align:center;margin:16px 0 0;color:#8a849d;font-size:.76rem;font-weight:700}
-.visual{width:min(100%,900px);display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,28px)}
-.equals,.then,.ask{font-size:clamp(1.45rem,2.8vw,2.15rem);font-weight:950;color:var(--ink)}
-.op-badge{width:58px;height:58px;border:3px solid var(--violet);border-radius:13px;display:grid;place-items:center;font-size:1.55rem;font-weight:950;background:#fff;color:var(--violet);flex:0 0 auto}
-.row-board{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 12px;border:1px solid #ddd8e9;border-radius:14px;background:#fff;min-width:260px;min-height:86px}
-.token{width:62px;height:62px;display:grid;place-items:center;flex:0 0 auto}.token svg{width:56px;height:56px;display:block}
-.edge-board{position:relative;width:330px;height:132px;flex:0 0 auto}.node{position:absolute;width:64px;height:64px;display:grid;place-items:center;z-index:2}.node svg{width:58px;height:58px}.edge-board svg.edges{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible}
-.frame-board{width:160px;height:160px;position:relative;display:grid;place-items:center;flex:0 0 auto}.frame-board .ring{position:absolute;inset:18px;border:5px solid #d7d2e7;border-radius:50%}.frame-board .observer{position:absolute;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-bottom:25px solid var(--violet);transform-origin:80px 80px;left:67px;top:0}.frame-board .arrow{position:absolute;width:78px;height:78px;display:grid;place-items:center}.frame-board .arrow svg{width:72px;height:72px}
-.mini-transform{width:100%;display:flex;align-items:center;justify-content:center;gap:12px}.mini-transform .row-board{min-width:0;padding:8px}.mini-transform .token{width:46px;height:46px}.mini-transform .token svg{width:42px;height:42px}.mini-transform .equals{font-size:1.45rem}
-.graph-board{position:relative;width:280px;height:220px;flex:0 0 auto}.graph-board .node{width:56px;height:56px}.graph-board .node svg{width:50px;height:50px}.graph-board svg.edges{position:absolute;inset:0;width:100%;height:100%;z-index:1}.enclosure{position:absolute;border:4px solid #bbb3d5;border-radius:50%;z-index:0}
-@media(max-width:760px){.shell{padding:13px}.answers{grid-template-columns:1fr}.option{min-height:180px}.feedback{grid-template-columns:1fr}#next{width:100%}.game-head{align-items:center}.visual{gap:8px;flex-wrap:wrap}.row-board{min-width:0}.token{width:52px;height:52px}.token svg{width:48px;height:48px}.edge-board{width:290px}.graph-board{transform:scale(.9);margin:-10px}.op-badge{width:52px;height:52px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+html,body{margin:0;width:100%;height:100%;background:#f6f4fb;color:#2d2757;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+#boot{position:fixed;inset:0;display:grid;place-items:center;padding:24px;box-sizing:border-box;background:radial-gradient(circle at 18% -8%,rgba(91,63,219,.08),transparent 34rem),#f6f4fb}
+#card{width:min(620px,100%);padding:30px;border:1px solid #d9d5e8;border-radius:20px;background:#fff;text-align:center;box-shadow:0 14px 34px rgba(45,39,87,.08)}
+#title{color:#9b6c0a;font-weight:950;letter-spacing:.13em;font-size:clamp(1.45rem,4vw,2.25rem)}
+#status{margin-top:13px;color:#6f6888;font-weight:700;line-height:1.5}
+#error{display:none;margin-top:16px;padding:12px;border-radius:12px;background:#fff1f5;color:#9f1239;text-align:left;white-space:pre-wrap;font-size:.85rem}
 </style>
 </head>
 <body>
-<main class="shell">
-<header class="brand"><h1>ONTOLOGICAL DECEPTION</h1><p>Meta-Logic × Meta-Distinction</p></header>
-<section id="intro" class="intro card">
-  <h2>Infer the rule before using it.</h2>
-  <p>Every trial is generated from a hidden relational model first. The figures are deliberately simple and high-contrast: the answer depends on rule selection, composition, reference frame or structure—not subtle visual differences.</p>
-  <div class="rule">DISCOVER · INTEGRATE · DISTINGUISH · TRANSFER</div>
-  <button id="start" class="primary" type="button">BEGIN</button>
-</section>
-<section id="game" hidden>
-  <div class="game-head"><div class="stream">Unfamiliar rule stream</div><div id="score" class="score">0 correct · 0 trials</div></div>
-  <section class="prompt card"><h2 id="prompt-title"></h2><p id="prompt-copy"></p></section>
-  <section class="problem card"><div class="caption">Examples</div><div id="examples" class="examples"></div><div class="caption" style="margin-top:14px">Now</div><div id="query" class="query"></div></section>
-  <section id="answers" class="answers" aria-label="Answer choices"></section>
-  <section id="feedback" class="feedback card" hidden aria-live="polite"><div><h3 id="feedback-title"></h3><p id="feedback-copy"></p></div><button id="next" class="primary" type="button">NEXT TRIAL</button></section>
-  <p class="footer-note">All answer choices are matched for object count, scale, colour and visual weight. Only the latent relation differs.</p>
-</section>
-</main>
+<main id="boot"><section id="card"><div id="title">ONTOLOGICAL DECEPTION</div><div id="status">Loading the foundational meta-logic engine…</div><div id="error" role="alert"></div></section></main>
 <script>
-(()=>{
-'use strict';
-const SHAPES=['circle','square','triangle','diamond','hexagon','pentagon','star','cross'];
-const OPS={
-  rotateLeft:a=>[a[1],a[2],a[3],a[0]],
-  rotateRight:a=>[a[3],a[0],a[1],a[2]],
-  reverse:a=>[...a].reverse(),
-  swapMiddle:a=>[a[0],a[2],a[1],a[3]],
-  swapOuter:a=>[a[3],a[1],a[2],a[0]]
-};
-const OP_NAMES=Object.keys(OPS);
-const OP_GLYPHS=['✦','◇','⊙','△','□','↯','◆','○'];
-const DIRS=[0,90,180,270];
-const intro=document.getElementById('intro'),game=document.getElementById('game'),start=document.getElementById('start'),next=document.getElementById('next');
-const promptTitle=document.getElementById('prompt-title'),promptCopy=document.getElementById('prompt-copy'),examples=document.getElementById('examples'),query=document.getElementById('query'),answers=document.getElementById('answers'),feedback=document.getElementById('feedback'),feedbackTitle=document.getElementById('feedback-title'),feedbackCopy=document.getElementById('feedback-copy'),score=document.getElementById('score');
-let trials=0,correct=0,current=null,locked=false,pendingFocus=null,familyBag=[];
-function r(list){return list[Math.floor(Math.random()*list.length)]}
-function shuffle(list){const a=[...list];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function uniqueShapes(n){return shuffle(SHAPES).slice(0,n)}
-function keyRow(a){return a.join('|')}
-function applySeq(row,seq){return seq.reduce((s,name)=>OPS[name](s),row)}
-function svgShape(shape){
- const common='fill="none" stroke="#9b6c0a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"';
- if(shape==='circle')return `<svg viewBox="0 0 100 100"><circle ${common} cx="50" cy="50" r="31"/></svg>`;
- if(shape==='square')return `<svg viewBox="0 0 100 100"><rect ${common} x="20" y="20" width="60" height="60" rx="4"/></svg>`;
- if(shape==='triangle')return `<svg viewBox="0 0 100 100"><path ${common} d="M50 15 L84 80 H16 Z"/></svg>`;
- if(shape==='diamond')return `<svg viewBox="0 0 100 100"><path ${common} d="M50 13 L87 50 L50 87 L13 50 Z"/></svg>`;
- if(shape==='hexagon')return `<svg viewBox="0 0 100 100"><path ${common} d="M28 16 H72 L90 50 L72 84 H28 L10 50 Z"/></svg>`;
- if(shape==='pentagon')return `<svg viewBox="0 0 100 100"><path ${common} d="M50 12 L87 39 L73 83 H27 L13 39 Z"/></svg>`;
- if(shape==='star')return `<svg viewBox="0 0 100 100"><path ${common} d="M50 10 L61 38 L91 40 L68 59 L76 88 L50 72 L24 88 L32 59 L9 40 L39 38 Z"/></svg>`;
- return `<svg viewBox="0 0 100 100"><path ${common} d="M37 12 H63 V37 H88 V63 H63 V88 H37 V63 H12 V37 H37 Z"/></svg>`;
-}
-function token(shape){return `<span class="token">${svgShape(shape)}</span>`}
-function rowBoard(row){return `<div class="row-board">${row.map(token).join('')}</div>`}
-function opBadge(g){return `<span class="op-badge">${g}</span>`}
-function wrap(html,cls='example'){return `<div class="${cls}">${html}</div>`}
-function arrowSvg(dir){return `<svg viewBox="0 0 100 100" style="transform:rotate(${dir}deg)"><path d="M45 12 H65 V48 H86 L55 88 L24 48 H45 Z" fill="#9b6c0a"/></svg>`}
-function frameBoard(marker,dir){return `<div class="frame-board"><div class="ring"></div><div class="observer" style="transform:rotate(${marker}deg);transform-origin:13px 80px"></div><div class="arrow" style="transform:rotate(${dir}deg)">${arrowSvg(0)}</div></div>`}
-function edgeSvg(nodes,edges,w=330,h=132){
- let defs='<defs><marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,4 L0,8 Z" fill="#2d2757"/></marker></defs>';
- let lines='';
- for(const [a,b] of edges){const A=nodes[a],B=nodes[b];lines+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#2d2757" stroke-width="5" marker-end="url(#arr)"/>`}
- return `<svg class="edges" viewBox="0 0 ${w} ${h}">${defs}${lines}</svg>`
-}
-function edgeBoard(shapes,edges){const pos=[{x:48,y:66},{x:165,y:28},{x:282,y:66}];return `<div class="edge-board">${edgeSvg(pos,edges)}${pos.map((p,i)=>`<span class="node" style="left:${p.x-32}px;top:${p.y-32}px">${svgShape(shapes[i])}</span>`).join('')}</div>`}
-function graphBoard(shapes,edges,enclosed,perm=[0,1,2,3]){
- const base=[{x:52,y:50},{x:228,y:50},{x:52,y:170},{x:228,y:170}];
- const pos=perm.map(i=>base[i]);
- const encPoints=enclosed.map(i=>pos[i]);
- const minX=Math.min(...encPoints.map(p=>p.x))-38,maxX=Math.max(...encPoints.map(p=>p.x))+38,minY=Math.min(...encPoints.map(p=>p.y))-38,maxY=Math.max(...encPoints.map(p=>p.y))+38;
- return `<div class="graph-board"><div class="enclosure" style="left:${minX}px;top:${minY}px;width:${maxX-minX}px;height:${maxY-minY}px"></div>${edgeSvg(pos,edges,280,220)}${pos.map((p,i)=>`<span class="node" style="left:${p.x-28}px;top:${p.y-28}px">${svgShape(shapes[i])}</span>`).join('')}</div>`
-}
-function nextFamily(){if(pendingFocus)return pendingFocus.family;if(!familyBag.length)familyBag=shuffle(['order','metaTransfer','closure','frame','projection']);return familyBag.pop()}
-function chooseDistinctOps(){for(let k=0;k<100;k++){const [a,b]=shuffle(OP_NAMES).slice(0,2),row=uniqueShapes(4);const outcomes=[applySeq(row,[a,b]),applySeq(row,[b,a]),applySeq(row,[a]),applySeq(row,[b])];if(new Set(outcomes.map(keyRow)).size===4)return {a,b}}throw new Error('Operator pair generation failed')}
-function buildOrder(focus){const {a,b}=focus&&focus.rule?focus.rule:chooseDistinctOps();const glyphs=shuffle(OP_GLYPHS).slice(0,2),row1=uniqueShapes(4),row2=uniqueShapes(4),queryRow=uniqueShapes(4);const options=shuffle([
- {state:applySeq(queryRow,[a,b]),error:'correct'},
- {state:applySeq(queryRow,[b,a]),error:'illegal-commutation'},
- {state:applySeq(queryRow,[a]),error:'premature-closure'},
- {state:applySeq(queryRow,[b]),error:'operator-omission'}
-]);return {family:'order',rule:{a,b},glyphs,prompt:'Which result must follow?',copy:'Infer both operators, then preserve their shown order.',examples:[{row:row1,op:glyphs[0],out:OPS[a](row1)},{row:row2,op:glyphs[1],out:OPS[b](row2)}],query:{row:queryRow,ops:glyphs},options,answer:options.findIndex(o=>o.error==='correct')}
-}
-function buildMetaTransfer(focus){const rule=focus&&focus.rule?focus.rule:r(OP_NAMES),ref=uniqueShapes(4);const distractorRules=shuffle(OP_NAMES.filter(x=>x!==rule)).slice(0,3);const candidates=shuffle([{rule,error:'correct'},...distractorRules.map((x,i)=>({rule:x,error:i===0?'inverse-or-neighbour-rule':i===1?'surface-capture':'wrong-transformation-class'}))]).map(c=>{const row=uniqueShapes(4);return {...c,row,out:OPS[c.rule](row)}});return {family:'metaTransfer',rule,prompt:'Which example uses the same governing rule?',copy:'Ignore the shapes. Compare the transformation itself.',examples:[{row:ref,out:OPS[rule](ref)}],query:null,options:candidates,answer:candidates.findIndex(o=>o.error==='correct')}
-}
-const CLOSURE_RULES={
- transitive:{prem:[[0,1],[1,2]],con:[0,2]},
- reverseChain:{prem:[[0,1],[1,2]],con:[2,0]},
- sharedSource:{prem:[[0,1],[0,2]],con:[1,2]},
- sharedTarget:{prem:[[1,0],[2,0]],con:[1,2]}
-};
-function allCandidateEdges(){return [[0,1],[1,0],[0,2],[2,0],[1,2],[2,1]]}
-function buildClosure(focus){const rule=focus&&focus.rule?focus.rule:r(Object.keys(CLOSURE_RULES)),spec=CLOSURE_RULES[rule];const exShapes=uniqueShapes(3),qShapes=uniqueShapes(3);const wrong=shuffle(allCandidateEdges().filter(e=>e[0]!==spec.con[0]||e[1]!==spec.con[1])).slice(0,3);const options=shuffle([{edge:spec.con,error:'correct'},...wrong.map((edge,i)=>({edge,error:i===0?'reversed-relation':i===1?'local-not-global':'unsupported-closure'}))]);return {family:'closure',rule,prompt:'Which relation must be added?',copy:'Infer what kind of relational closure the example licenses.',examples:[{shapes:exShapes,prem:spec.prem,con:spec.con}],query:{shapes:qShapes,prem:spec.prem},options,answer:options.findIndex(o=>o.error==='correct')}
-}
-const FRAME_RULES={fixed:(arrow,delta)=>arrow,relative:(arrow,delta)=>(arrow+delta+360)%360,counter:(arrow,delta)=>(arrow-delta+360)%360};
-function buildFrame(focus){const rule=focus&&focus.rule?focus.rule:r(Object.keys(FRAME_RULES)),delta=r([90,270]);const make=()=>{const m0=r(DIRS),a0=r(DIRS),m1=(m0+delta)%360,a1=FRAME_RULES[rule](a0,delta);return {m0,a0,m1,a1}};const ex1=make(),ex2=make(),q=make();const options=shuffle(DIRS.map(dir=>({dir,error:dir===q.a1?'correct':dir===q.a0?'wrong-reference-frame':dir===(q.a0+180)%360?'inversion-confusion':'wrong-frame-update'})));return {family:'frame',rule,prompt:'Which direction is exact in the new frame?',copy:'Infer whether the arrow follows the world, the observer, or the inverse frame change.',examples:[ex1,ex2],query:q,options,answer:options.findIndex(o=>o.error==='correct')}
-}
-function buildProjection(focus){const perm=focus&&focus.rule?focus.rule.perm:r([[1,3,0,2],[2,0,3,1],[3,2,1,0]]);const edges=[[0,1],[0,2],[2,3]],enclosed=[0,2],srcShapes=uniqueShapes(4),outShapes=uniqueShapes(4),qShapes=uniqueShapes(4),ansShapes=uniqueShapes(4);const correct={edges:edges.map(([a,b])=>[a,b]),enclosed:[...enclosed],error:'correct'};const rev={edges:[[1,0],[0,2],[2,3]],enclosed:[...enclosed],error:'reversed-relation'};const wrongEnc={edges:edges.map(e=>[...e]),enclosed:[0,1],error:'altered-containment'};const wrongAdj={edges:[[0,1],[0,3],[2,3]],enclosed:[...enclosed],error:'broken-topology'};const options=shuffle([correct,rev,wrongEnc,wrongAdj]);return {family:'projection',rule:{perm},prompt:'Which projection preserves the same structure?',copy:'Local appearances change. Preserve directed topology and containment.',examples:[{srcShapes,outShapes,edges,enclosed,perm}],query:{qShapes,edges,enclosed},ansShapes,options,answer:options.findIndex(o=>o.error==='correct')}
-}
-function buildTrial(){const family=nextFamily(),focus=pendingFocus&&pendingFocus.family===family?pendingFocus:null;pendingFocus=null;const t=family==='order'?buildOrder(focus):family==='metaTransfer'?buildMetaTransfer(focus):family==='closure'?buildClosure(focus):family==='frame'?buildFrame(focus):buildProjection(focus);auditTrial(t);return t}
-function renderVisualRow(row,op,out){return `<div class="visual">${rowBoard(row)}${op?opBadge(op):'<span class="then">→</span>'}${op?'<span class="equals">=</span>':''}${rowBoard(out)}</div>`}
-function renderTrial(){locked=false;feedback.hidden=true;feedback.className='feedback card';answers.innerHTML='';examples.innerHTML='';query.innerHTML='';current=buildTrial();promptTitle.textContent=current.prompt;promptCopy.textContent=current.copy;
- if(current.family==='order'){
-   current.examples.forEach(e=>examples.insertAdjacentHTML('beforeend',wrap(renderVisualRow(e.row,e.op,e.out))));
-   query.innerHTML=`<div class="visual">${rowBoard(current.query.row)}${opBadge(current.query.ops[0])}<span class="then">→</span>${opBadge(current.query.ops[1])}<span class="equals">=</span><span class="ask">?</span></div>`;
-   current.options.forEach((o,i)=>addOption(rowBoard(o.state),i));
- }else if(current.family==='metaTransfer'){
-   const e=current.examples[0];examples.innerHTML=wrap(`<div class="mini-transform">${rowBoard(e.row)}<span class="then">→</span>${rowBoard(e.out)}</div>`);
-   query.innerHTML='<div class="visual"><span class="ask">Which candidate repeats the same transformation?</span></div>';
-   current.options.forEach((o,i)=>addOption(`<div class="mini-transform">${rowBoard(o.row)}<span class="then">→</span>${rowBoard(o.out)}</div>`,i));
- }else if(current.family==='closure'){
-   const e=current.examples[0];examples.innerHTML=wrap(`<div class="visual">${edgeBoard(e.shapes,e.prem)}<span class="then">⇒</span>${edgeBoard(e.shapes,[e.con])}</div>`);
-   query.innerHTML=`<div class="visual">${edgeBoard(current.query.shapes,current.query.prem)}<span class="then">⇒</span><span class="ask">?</span></div>`;
-   current.options.forEach((o,i)=>addOption(edgeBoard(current.query.shapes,[o.edge]),i));
- }else if(current.family==='frame'){
-   current.examples.forEach(e=>examples.insertAdjacentHTML('beforeend',wrap(`<div class="visual">${frameBoard(e.m0,e.a0)}<span class="then">→</span>${frameBoard(e.m1,e.a1)}</div>`)));
-   query.innerHTML=`<div class="visual">${frameBoard(current.query.m0,current.query.a0)}<span class="then">→</span>${frameBoard(current.query.m1,0).replace(arrowSvg(0),'<span class="ask">?</span>')}</div>`;
-   current.options.forEach((o,i)=>addOption(frameBoard(current.query.m1,o.dir),i));
- }else{
-   const e=current.examples[0];examples.innerHTML=wrap(`<div class="visual">${graphBoard(e.srcShapes,e.edges,e.enclosed)}<span class="then">→</span>${graphBoard(e.outShapes,e.edges,e.enclosed,e.perm)}</div>`);
-   query.innerHTML=`<div class="visual">${graphBoard(current.query.qShapes,current.query.edges,current.query.enclosed)}<span class="then">→</span><span class="ask">?</span></div>`;
-   current.options.forEach((o,i)=>addOption(graphBoard(current.ansShapes,o.edges,o.enclosed,current.rule.perm),i));
- }
-}
-function addOption(html,index){const b=document.createElement('button');b.type='button';b.className='option';b.innerHTML=`<span class="mark"></span>${html}`;b.addEventListener('click',()=>choose(index,b));answers.appendChild(b)}
-function choose(index,button){if(locked)return;locked=true;trials++;const buttons=[...answers.querySelectorAll('.option')];buttons.forEach(b=>b.disabled=true);const chosen=current.options[index],good=index===current.answer;buttons[current.answer].classList.add('correct');buttons[current.answer].querySelector('.mark').textContent='✓';if(!good){button.classList.add('wrong');button.querySelector('.mark').textContent='×';pendingFocus={family:current.family,rule:current.rule}}else correct++;score.textContent=`${correct} correct · ${trials} trial${trials===1?'':'s'}`;feedback.hidden=false;feedback.classList.add(good?'good':'bad');feedbackTitle.textContent=good?'Exact.':'Not exact.';feedbackCopy.textContent=feedbackText(chosen.error,current);feedback.scrollIntoView({behavior:'smooth',block:'nearest'})}
-function feedbackText(error,t){if(error==='correct')return t.family==='order'?'You inferred both operators and preserved their non-commutative order.':t.family==='metaTransfer'?'You matched the latent transformation across different surfaces.':t.family==='closure'?'You inferred the active closure rule rather than merely copying an arrow.':t.family==='frame'?'You regulated the correct reference frame.':'You preserved directed topology and containment while ignoring local appearance.';
- const map={
-  'illegal-commutation':'The operators were applied in reverse order. The next trial preserves this distinction with new symbols.',
-  'premature-closure':'Only the first operation was applied.',
-  'operator-omission':'Only the second operation was applied.',
-  'inverse-or-neighbour-rule':'This is a neighbouring transformation, not the same rule.',
-  'surface-capture':'The surface pattern was similar, but the transformation class changed.',
-  'wrong-transformation-class':'The candidate uses a different latent mapping.',
-  'reversed-relation':'The derived relation was reversed.',
-  'local-not-global':'The choice fits one local edge but not the demonstrated global rule.',
-  'unsupported-closure':'The example does not license that connection.',
-  'wrong-reference-frame':'The arrow was treated as world-fixed when the demonstrated system was not.',
-  'inversion-confusion':'The frame change was confused with simple opposition.',
-  'wrong-frame-update':'The observer change was applied under the wrong frame algebra.',
-  'altered-containment':'The edge pattern was close, but containment changed.',
-  'broken-topology':'One adjacency changed, so the structure is not isomorphic.'
- };
- return map[error]||'The selected option occupies a neighbouring but different distinction class.'}
-function auditTrial(t){if(!t||!Array.isArray(t.options)||t.options.length!==4)throw new Error('Trial malformed.');if(t.options.filter(o=>o.error==='correct').length!==1)throw new Error('Answer is not unique.');if(t.answer<0||t.answer>3)throw new Error('Answer index invalid.');
- if(t.family==='order'&&new Set(t.options.map(o=>keyRow(o.state))).size!==4)throw new Error('Order outcomes duplicate.');
- if(t.family==='metaTransfer'&&new Set(t.options.map(o=>o.rule)).size!==4)throw new Error('Transfer rules duplicate.');
- if(t.family==='closure'&&new Set(t.options.map(o=>o.edge.join('-'))).size!==4)throw new Error('Closure answers duplicate.');
- if(t.family==='frame'&&new Set(t.options.map(o=>o.dir)).size!==4)throw new Error('Frame answers duplicate.');
- if(t.family==='projection'){
-   const keys=t.options.map(o=>JSON.stringify({e:o.edges,c:o.enclosed}));if(new Set(keys).size!==4)throw new Error('Projection answers duplicate.');
-   if(t.options.some(o=>o.edges.length!==3||o.enclosed.length!==2))throw new Error('Projection visual load mismatch.');
- }
-}
-function auditGenerator(){const savedBag=[...familyBag],savedFocus=pendingFocus;for(const family of ['order','metaTransfer','closure','frame','projection'])for(let i=0;i<140;i++){const t=family==='order'?buildOrder():family==='metaTransfer'?buildMetaTransfer():family==='closure'?buildClosure():family==='frame'?buildFrame():buildProjection();auditTrial(t)}familyBag=savedBag;pendingFocus=savedFocus}
-start.addEventListener('click',()=>{intro.hidden=true;game.hidden=false;document.body.classList.add('playing');renderTrial()});next.addEventListener('click',renderTrial);auditGenerator();
+(async()=>{
+  'use strict';
+  const status=document.getElementById('status'),error=document.getElementById('error');
+  try{
+    if(typeof DecompressionStream!=='function')throw new Error('This build requires a current Chrome, Edge, Firefox or Safari version with native gzip support.');
+    const response=await fetch('assets/foundational-meta-logic-v1.b64?v=20260717b',{cache:'no-store'});
+    if(!response.ok)throw new Error('Engine payload returned HTTP '+response.status+'.');
+    const payload=(await response.text()).replace(/\s+/g,'');
+    const bytes=Uint8Array.from(atob(payload),character=>character.charCodeAt(0));
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html=await new Response(stream).text();
+    if(!html.includes('Foundational rule stream')||!html.includes('auditGenerator'))throw new Error('Engine integrity check failed.');
+    document.open();document.write(html);document.close();
+  }catch(reason){
+    status.textContent='The game could not initialise.';
+    error.style.display='block';
+    error.textContent=String(reason&&reason.stack||reason);
+    console.error(reason);
+  }
 })();
 </script>
 </body>
