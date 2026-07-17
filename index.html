@@ -4,304 +4,316 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f6f4fb">
-<title>Ontological Deception · Meta-Logic × Meta-Distinction</title>
+<title>Ontological Deception · Foundational Meta-Logic</title>
 <style>
 :root{
   --ink:#2d2757;--muted:#6f6888;--violet:#5b3fdb;--violet-dark:#4328b8;
-  --line:#d9d5e8;--panel:#fff;--ground:#f6f4fb;--gold:#9b6c0a;
+  --gold:#9b6c0a;--line:#d9d5e8;--panel:#fff;--ground:#f6f4fb;
   --green:#147a50;--green-soft:#eef9f3;--red:#bf2552;--red-soft:#fff1f5;
-  --shadow:0 14px 36px rgba(45,39,87,.085)
+  --shadow:0 14px 34px rgba(45,39,87,.08)
 }
 *{box-sizing:border-box}
 html{min-height:100%;background:var(--ground)}
-body{margin:0;min-height:100vh;min-height:100dvh;background:radial-gradient(circle at 16% -7%,rgba(91,63,219,.09),transparent 35rem),var(--ground);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+body{margin:0;min-height:100vh;min-height:100dvh;background:radial-gradient(circle at 18% -8%,rgba(91,63,219,.08),transparent 34rem),var(--ground);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
 button{font:inherit;color:inherit}[hidden]{display:none!important}
-.shell{width:min(1180px,100%);margin:0 auto;padding:clamp(14px,2.6vw,32px)}
-.brand{text-align:center;margin-bottom:clamp(14px,2.3vw,26px)}
-.brand h1{margin:0;color:var(--gold);font-size:clamp(1.9rem,4.2vw,3.8rem);font-weight:950;letter-spacing:.135em;line-height:1}
-.brand p{margin:.55rem 0 0;color:var(--violet);font-size:clamp(.72rem,1.3vw,.95rem);font-weight:900;letter-spacing:.24em;text-transform:uppercase}
-body.playing .brand{margin-bottom:12px}body.playing .brand h1{font-size:clamp(1.35rem,2.5vw,2.15rem)}body.playing .brand p{font-size:.66rem;margin-top:.28rem}
+.shell{width:min(1120px,100%);margin:0 auto;padding:clamp(14px,2.5vw,30px)}
+.brand{text-align:center;margin-bottom:clamp(14px,2vw,24px)}
+.brand h1{margin:0;color:var(--gold);font-size:clamp(1.9rem,4vw,3.55rem);font-weight:950;letter-spacing:.13em;line-height:1}
+.brand p{margin:.52rem 0 0;color:var(--violet);font-size:clamp(.72rem,1.25vw,.94rem);font-weight:900;letter-spacing:.22em;text-transform:uppercase}
+body.playing .brand{margin-bottom:10px}body.playing .brand h1{font-size:clamp(1.35rem,2.4vw,2.05rem)}body.playing .brand p{font-size:.64rem;margin-top:.25rem}
 .card{background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:21px;box-shadow:var(--shadow)}
-.intro{max-width:850px;margin:clamp(28px,7vh,78px) auto 0;padding:clamp(28px,5vw,54px);text-align:center}
-.intro h2{margin:0;font-size:clamp(1.85rem,3.3vw,3rem);line-height:1.12}
-.intro p{max-width:710px;margin:18px auto 0;color:var(--muted);font-size:clamp(1.05rem,1.65vw,1.32rem);font-weight:650;line-height:1.55}
-.intro .rule{display:inline-block;margin:24px 0 0;padding:12px 16px;border-radius:13px;background:#f1eefc;color:var(--ink);font-size:clamp(.94rem,1.4vw,1.12rem);font-weight:900}
-.primary{border:0;border-radius:14px;background:linear-gradient(135deg,var(--violet),var(--violet-dark));color:#fff;font-weight:950;letter-spacing:.055em;cursor:pointer;box-shadow:0 10px 20px rgba(91,63,219,.2);transition:transform .14s ease,filter .14s ease}
+.intro{max-width:830px;margin:clamp(30px,7vh,78px) auto 0;padding:clamp(28px,5vw,52px);text-align:center}
+.intro h2{margin:0;font-size:clamp(1.85rem,3.2vw,2.9rem);line-height:1.12}
+.intro p{max-width:700px;margin:18px auto 0;color:var(--muted);font-size:clamp(1.04rem,1.6vw,1.28rem);font-weight:650;line-height:1.55}
+.intro .rule{display:inline-block;margin:24px 0 0;padding:12px 16px;border-radius:13px;background:#f1eefc;font-size:clamp(.93rem,1.35vw,1.1rem);font-weight:900}
+.primary{border:0;border-radius:14px;background:linear-gradient(135deg,var(--violet),var(--violet-dark));color:#fff;font-weight:950;letter-spacing:.055em;cursor:pointer;box-shadow:0 10px 20px rgba(91,63,219,.2)}
 .primary:hover{filter:brightness(1.04)}.primary:active{transform:translateY(1px)}
-#start{display:block;width:min(340px,100%);min-height:58px;margin:30px auto 0;font-size:1.04rem}
-.game-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:13px}
-.game-head .stream{font-size:.76rem;font-weight:950;letter-spacing:.18em;color:var(--violet);text-transform:uppercase}
-.game-head .score{font-size:.88rem;font-weight:850;color:var(--muted);white-space:nowrap}
-.prompt{padding:clamp(18px,2.8vw,29px);text-align:center;margin-bottom:16px}
-.prompt h2{margin:0;font-size:clamp(1.72rem,3.3vw,3rem);line-height:1.14;letter-spacing:-.022em}
-.prompt p{margin:9px auto 0;max-width:860px;color:var(--muted);font-size:clamp(1.04rem,1.9vw,1.42rem);font-weight:740;line-height:1.42}
-.problem{padding:clamp(16px,2.5vw,26px);margin-bottom:16px}
-.problem-title{margin:0 0 12px;color:#7c7395;font-size:.72rem;font-weight:950;letter-spacing:.17em;text-transform:uppercase}
-.demos{display:grid;gap:10px}.demo-row,.query-row{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.5vw,18px);min-height:98px;padding:10px 12px;border-radius:15px;background:#faf9fd;border:1px solid #e7e3f0}
-.query-row{margin-top:14px;background:#f4f1fd;border-color:#cec5ef;min-height:112px}
-.query-row::before{content:"NOW";align-self:flex-start;margin-right:-44px;color:var(--violet);font-size:.62rem;font-weight:950;letter-spacing:.16em}
-.eq,.step-arrow{font-size:clamp(1.15rem,2vw,1.55rem);font-weight:950;color:#4b426c}.operator{display:inline-grid;place-items:center;min-width:42px;height:42px;padding:0 10px;border:2px solid currentColor;border-radius:12px;color:var(--violet);background:#fff;font-size:1.25rem;font-weight:950;line-height:1}
-.stimulus{display:grid;place-items:center;min-width:80px}.stimulus svg{display:block;width:min(150px,23vw);height:auto;overflow:visible}
-.moves{display:flex;align-items:center;justify-content:center;gap:8px}.move-tile{display:grid;place-items:center;width:66px;height:66px;border:1px solid #d9d4e9;border-radius:14px;background:#fff}.move-tile svg{width:48px;height:48px}
-.reference{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:clamp(10px,2vw,24px);max-width:610px;margin:0 auto;padding:15px;border-radius:16px;background:#faf9fd;border:1px solid #e5e1ef}
-.set-grid{display:grid;grid-template-columns:repeat(4,26px);grid-template-rows:repeat(2,26px);gap:7px;justify-content:center;padding:10px}.set-cell{width:26px;height:26px;border:2px solid currentColor;border-radius:50%;background:#fff}.set-cell.on{background:currentColor}
-.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.option{position:relative;min-height:clamp(190px,24vw,280px);padding:18px;border:2px solid var(--line);border-radius:19px;background:var(--panel);cursor:pointer;box-shadow:0 7px 18px rgba(45,39,87,.05);transition:border-color .14s ease,transform .14s ease,box-shadow .14s ease,background .14s ease}
-.option:hover:not(:disabled){border-color:#aaa0e3;transform:translateY(-1px);box-shadow:0 11px 24px rgba(45,39,87,.085)}.option:focus-visible{outline:4px solid rgba(91,63,219,.24);outline-offset:3px}.option:disabled{cursor:default}.option.correct{border-color:var(--green);background:var(--green-soft)}.option.wrong{border-color:var(--red);background:var(--red-soft)}
-.option .mark{position:absolute;top:12px;right:14px;display:none;font-size:1.28rem;font-weight:950}.option.correct .mark,.option.wrong .mark{display:block}.option.correct .mark{color:var(--green)}.option.wrong .mark{color:var(--red)}
-.option-inner{height:100%;display:grid;place-items:center}.option .stimulus svg{width:min(168px,26vw)}.option .reference{width:100%;padding:9px;background:transparent;border:0}.option .set-grid{grid-template-columns:repeat(4,22px);grid-template-rows:repeat(2,22px);gap:6px;padding:5px}.option .set-cell{width:22px;height:22px}
-.feedback{margin-top:17px;padding:clamp(18px,2.6vw,25px);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;border-width:2px}.feedback.good{border-color:#a8ddc5;background:var(--green-soft)}.feedback.bad{border-color:#efb3c6;background:var(--red-soft)}.feedback h3{margin:0;font-size:clamp(1.22rem,2vw,1.62rem)}.feedback p{margin:6px 0 0;color:#554d72;font-size:clamp(.98rem,1.4vw,1.14rem);font-weight:650;line-height:1.48}#next{min-width:180px;min-height:52px;padding:0 24px}
-.footer-note{text-align:center;margin:17px 0 0;color:#8d86a0;font-size:.75rem;font-weight:700;letter-spacing:.035em}
-@media(max-width:760px){.shell{padding:12px}.brand h1{letter-spacing:.075em}.answers{grid-template-columns:1fr;gap:12px}.option{min-height:205px;padding:13px}.feedback{grid-template-columns:1fr}#next{width:100%}.game-head{align-items:center}.demo-row,.query-row{min-height:88px;padding:8px 5px;gap:6px}.stimulus{min-width:58px}.stimulus svg{width:min(115px,27vw)}.operator{min-width:36px;height:38px;padding:0 8px}.move-tile{width:54px;height:54px}.move-tile svg{width:40px;height:40px}.reference{gap:7px;padding:9px}.set-grid{grid-template-columns:repeat(4,21px);grid-template-rows:repeat(2,21px);gap:5px}.set-cell{width:21px;height:21px}.query-row::before{display:none}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+#start{display:block;width:min(330px,100%);min-height:58px;margin:30px auto 0;font-size:1.03rem}
+.game-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
+.game-head .stream{font-size:.75rem;font-weight:950;letter-spacing:.18em;color:var(--violet);text-transform:uppercase}
+.game-head .score{font-size:.87rem;font-weight:850;color:var(--muted);white-space:nowrap}
+.prompt{padding:clamp(17px,2.6vw,27px);text-align:center;margin-bottom:15px}
+.prompt h2{margin:0;font-size:clamp(1.75rem,3.25vw,2.9rem);line-height:1.13;letter-spacing:-.02em}
+.prompt p{margin:8px auto 0;max-width:820px;color:var(--muted);font-size:clamp(1.02rem,1.8vw,1.34rem);font-weight:735;line-height:1.42}
+.problem{padding:clamp(14px,2.3vw,24px);margin-bottom:15px}
+.caption{margin:0 0 10px;color:#7b7394;font-size:.72rem;font-weight:950;letter-spacing:.16em;text-transform:uppercase}
+.examples{display:grid;gap:10px}
+.example,.query{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.5vw,18px);min-height:102px;padding:11px 13px;border:1px solid #e5e1ee;border-radius:15px;background:#faf9fd}
+.query{margin-top:10px;background:#f5f2ff;border-color:#d8cff7}
+.operator{display:grid;place-items:center;width:46px;height:46px;border:2px solid #7760df;border-radius:12px;background:#fff;color:var(--violet);font-size:1.45rem;font-weight:950;flex:0 0 auto}
+.eq,.then{font-size:clamp(1.25rem,2vw,1.7rem);font-weight:950;color:var(--ink)}
+.board{display:grid;grid-template-columns:repeat(3,58px);gap:10px;align-items:center;justify-content:center;min-width:194px;padding:9px 10px;border:1px solid #ded9ea;border-radius:14px;background:#fff}
+.board.compact{grid-template-columns:repeat(3,48px);gap:8px;min-width:166px;padding:8px}
+.token{width:58px;height:58px;display:grid;place-items:center}.compact .token{width:48px;height:48px}
+.token svg{width:100%;height:100%;overflow:visible}.token-shape{stroke:var(--gold);stroke-width:8;stroke-linejoin:round;vector-effect:non-scaling-stroke}.token-shape.filled{fill:var(--gold)}.token-shape.outline{fill:#fff}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.option{position:relative;min-height:210px;padding:18px;border:2px solid var(--line);border-radius:19px;background:#fff;cursor:pointer;box-shadow:0 7px 18px rgba(45,39,87,.05);display:grid;place-items:center}
+.option:hover:not(:disabled){border-color:#aa9ee5;transform:translateY(-1px)}.option:focus-visible{outline:4px solid rgba(91,63,219,.23);outline-offset:3px}.option:disabled{cursor:default}
+.option.correct{border-color:var(--green);background:var(--green-soft)}.option.wrong{border-color:var(--red);background:var(--red-soft)}
+.option .mark{position:absolute;top:12px;right:14px;display:none;font-size:1.3rem;font-weight:950}.option.correct .mark,.option.wrong .mark{display:block}.option.correct .mark{color:var(--green)}.option.wrong .mark{color:var(--red)}
+.mapping{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
+.feedback{margin-top:15px;padding:clamp(17px,2.5vw,24px);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;border-width:2px}
+.feedback.good{border-color:#a9ddc6;background:var(--green-soft)}.feedback.bad{border-color:#efb2c5;background:var(--red-soft)}
+.feedback h3{margin:0;font-size:clamp(1.2rem,1.9vw,1.55rem)}.feedback p{margin:6px 0 0;color:#554d72;font-size:clamp(.98rem,1.4vw,1.13rem);font-weight:650;line-height:1.45}
+#next{min-width:175px;min-height:51px;padding:0 22px}
+.graph{width:min(420px,100%);height:126px}.edge-answer{width:min(330px,100%);height:132px}
+.frame{width:132px;height:132px}.frame-answer{width:150px;height:150px}
+svg text{font-family:inherit}
+@media(max-width:760px){
+  .shell{padding:13px}.brand h1{letter-spacing:.075em}.answers{grid-template-columns:1fr;gap:12px}.option{min-height:190px;padding:14px}
+  .feedback{grid-template-columns:1fr}.feedback #next{width:100%}.game-head{align-items:center}.example,.query{flex-wrap:wrap;min-height:112px}
+  .board{grid-template-columns:repeat(3,48px);gap:7px;min-width:166px}.token{width:48px;height:48px}.mapping{gap:6px}.operator{width:42px;height:42px}
+}
+@media(max-width:420px){.board.compact{grid-template-columns:repeat(3,40px);min-width:142px}.compact .token{width:40px;height:40px}.mapping{flex-wrap:wrap}.option{min-height:180px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <main class="shell">
-<header class="brand"><h1>ONTOLOGICAL DECEPTION</h1><p>Meta-Logic × Meta-Distinction</p></header>
-<section id="intro" class="intro card">
-  <h2>Infer the rule before using it.</h2>
-  <p>Every trial first defines an unfamiliar logical system through examples. Select the exact consequence—not the closest-looking answer.</p>
-  <div class="rule">RULE DISCOVERY × RELATIONAL INTEGRATION × DISTINCTION PRECISION</div>
-  <button id="start" class="primary" type="button">BEGIN</button>
-</section>
-<section id="game" hidden>
-  <div class="game-head"><div class="stream">Unfamiliar Rule Stream</div><div id="score" class="score" aria-live="polite">0 correct · 0 trials</div></div>
-  <section class="prompt card"><h2 id="question"></h2><p id="instruction"></p></section>
-  <section id="problem" class="problem card"></section>
-  <section id="answers" class="answers" aria-label="Answer choices"></section>
-  <section id="feedback" class="feedback card" hidden aria-live="polite"><div><h3 id="feedback-title"></h3><p id="feedback-copy"></p></div><button id="next" class="primary" type="button">NEXT TRIAL</button></section>
-  <p class="footer-note">Surface features are randomised. The answer is determined by the latent relation.</p>
-</section>
+  <header class="brand"><h1>ONTOLOGICAL DECEPTION</h1><p>Meta-Logic × Meta-Distinction</p></header>
+
+  <section id="intro" class="intro card">
+    <h2>Infer the rule before using it.</h2>
+    <p>Each trial teaches an unfamiliar logical system through examples. Determine what changes, what remains invariant, and which conclusion is exact.</p>
+    <div class="rule">LARGE SYMBOLS · MATCHED VISUAL LOAD · NO FINE-DETAIL SEARCH</div>
+    <button id="start" class="primary" type="button">BEGIN</button>
+  </section>
+
+  <section id="game" hidden>
+    <div class="game-head"><div class="stream">Foundational rule stream</div><div id="score" class="score">0 correct · 0 trials</div></div>
+    <section class="prompt card"><h2>Which result must follow?</h2><p>Infer the governing rule from the example, then apply it exactly.</p></section>
+    <section id="problem" class="problem card"></section>
+    <section id="answers" class="answers" aria-label="Answer choices"></section>
+    <section id="feedback" class="feedback card" hidden aria-live="polite">
+      <div><h3 id="feedback-title"></h3><p id="feedback-copy"></p></div>
+      <button id="next" class="primary" type="button">NEXT TRIAL</button>
+    </section>
+  </section>
 </main>
+
 <script>
 (()=>{
 'use strict';
-const DIR_NAMES=['north','north-east','east','south-east','south','south-west','west','north-west'];
-const VECTORS=[[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]];
-const TONES=['#5b3fdb','#0a8298','#b67800','#c62555'];
-const SHAPES=['pointer','kite','chevron'];
-const OP_SYMBOLS=['◇','⊕','⌁','✦','△','⊙','□','≈'];
-const intro=document.getElementById('intro'),game=document.getElementById('game'),answers=document.getElementById('answers'),problem=document.getElementById('problem'),question=document.getElementById('question'),instruction=document.getElementById('instruction'),feedback=document.getElementById('feedback'),feedbackTitle=document.getElementById('feedback-title'),feedbackCopy=document.getElementById('feedback-copy'),score=document.getElementById('score'),start=document.getElementById('start'),next=document.getElementById('next');
-let trialNo=0,correct=0,current=null,locked=false,focus=null,familyCursor=0,uid=0;
-const FAMILIES=['ordered','resolution','relation','transfer'];
-function randomItem(a){return a[Math.floor(Math.random()*a.length)]}
-function randomInt(n){return Math.floor(Math.random()*n)}
-function shuffle(a){const out=[...a];for(let i=out.length-1;i>0;i--){const j=randomInt(i+1);[out[i],out[j]]=[out[j],out[i]]}return out}
-function mod(n,m){return((n%m)+m)%m}
-function sameObject(a,b){return JSON.stringify(a)===JSON.stringify(b)}
-function uniqueBy(items,key){return new Set(items.map(key)).size===items.length}
-function rotateDirection(d,steps){return mod(d+steps,8)}
-const OPERATIONS={
-  r2:{name:'quarter-turn clockwise',apply:d=>mod(d+2,8)},
-  r6:{name:'quarter-turn anticlockwise',apply:d=>mod(d+6,8)},
-  mv:{name:'left-right reflection',apply:d=>mod(8-d,8)},
-  mh:{name:'top-bottom reflection',apply:d=>mod(4-d,8)},
-  md:{name:'diagonal reflection',apply:d=>mod(2-d,8)},
-  ma:{name:'opposite-diagonal reflection',apply:d=>mod(6-d,8)}
-};
-function nonCommuting(a,b){return [...Array(8).keys()].some(d=>OPERATIONS[a].apply(OPERATIONS[b].apply(d))!==OPERATIONS[b].apply(OPERATIONS[a].apply(d)))}
-function applySequence(d,ops){return ops.reduce((v,op)=>OPERATIONS[op].apply(v),d)}
-function chooseOperationPair(preferred){
-  if(preferred&&preferred.length===2&&nonCommuting(preferred[0],preferred[1]))return [...preferred];
-  const keys=Object.keys(OPERATIONS),pairs=[];
-  for(const a of keys)for(const b of keys)if(a!==b&&nonCommuting(a,b))pairs.push([a,b]);
-  return randomItem(pairs);
+
+const SHAPE_POOLS=[['circle','triangle','square'],['diamond','pentagon','hexagon']];
+const OP_GLYPHS=['✦','◇','⊕','△','□','⟐','✧','⊙'];
+const DIRS=[0,1,2,3];
+const intro=document.getElementById('intro'),game=document.getElementById('game'),problem=document.getElementById('problem'),answers=document.getElementById('answers'),feedback=document.getElementById('feedback'),feedbackTitle=document.getElementById('feedback-title'),feedbackCopy=document.getElementById('feedback-copy'),score=document.getElementById('score'),start=document.getElementById('start'),next=document.getElementById('next');
+let trialCount=0,correctCount=0,current=null,locked=false,pendingFocus=null,familyBag=[],svgUid=0;
+
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function same(a,b){return JSON.stringify(a)===JSON.stringify(b)}
+function cloneBoard(b){return b.map(t=>({...t}))}
+function boardKey(b){return b.map(t=>t.shape+(t.filled?'1':'0')).join('|')}
+function edgeKey(e){return e[0]+'>'+e[1]}
+function rotateDir(d,delta){return (d+delta+4)%4}
+
+function randomBoard(poolIndex=0){
+  const shapes=shuffle(SHAPE_POOLS[poolIndex]);
+  let fills=[Math.random()<.5,Math.random()<.5,Math.random()<.5];
+  if(fills.every(Boolean)||fills.every(v=>!v))fills[Math.floor(Math.random()*3)]=!fills[0];
+  return shapes.map((shape,i)=>({shape,filled:fills[i]}));
 }
-function buildOrdered(repeat){
-  const opKeys=chooseOperationPair(repeat&&repeat.opKeys),symbols=shuffle(OP_SYMBOLS).slice(0,2),symbolFor={[opKeys[0]]:symbols[0],[opKeys[1]]:symbols[1]};
-  let queryDir,sequence,results;
-  for(let guard=0;guard<200;guard++){
-    queryDir=randomInt(8);sequence=Math.random()<.5?[opKeys[0],opKeys[1]]:[opKeys[1],opKeys[0]];
-    const reverse=[...sequence].reverse();
-    results=[applySequence(queryDir,sequence),applySequence(queryDir,reverse),OPERATIONS[sequence[0]].apply(queryDir),OPERATIONS[sequence[1]].apply(queryDir)];
-    if(new Set(results).size===4)break;
+
+const OPS={
+  L:b=>[b[1],b[2],b[0]].map(t=>({...t})),
+  R:b=>[b[2],b[0],b[1]].map(t=>({...t})),
+  S:b=>[b[2],b[1],b[0]].map(t=>({...t})),
+  F:b=>b.map((t,i)=>({...t,filled:i===0?!t.filled:t.filled})),
+  M:b=>b.map((t,i)=>({...t,filled:i===1?!t.filled:t.filled}))
+};
+const OP_TEXT={L:'move every token one place left',R:'move every token one place right',S:'swap the two outer tokens',F:'reverse the state of the first token',M:'reverse the state of the middle token'};
+function applyOp(board,op){return OPS[op](cloneBoard(board))}
+function applySeq(board,ops){return ops.reduce((b,op)=>applyOp(b,op),cloneBoard(board))}
+function diagnosticBoard(op,pool=0){
+  for(let i=0;i<100;i++){
+    const b=randomBoard(pool),out=applyOp(b,op);
+    const matches=Object.keys(OPS).filter(k=>same(applyOp(b,k),out));
+    if(matches.length===1)return b;
   }
-  if(new Set(results).size!==4)return buildOrdered(repeat);
-  const surface={shape:randomItem(SHAPES),tone:randomItem(TONES)};
-  const demos=[
-    {start:randomInt(8),ops:[opKeys[0]]},
-    {start:randomInt(8),ops:[opKeys[1]]}
-  ].map(x=>({...x,end:applySequence(x.start,x.ops)}));
-  const raw=[
-    {value:results[0],error:null},
-    {value:results[1],error:'reversed-operator-order'},
-    {value:results[2],error:'premature-closure-after-first-operator'},
-    {value:results[3],error:'ignored-first-operator'}
-  ];
-  const options=shuffle(raw),answer=options.findIndex(o=>o.error===null);
-  return {family:'ordered',question:'Which result must follow?',instruction:'Infer what each symbol does, then preserve the shown order.',surface,opKeys,symbolFor,demos,query:{start:queryDir,ops:sequence},options,answer,
-    explain:`${symbolFor[sequence[0]]} means ${OPERATIONS[sequence[0]].name}; ${symbolFor[sequence[1]]} means ${OPERATIONS[sequence[1]].name}. Applied in that order, the figure points ${DIR_NAMES[results[0]]}.`,
-    repeat:{family:'ordered',opKeys}};
+  throw new Error('Could not construct a diagnostic board.');
 }
-function vectorSum(a,b){return [VECTORS[a][0]+VECTORS[b][0],VECTORS[a][1]+VECTORS[b][1]]}
-function resolveVector(sum,system){
-  const [x,y]=sum;if(x===0&&y===0)return null;
-  if(system===8){const sx=Math.sign(x),sy=Math.sign(y);return VECTORS.findIndex(v=>v[0]===sx&&v[1]===sy)}
-  if(Math.abs(x)>Math.abs(y))return x>0?2:6;
-  if(Math.abs(y)>Math.abs(x))return y>0?4:0;
-  return null;
+
+function shapeElement(shape,filled){
+  const cls='token-shape '+(filled?'filled':'outline');
+  if(shape==='circle')return `<circle class="${cls}" cx="50" cy="50" r="32"/>`;
+  if(shape==='triangle')return `<polygon class="${cls}" points="50,12 88,82 12,82"/>`;
+  if(shape==='square')return `<rect class="${cls}" x="17" y="17" width="66" height="66" rx="5"/>`;
+  if(shape==='diamond')return `<polygon class="${cls}" points="50,10 90,50 50,90 10,50"/>`;
+  if(shape==='pentagon')return `<polygon class="${cls}" points="50,9 89,38 74,86 26,86 11,38"/>`;
+  return `<polygon class="${cls}" points="25,13 75,13 94,50 75,87 25,87 6,50"/>`;
 }
-const RESOLUTION_TEMPLATES=[[0,1],[2,3],[4,5],[6,7],[1,2],[3,4],[5,6],[7,0]];
-function rotatePair(pair,k){return pair.map(d=>mod(d+k,8))}
-function buildResolution(repeat){
-  const system=repeat&&repeat.system||randomItem([4,8]),rotation=randomInt(8);
-  const demoPairs=shuffle(RESOLUTION_TEMPLATES).slice(0,2).map(p=>rotatePair(p,rotation));
-  let queryPair=rotatePair(randomItem(RESOLUTION_TEMPLATES),randomInt(8));
-  let correctDir=resolveVector(vectorSum(...queryPair),system),alternate=resolveVector(vectorSum(...queryPair),system===8?4:8);
-  if(correctDir===null||alternate===null||correctDir===alternate)return buildResolution(repeat);
-  const distractors=[alternate,mod(correctDir+4,8),mod(correctDir+2,8)];
-  if(new Set([correctDir,...distractors]).size!==4)return buildResolution(repeat);
-  const raw=[{value:correctDir,error:null},{value:alternate,error:system===8?'coarse-category-substitution':'over-precise-inference'},{value:distractors[1],error:'reversed-result'},{value:distractors[2],error:'wrong-reference-axis'}];
-  const options=shuffle(raw),answer=options.findIndex(o=>o.error===null),surface={shape:'pointer',tone:randomItem(TONES)};
-  const demos=demoPairs.map(moves=>({moves,result:resolveVector(vectorSum(...moves),system)}));
-  return {family:'resolution',question:'Which direction follows exactly?',instruction:'Infer how this system combines directions; do not substitute a merely compatible direction.',surface,system,demos,query:{moves:queryPair},options,answer,
-    explain:system===8?`This system preserves eight-way precision. The combined displacement points ${DIR_NAMES[correctDir]}, not the coarser neighbouring direction.`:`This system resolves to the dominant cardinal axis. The combined displacement therefore counts as ${DIR_NAMES[correctDir]}, not the finer diagonal.`,
-    repeat:{family:'resolution',system}};
+function tokenHTML(t){return `<span class="token"><svg viewBox="0 0 100 100" aria-hidden="true">${shapeElement(t.shape,t.filled)}</svg></span>`}
+function boardHTML(b,compact=false){return `<div class="board${compact?' compact':''}">${b.map(tokenHTML).join('')}</div>`}
+function opHTML(g){return `<span class="operator" aria-hidden="true">${g}</span>`}
+
+function buildOrder(focus){
+  const pairs=focus&&focus.pair?[focus.pair]:[['L','F'],['R','F'],['S','F'],['L','M'],['R','M'],['S','M']];
+  for(let tries=0;tries<200;tries++){
+    const pair=pick(pairs),[a,b]=pair,glyphs=shuffle(OP_GLYPHS).slice(0,2);
+    const demoA=diagnosticBoard(a,0),demoB=diagnosticBoard(b,0),query=randomBoard(1);
+    const candidates=[
+      {state:applySeq(query,[a,b]),error:'correct'},
+      {state:applySeq(query,[b,a]),error:'reversed-order'},
+      {state:applyOp(query,a),error:'premature-closure'},
+      {state:applyOp(query,b),error:'omitted-first-operation'}
+    ];
+    if(new Set(candidates.map(c=>boardKey(c.state))).size!==4)continue;
+    if(same(candidates[0].state,query))continue;
+    return {family:'order',focusKey:{pair},glyphs,ops:[a,b],demoA:{in:demoA,out:applyOp(demoA,a)},demoB:{in:demoB,out:applyOp(demoB,b)},query,options:shuffle(candidates),answerError:'correct'};
+  }
+  throw new Error('Order generator exhausted.');
 }
-function bits(mask){return [...Array(8).keys()].filter(i=>mask&(1<<i))}
-function maskOf(indices){return indices.reduce((m,i)=>m|(1<<i),0)}
-function relationOf(a,b){
-  if(a===b)return'equal';
-  if((a&b)===a)return'subset';
-  if((a&b)===b)return'superset';
-  if((a&b)===0)return'disjoint';
-  return'overlap';
+
+function buildTransfer(focus){
+  const op=focus&&focus.op?focus.op:pick(Object.keys(OPS));
+  const near={L:['R','S','F'],R:['L','S','F'],S:['L','R','F'],F:['M','S','L'],M:['F','S','R']}[op];
+  const demo=diagnosticBoard(op,0),query=randomBoard(1);
+  const options=shuffle([op,...near].map(k=>({op:k,state:applyOp(query,k),error:k===op?'correct':k===near[0]?'inverse-or-neighbour':k===near[1]?'wrong-transformation-class':'surface-capture'})));
+  if(new Set(options.map(o=>boardKey(o.state))).size!==4)return buildTransfer(focus);
+  return {family:'transfer',focusKey:{op},op,demo:{in:demo,out:applyOp(demo,op)},query,options,answerError:'correct'};
 }
-function sampleIndices(n,excluded=[]){return shuffle([...Array(8).keys()].filter(i=>!excluded.includes(i))).slice(0,n)}
-function makeRelationPair(rel){
-  let a,b;
-  if(rel==='equal'){a=maskOf(sampleIndices(3));b=a}
-  if(rel==='subset'){const left=sampleIndices(2),extra=sampleIndices(2,left);a=maskOf(left);b=maskOf([...left,...extra])}
-  if(rel==='superset'){const right=sampleIndices(2),extra=sampleIndices(2,right);b=maskOf(right);a=maskOf([...right,...extra])}
-  if(rel==='overlap'){const shared=sampleIndices(1),leftOnly=sampleIndices(2,shared),rightOnly=sampleIndices(2,[...shared,...leftOnly]);a=maskOf([...shared,...leftOnly]);b=maskOf([...shared,...rightOnly])}
-  if(rel==='disjoint'){const left=sampleIndices(3),right=sampleIndices(3,left);a=maskOf(left);b=maskOf(right)}
-  if(relationOf(a,b)!==rel)return makeRelationPair(rel);
-  return{a,b,relation:rel};
-}
-const NEIGHBOURS={equal:['subset','superset','overlap'],subset:['equal','overlap','superset'],superset:['equal','overlap','subset'],overlap:['subset','superset','disjoint'],disjoint:['overlap','equal','subset']};
-const RELATION_EXPLAIN={equal:'the active positions are identical',subset:'every active position on the left also appears on the right, but the right has more',superset:'every active position on the right appears on the left, but the left has more',overlap:'the sides share some active positions, but neither contains the other',disjoint:'the sides share no active positions'};
-function buildRelation(repeat){
-  const target=repeat&&repeat.target||randomItem(Object.keys(NEIGHBOURS)),reference=makeRelationPair(target),candidateRels=[target,...NEIGHBOURS[target]];
-  const raw=shuffle(candidateRels.map(rel=>({pair:makeRelationPair(rel),error:rel===target?null:relationError(target,rel)}))),answer=raw.findIndex(o=>o.error===null);
-  return {family:'relation',question:'Which pair has the same relation?',instruction:'Compare the left side with the right side. Match the relation, not the surface pattern.',tone:randomItem(TONES),reference,options:raw,answer,
-    explain:`In the example, ${RELATION_EXPLAIN[target]}. The correct option preserves that exact left-to-right relation.`,
-    repeat:{family:'relation',target}};
-}
-function relationError(target,actual){
-  if((target==='subset'&&actual==='superset')||(target==='superset'&&actual==='subset'))return'reversed-one-way-entailment';
-  if(actual==='equal')return'identity-substituted-for-equivalence-class';
-  if(actual==='overlap')return'compatibility-substituted-for-entailment';
-  if(actual==='disjoint')return'contradiction-substituted-for-independence';
-  return'wrong-relation-class';
-}
-function toggle(v,a,b){return v===a?b:a}
-const TRANSFORM_EFFECTS={
-  r1:{name:'turns one eighth clockwise',apply:s=>({...s,dir:mod(s.dir+1,8)})},
-  r2:{name:'turns one quarter clockwise',apply:s=>({...s,dir:mod(s.dir+2,8)})},
-  enc:{name:'switches enclosure',apply:s=>({...s,enclosed:!s.enclosed})},
-  fill:{name:'switches fill',apply:s=>({...s,fill:toggle(s.fill,'outline','solid')})},
-  count:{name:'switches one and two',apply:s=>({...s,count:toggle(s.count,1,2)})}
+
+const REL_LAWS={
+  transitive:{prem:[[0,1],[1,2]],derive:[0,2],text:'the two directed steps compose through the shared middle object'},
+  reverseChain:{prem:[[0,1],[1,2]],derive:[2,0],text:'the chain closes from the final object back to the first'},
+  symmetric:{prem:[[0,1]],derive:[1,0],text:'every directed connection licenses its converse'},
+  sharedTarget:{prem:[[0,1],[2,1]],derive:[0,2],text:'two objects directed into the same target connect from the first source to the second'}
 };
-function applyEffects(state,effects){return effects.reduce((s,e)=>TRANSFORM_EFFECTS[e].apply(s),{...state})}
-function freshState(overrides={}){return{dir:randomInt(8),enclosed:Math.random()<.5,fill:Math.random()<.5?'outline':'solid',count:Math.random()<.5?1:2,shape:randomItem(SHAPES),tone:randomItem(TONES),...overrides}}
-function stateKey(s){return[s.dir,s.enclosed,s.fill,s.count,s.shape,s.tone].join('|')}
-function buildTransfer(repeat){
-  const effects=repeat&&repeat.effects||shuffle(Object.keys(TRANSFORM_EFFECTS)).slice(0,2);
-  const demos=[freshState(),freshState()].map(source=>({source,target:applyEffects(source,effects)}));
-  let source=freshState(),correctState=applyEffects(source,effects);
-  const wrongEffects=[effects.slice(0,1),effects.slice(1),[...effects,randomItem(Object.keys(TRANSFORM_EFFECTS).filter(e=>!effects.includes(e)))]];
-  let candidates=[{state:correctState,error:null},{state:applyEffects(source,wrongEffects[0]),error:'premature-closure-after-first-change'},{state:applyEffects(source,wrongEffects[1]),error:'ignored-first-transformation'},{state:applyEffects(source,wrongEffects[2]),error:'surplus-transformation'}];
-  if(!uniqueBy(candidates,c=>stateKey(c.state)))return buildTransfer(repeat);
-  candidates=shuffle(candidates);const answer=candidates.findIndex(o=>o.error===null);
-  return {family:'transfer',question:'Which result applies the same transformation?',instruction:'Infer the invariant change across both examples, then transfer it to a new surface.',effects,demos,query:{source},options:candidates,answer,
-    explain:`Across both examples, the transformation ${effects.map(e=>TRANSFORM_EFFECTS[e].name).join(' and ')}. The correct result performs both changes and no others.`,
-    repeat:{family:'transfer',effects}};
+function relationOptions(correct,prem){
+  const all=[];for(let a=0;a<3;a++)for(let b=0;b<3;b++)if(a!==b)all.push([a,b]);
+  const ordered=[correct,[correct[1],correct[0]],...prem.map(e=>[e[1],e[0]]),...all];
+  const unique=[];for(const e of ordered)if(!unique.some(x=>edgeKey(x)===edgeKey(e)))unique.push(e);
+  return unique.slice(0,4).map((e,i)=>({edge:e,error:i===0?'correct':i===1?'reversed-relation':i===2?'local-premise-substitution':'unsupported-connection'}));
 }
-function buildTrial(){
-  let family,repeat=null;
-  if(focus){family=focus.family;repeat=focus;focus=null}else{family=FAMILIES[familyCursor%FAMILIES.length];familyCursor++}
-  const trial=family==='ordered'?buildOrdered(repeat):family==='resolution'?buildResolution(repeat):family==='relation'?buildRelation(repeat):buildTransfer(repeat);
+function buildRelation(focus){
+  const lawName=focus&&focus.law?focus.law:pick(Object.keys(REL_LAWS)),law=REL_LAWS[lawName];
+  return {family:'relation',focusKey:{law:lawName},law:lawName,demoNodes:SHAPE_POOLS[0],queryNodes:SHAPE_POOLS[1],prem:law.prem,derive:law.derive,options:shuffle(relationOptions(law.derive,law.prem)),answerError:'correct'};
+}
+
+const FRAME_LAWS={
+  fixed:{apply:(mark,delta)=>mark,text:'the inner direction is fixed to the world, not to the observer'},
+  coRotate:{apply:(mark,delta)=>rotateDir(mark,delta),text:'the inner direction rotates with the observer frame'},
+  counterRotate:{apply:(mark,delta)=>rotateDir(mark,-delta),text:'the inner direction rotates against the observer frame'}
+};
+function buildFrame(focus){
+  const lawName=focus&&focus.law?focus.law:pick(Object.keys(FRAME_LAWS)),law=FRAME_LAWS[lawName];
+  const demoStart=0,demoEnd=1,demoDelta=1,demoMark=2,demoOut=law.apply(demoMark,demoDelta);
+  const qStart=pick(DIRS),delta=pick([-1,1]),qEnd=rotateDir(qStart,delta),qMark=pick(DIRS),correct=law.apply(qMark,delta);
+  const options=shuffle(DIRS.map(d=>({dir:d,error:d===correct?'correct':d===qMark?'wrong-reference-frame':d===rotateDir(qMark,-delta)?'inverse-frame':'coarse-direction-substitution'})));
+  return {family:'frame',focusKey:{law:lawName},law:lawName,demo:{startObs:demoStart,endObs:demoEnd,startMark:demoMark,endMark:demoOut},query:{startObs:qStart,endObs:qEnd,startMark:qMark},options,answerError:'correct'};
+}
+
+function refillBag(){familyBag=shuffle(['order','relation','frame','transfer'])}
+function nextFamily(){if(!familyBag.length)refillBag();return familyBag.pop()}
+function makeTrial(){
+  const focus=pendingFocus;pendingFocus=null;
+  const family=focus?focus.family:nextFamily();
+  const trial=family==='order'?buildOrder(focus):family==='relation'?buildRelation(focus):family==='frame'?buildFrame(focus):buildTransfer(focus);
   auditTrial(trial);return trial;
 }
-function auditTrial(t){
-  if(!Array.isArray(t.options)||t.options.length!==4)throw new Error('Audit: exactly four options required.');
-  if(t.options.filter(o=>o.error===null).length!==1||t.answer<0)throw new Error('Audit: answer must be unique.');
-  if(t.family==='ordered'){
-    if(!nonCommuting(t.opKeys[0],t.opKeys[1]))throw new Error('Audit: operators must be non-commutative.');
-    if(!uniqueBy(t.options,o=>String(o.value)))throw new Error('Audit: ordered options duplicate.');
+
+function graphSVG(nodes,edges,answerOnly=false){
+  const xs=[55,180,305],y=66,id='arr'+(++svgUid);
+  const defs=`<defs><marker id="${id}" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2d2757"/></marker></defs>`;
+  const lines=edges.map((e,i)=>{const x1=xs[e[0]],x2=xs[e[1]],pad=x2>x1?26:-26;return `<line x1="${x1+pad}" y1="${y+(i%2?8:-8)}" x2="${x2-pad}" y2="${y+(i%2?8:-8)}" stroke="#2d2757" stroke-width="5" marker-end="url(#${id})"/>`}).join('');
+  const nodeSvg=nodes.map((shape,i)=>`<g transform="translate(${xs[i]-25},${y-25})"><svg x="0" y="0" width="50" height="50" viewBox="0 0 100 100">${shapeElement(shape,false)}</svg></g>`).join('');
+  return `<svg class="${answerOnly?'edge-answer':'graph'}" viewBox="0 0 360 132" aria-hidden="true">${defs}${lines}${nodeSvg}</svg>`;
+}
+
+function arrowPath(dir){
+  const angles=[0,90,180,270],a=angles[dir];
+  return `<g transform="rotate(${a} 70 70)"><path d="M35 58 H82 V42 L110 70 L82 98 V82 H35 Z" fill="#9b6c0a"/></g>`;
+}
+function observerMarker(dir){
+  const pos=[[70,10],[130,70],[70,130],[10,70]][dir];
+  const angle=[0,90,180,270][dir];
+  return `<g transform="translate(${pos[0]} ${pos[1]}) rotate(${angle})"><path d="M0 -11 L11 10 L-11 10 Z" fill="#5b3fdb"/></g>`;
+}
+function frameSVG(obs,mark,answer=false){const centre=mark===null?'<text x="70" y="83" text-anchor="middle" font-size="42" font-weight="950" fill="#2d2757">?</text>':arrowPath(mark);return `<svg class="${answer?'frame-answer':'frame'}" viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="54" fill="#fff" stroke="#d8d2e8" stroke-width="5"/>${observerMarker(obs)}${centre}</svg>`}
+
+function renderProblem(t){
+  if(t.family==='order'){
+    problem.innerHTML=`<div class="caption">Examples</div><div class="examples">
+      <div class="example">${boardHTML(t.demoA.in,true)}${opHTML(t.glyphs[0])}<span class="eq">=</span>${boardHTML(t.demoA.out,true)}</div>
+      <div class="example">${boardHTML(t.demoB.in,true)}${opHTML(t.glyphs[1])}<span class="eq">=</span>${boardHTML(t.demoB.out,true)}</div>
+    </div><div class="query"><span class="caption" style="margin:0">Now</span>${boardHTML(t.query,true)}${opHTML(t.glyphs[0])}<span class="then">→</span>${opHTML(t.glyphs[1])}<span class="eq">= ?</span></div>`;
+  }else if(t.family==='transfer'){
+    problem.innerHTML=`<div class="caption">Example</div><div class="example">${boardHTML(t.demo.in)}<span class="then">→</span>${boardHTML(t.demo.out)}</div><div class="query"><span class="caption" style="margin:0">Now</span>${boardHTML(t.query)}<span class="then">→ ?</span></div>`;
+  }else if(t.family==='relation'){
+    problem.innerHTML=`<div class="caption">Example rule</div><div class="example">${graphSVG(t.demoNodes,t.prem)}<span class="then">⇒</span>${graphSVG(t.demoNodes,[t.derive],true)}</div><div class="query"><span class="caption" style="margin:0">Now</span>${graphSVG(t.queryNodes,t.prem)}<span class="then">⇒ ?</span></div>`;
+  }else{
+    problem.innerHTML=`<div class="caption">Example frame change</div><div class="example">${frameSVG(t.demo.startObs,t.demo.startMark)}<span class="then">→</span>${frameSVG(t.demo.endObs,t.demo.endMark)}</div><div class="query"><span class="caption" style="margin:0">Now</span>${frameSVG(t.query.startObs,t.query.startMark)}<span class="then">→</span>${frameSVG(t.query.endObs,null)}</div>`;
   }
-  if(t.family==='resolution'){
-    if(!uniqueBy(t.options,o=>String(o.value)))throw new Error('Audit: resolution options duplicate.');
-  }
-  if(t.family==='relation'){
-    if(t.options.some(o=>relationOf(o.pair.a,o.pair.b)!==o.pair.relation))throw new Error('Audit: relation model mismatch.');
+}
+
+function optionHTML(t,o){
+  if(t.family==='order'||t.family==='transfer')return boardHTML(o.state);
+  if(t.family==='relation')return graphSVG(t.queryNodes,[o.edge],true);
+  return frameSVG(t.query.endObs,o.dir,true);
+}
+function renderAnswers(t){
+  answers.innerHTML='';
+  t.options.forEach((o,i)=>{
+    const b=document.createElement('button');b.type='button';b.className='option';b.dataset.index=String(i);b.innerHTML=`<span class="mark"></span>${optionHTML(t,o)}`;b.addEventListener('click',()=>answer(i));answers.appendChild(b);
+  });
+}
+function renderTrial(){
+  locked=false;feedback.hidden=true;feedback.className='feedback card';current=makeTrial();renderProblem(current);renderAnswers(current);window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function feedbackFor(t,chosen){
+  if(t.family==='order'){
+    const rule=`${t.glyphs[0]} means “${OP_TEXT[t.ops[0]]}”; ${t.glyphs[1]} means “${OP_TEXT[t.ops[1]]}”. Operations apply left to right.`;
+    const errors={
+      'reversed-order':'The two operations were applied in reverse. Their order is not interchangeable.',
+      'premature-closure':'Only the first operation was applied.',
+      'omitted-first-operation':'The first operation was omitted.'
+    };
+    return chosen.error==='correct'?rule:`${errors[chosen.error]} ${rule}`;
   }
   if(t.family==='transfer'){
-    if(!uniqueBy(t.options,o=>stateKey(o.state)))throw new Error('Audit: transfer options duplicate.');
-    if(!sameObject(t.options[t.answer].state,applyEffects(t.query.source,t.effects)))throw new Error('Audit: transfer proof mismatch.');
+    const rule=`The example instantiates one invariant transformation: ${OP_TEXT[t.op]}. The token shapes change, but that relation must be preserved.`;
+    const errors={'inverse-or-neighbour':'A neighbouring or inverse transformation was selected.','wrong-transformation-class':'The candidate changes a different structural feature.','surface-capture':'The surface changed, but the latent transformation did not transfer.'};
+    return chosen.error==='correct'?rule:`${errors[chosen.error]} ${rule}`;
   }
+  if(t.family==='relation'){
+    const rule=`The demonstrated system licenses this closure: ${REL_LAWS[t.law].text}.`;
+    const errors={'reversed-relation':'The required direction was reversed.','local-premise-substitution':'A local premise was substituted for the derived connection.','unsupported-connection':'That connection is not forced by the demonstrated system.'};
+    return chosen.error==='correct'?rule:`${errors[chosen.error]} ${rule}`;
+  }
+  const rule=`The demonstration shows that ${FRAME_LAWS[t.law].text}.`;
+  const errors={'wrong-reference-frame':'The observer moved, but the wrong frame was preserved.','inverse-frame':'The observer transformation was inverted.','coarse-direction-substitution':'The selected direction is compatible with neither exact frame transformation.'};
+  return chosen.error==='correct'?rule:`${errors[chosen.error]} ${rule}`;
+}
+
+function answer(index){
+  if(locked)return;locked=true;trialCount++;
+  const chosen=current.options[index],ok=chosen.error==='correct';if(ok)correctCount++;else pendingFocus={family:current.family,...current.focusKey};
+  [...answers.children].forEach((b,i)=>{b.disabled=true;const o=current.options[i];if(o.error==='correct'){b.classList.add('correct');b.querySelector('.mark').textContent='✓'}else if(i===index){b.classList.add('wrong');b.querySelector('.mark').textContent='×'}});
+  feedback.hidden=false;feedback.classList.add(ok?'good':'bad');feedbackTitle.textContent=ok?'Exact.':'Not exact.';feedbackCopy.textContent=feedbackFor(current,chosen);score.textContent=`${correctCount} correct · ${trialCount} ${trialCount===1?'trial':'trials'}`;feedback.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function auditTrial(t){
+  if(t.options.length!==4)throw new Error('Every trial must have four matched options.');
+  if(t.options.filter(o=>o.error==='correct').length!==1)throw new Error('Answer is not unique.');
+  if(t.family==='order'||t.family==='transfer'){
+    if(new Set(t.options.map(o=>boardKey(o.state))).size!==4)throw new Error('Board answers are visually or logically duplicated.');
+    if(t.options.some(o=>o.state.length!==3))throw new Error('Visual load mismatch.');
+  }
+  if(t.family==='relation'&&new Set(t.options.map(o=>edgeKey(o.edge))).size!==4)throw new Error('Relation answers are duplicated.');
+  if(t.family==='frame'&&new Set(t.options.map(o=>o.dir)).size!==4)throw new Error('Frame answers are duplicated.');
 }
 function auditGenerator(){
-  const oldFocus=focus,oldCursor=familyCursor;
-  for(const family of FAMILIES)for(let i=0;i<80;i++){
-    const t=family==='ordered'?buildOrdered(null):family==='resolution'?buildResolution(null):family==='relation'?buildRelation(null):buildTransfer(null);auditTrial(t)
-  }
-  focus=oldFocus;familyCursor=oldCursor;
+  const savedBag=[...familyBag],savedFocus=pendingFocus;
+  for(const family of ['order','relation','frame','transfer'])for(let i=0;i<120;i++)auditTrial(family==='order'?buildOrder():family==='relation'?buildRelation():family==='frame'?buildFrame():buildTransfer());
+  familyBag=savedBag;pendingFocus=savedFocus;
 }
-function pathFor(shape){
-  if(shape==='pointer')return'<path d="M50 7 L92 50 L50 93 L50 68 L12 68 L12 32 L50 32 Z"/>';
-  if(shape==='kite')return'<path d="M50 7 L88 48 L50 93 L12 48 Z"/>';
-  return'<path d="M12 20 L50 50 L12 80 H38 L78 50 L38 20 Z"/>';
-}
-function figureSVG(state,{compact=false}={}){
-  const id='p'+(++uid),stroke=state.tone,fill=state.fill==='solid'?stroke:`url(#${id})`,count=state.count||1;
-  const xs=count===1?[75]:[48,102],scale=count===1?.82:.56;
-  const shapes=xs.map(x=>`<g transform="translate(${x} 60) rotate(${state.dir*45}) scale(${scale}) translate(-50 -50)">${state.enclosed?'<circle cx="50" cy="50" r="47" fill="none" stroke="'+stroke+'" stroke-width="5"/>':''}<g fill="${fill}" stroke="${stroke}" stroke-width="5" stroke-linejoin="round">${pathFor(state.shape)}</g></g>`).join('');
-  return `<svg viewBox="0 0 150 120" role="img" aria-label="abstract figure"><defs><pattern id="${id}" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="9" height="9" fill="white"/><rect width="4" height="9" fill="${stroke}"/></pattern></defs>${shapes}</svg>`;
-}
-function arrowSVG(dir,tone){return figureSVG({dir,enclosed:false,fill:'outline',count:1,shape:'pointer',tone})}
-function operatorHTML(symbol){return `<span class="operator" aria-hidden="true">${symbol}</span>`}
-function sequenceRow(start,ops,end,t){return `<div class="demo-row"><span class="stimulus">${figureSVG({...t.surface,dir:start,enclosed:false,fill:'outline',count:1})}</span>${ops.map(op=>operatorHTML(t.symbolFor[op])).join('<span class="step-arrow">→</span>')}<span class="eq">=</span><span class="stimulus">${figureSVG({...t.surface,dir:end,enclosed:false,fill:'outline',count:1})}</span></div>`}
-function renderOrdered(t){
-  const demos=t.demos.map(d=>sequenceRow(d.start,d.ops,d.end,t)).join('');
-  problem.innerHTML=`<div class="problem-title">Examples</div><div class="demos">${demos}</div><div class="query-row"><span class="stimulus">${figureSVG({...t.surface,dir:t.query.start,enclosed:false,fill:'outline',count:1})}</span>${t.query.ops.map(op=>operatorHTML(t.symbolFor[op])).join('<span class="step-arrow">→</span>')}<span class="eq">=</span><span class="eq">?</span></div>`;
-  renderOptions(t,o=>`<span class="stimulus">${figureSVG({...t.surface,dir:o.value,enclosed:false,fill:'outline',count:1})}</span>`);
-}
-function moveHTML(dir,tone){return `<span class="move-tile">${arrowSVG(dir,tone)}</span>`}
-function movesRow(moves,result,tone,query=false){return `<div class="${query?'query-row':'demo-row'}"><span class="moves">${moves.map(d=>moveHTML(d,tone)).join('<span class="step-arrow">+</span>')}</span><span class="eq">=</span>${query?'<span class="eq">?</span>':`<span class="stimulus">${arrowSVG(result,tone)}</span>`}</div>`}
-function renderResolution(t){problem.innerHTML=`<div class="problem-title">Examples</div><div class="demos">${t.demos.map(d=>movesRow(d.moves,d.result,t.surface.tone)).join('')}</div>${movesRow(t.query.moves,null,t.surface.tone,true)}`;renderOptions(t,o=>`<span class="stimulus">${arrowSVG(o.value,t.surface.tone)}</span>`)}
-function gridHTML(mask,tone){return `<span class="set-grid" style="color:${tone}">${[...Array(8).keys()].map(i=>`<span class="set-cell ${mask&(1<<i)?'on':''}"></span>`).join('')}</span>`}
-function pairHTML(pair,tone){return `<span class="reference">${gridHTML(pair.a,tone)}<span class="relation">↔</span>${gridHTML(pair.b,tone)}</span>`}
-function renderRelation(t){problem.innerHTML=`<div class="problem-title">Example relation</div>${pairHTML(t.reference,t.tone)}`;renderOptions(t,o=>pairHTML(o.pair,t.tone))}
-function transformRow(source,target){return `<div class="demo-row"><span class="stimulus">${figureSVG(source)}</span><span class="step-arrow">→</span><span class="stimulus">${figureSVG(target)}</span></div>`}
-function renderTransfer(t){problem.innerHTML=`<div class="problem-title">Examples</div><div class="demos">${t.demos.map(d=>transformRow(d.source,d.target)).join('')}</div><div class="query-row"><span class="stimulus">${figureSVG(t.query.source)}</span><span class="step-arrow">→</span><span class="eq">?</span></div>`;renderOptions(t,o=>`<span class="stimulus">${figureSVG(o.state)}</span>`)}
-function renderOptions(t,content){answers.innerHTML='';t.options.forEach((o,i)=>{const b=document.createElement('button');b.className='option';b.type='button';b.innerHTML=`<span class="mark" aria-hidden="true"></span><span class="option-inner">${content(o)}</span>`;b.addEventListener('click',()=>choose(i));answers.appendChild(b)})}
-function renderTrial(){
-  locked=false;feedback.hidden=true;answers.innerHTML='';current=buildTrial();question.textContent=current.question;instruction.textContent=current.instruction;
-  if(current.family==='ordered')renderOrdered(current);else if(current.family==='resolution')renderResolution(current);else if(current.family==='relation')renderRelation(current);else renderTransfer(current);
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function choose(index){
-  if(locked)return;locked=true;trialNo++;
-  const buttons=[...answers.querySelectorAll('.option')],chosen=current.options[index],isCorrect=index===current.answer;
-  buttons.forEach((b,i)=>{b.disabled=true;if(i===current.answer){b.classList.add('correct');b.querySelector('.mark').textContent='✓'}});
-  if(!isCorrect){buttons[index].classList.add('wrong');buttons[index].querySelector('.mark').textContent='×';focus={...current.repeat,error:chosen.error}}
-  else correct++;
-  score.textContent=`${correct} correct · ${trialNo} trial${trialNo===1?'':'s'}`;
-  feedback.hidden=false;feedback.className='feedback card '+(isCorrect?'good':'bad');feedbackTitle.textContent=isCorrect?'Exact.':'Not exact.';
-  feedbackCopy.textContent=(isCorrect?'You preserved the governing rule. ':'The selected answer reflects '+humanError(chosen.error)+'. ')+current.explain;
-  feedback.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function humanError(error){
-  const map={
-    'reversed-operator-order':'the right operations in the wrong order','premature-closure-after-first-operator':'stopping after the first operation','ignored-first-operator':'using only the final operation','coarse-category-substitution':'a direction that is compatible but less precise','over-precise-inference':'a distinction this rule system does not preserve','reversed-result':'reversing the derived relation','wrong-reference-axis':'resolving the displacement against the wrong axis','reversed-one-way-entailment':'reversing a one-way relation','identity-substituted-for-equivalence-class':'substituting identity for the required relation','compatibility-substituted-for-entailment':'substituting partial overlap for containment','contradiction-substituted-for-independence':'substituting exclusion for the required relation','wrong-relation-class':'a neighbouring but different relation class','premature-closure-after-first-change':'performing only the first invariant change','ignored-first-transformation':'performing only the second invariant change','surplus-transformation':'adding a change not licensed by the demonstrations'
-  };return map[error]||'a neighbouring but invalid rule';
-}
+
 start.addEventListener('click',()=>{intro.hidden=true;game.hidden=false;document.body.classList.add('playing');renderTrial()});
 next.addEventListener('click',renderTrial);
-try{auditGenerator()}catch(e){console.error(e);document.body.innerHTML='<main class="shell"><section class="intro card"><h2>Generator audit failed.</h2><p>'+String(e.message||e)+'</p></section></main>';return}
-window.__ONTOLOGICAL_DECEPTION_META__={version:2,audited:true,families:[...FAMILIES]};
+auditGenerator();
 })();
 </script>
 </body>
