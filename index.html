@@ -43,7 +43,8 @@ const stableModules=[
 const clarityModule='assets/relational-v25-clarity.js?v=20260713b';
 const playabilityModule='assets/relational-v26-playability.js?v=20260713b';
 const openCanvasModule='assets/relational-v27-open-canvas.js?v=20260713c';
-const introModule='assets/relational-v28-intro.js?v=20260713c';
+const introModule='assets/relational-v28-intro.js?v=20260717a';
+const readabilityModule='assets/relational-v28-readability.js?v=20260717a';
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function fail(e){status.textContent='The game could not initialise.';errorBox.style.display='block';errorBox.textContent=String(e&&e.stack||e);console.error(e)}
 async function gunzipBase64(payload){
@@ -105,6 +106,11 @@ async function bootGame(){
     if(introError)throw introError;
     const intro=frame.contentWindow.__V28_INTRO_TEST__;
     if(!frame.contentWindow.__RELATIONAL_V28__||!intro||!intro.intro||!intro.start||!intro.returnToIntro)throw new Error('V28 introduction-state check failed.');
+
+    status.textContent='Improving instruction readability…';
+    const readabilityError=await inject(d,await fetchText(readabilityModule),'v28-readability');
+    if(readabilityError)throw readabilityError;
+    if(!frame.contentWindow.__RELATIONAL_V28_READABILITY__)throw new Error('V28 readability layer failed.');
 
     d.title='Ontological Deception V28';document.title='Ontological Deception V28';
     frame.style.visibility='visible';boot.style.display='none';
